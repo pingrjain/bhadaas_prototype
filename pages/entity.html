@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entity Profile — Bhadaas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ---- Entity-page-specific styles ---- */
+
+    /* Hero */
+    .entity-hero {
+      background: linear-gradient(135deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%);
+      padding: 2.5rem 0 0;
+      color: #fff;
+    }
+    .entity-hero-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .entity-logo {
+      width: 80px;
+      height: 80px;
+      background: #fff;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .entity-hero-info { flex: 1; min-width: 0; }
+    .entity-hero-info h1 {
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 0.4rem;
+      line-height: 1.2;
+    }
+    .entity-hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .entity-hero-claim-link {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.55);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .entity-hero-claim-link:hover { color: #fff; }
+    .badge-claimed-hero {
+      background: rgba(40,199,111,0.2);
+      color: #28C76F;
+      border: 1px solid rgba(40,199,111,0.4);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .category-tag-hero {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* Score ring */
+    .score-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .score-ring.high  { border-color: #EA5455; }
+    .score-ring.medium{ border-color: #FF9F43; }
+    .score-ring.low   { border-color: #28C76F; }
+    .score-ring .score-value {
+      font-size: 1.4rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #fff;
+    }
+    .score-ring.high  .score-value { color: #EA5455; }
+    .score-ring.medium .score-value { color: #FF9F43; }
+    .score-ring.low   .score-value { color: #28C76F; }
+    .score-ring .score-lbl {
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.6);
+      margin-top: 2px;
+    }
+
+    /* Hero stats */
+    .entity-stats {
+      display: flex;
+      gap: 0;
+      margin-top: 1.75rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .entity-stat-item {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .entity-stat-item:last-child { border-right: none; }
+    .entity-stat-value {
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .entity-stat-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Hero action buttons */
+    .entity-hero-actions {
+      padding: 1rem 0 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .btn-hero-outline {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.35);
+      color: #fff;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-sm, 8px);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-hero-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      padding: 0.65rem 0;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--primary); }
+    .breadcrumb span { margin: 0 0.35rem; }
+
+    /* Entity page main area */
+    .entity-page { padding: 1.5rem 0 3rem; }
+    .entity-layout { display: flex; gap: 1.5rem; align-items: flex-start; }
+
+    /* Stats grid */
+    .stats-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Sidebar */
+    .entity-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: calc(var(--nav-height, 60px) + 1rem);
+      max-height: calc(100vh - var(--nav-height, 60px) - 2rem);
+      overflow-y: auto;
+    }
+    .entity-sidebar .card-header { padding: 0.875rem 1rem; }
+    .entity-sidebar .card-body  { padding: 1rem; }
+
+    /* Sidebar about rows */
+    .about-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .about-row:last-child { border-bottom: none; }
+    .about-row .label { color: var(--text-muted); font-weight: 500; }
+    .about-row .value { font-weight: 600; color: var(--text); }
+
+    /* Resolution progress */
+    .res-item { margin-bottom: 0.875rem; }
+    .res-item:last-child { margin-bottom: 0; }
+    .res-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Severity mini bars */
+    .sev-dist-item {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      margin-bottom: 0.5rem;
+    }
+    .sev-dist-item:last-child { margin-bottom: 0; }
+    .sev-dist-label { font-size: 0.75rem; font-weight: 600; width: 60px; flex-shrink: 0; }
+    .sev-dist-bar-wrap { flex: 1; background: #EEF0F6; border-radius: 4px; height: 8px; overflow: hidden; }
+    .sev-dist-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .sev-dist-count { font-size: 0.72rem; color: var(--text-muted); width: 28px; text-align: right; flex-shrink: 0; }
+
+    /* Similar entities compact */
+    .similar-entity-row {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+    .similar-entity-row:last-child { border-bottom: none; }
+    .similar-entity-row:hover { color: var(--primary); }
+    .similar-entity-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .similar-entity-info { flex: 1; min-width: 0; }
+    .similar-entity-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .similar-entity-meta { font-size: 0.7rem; color: var(--text-muted); }
+    .similar-entity-count {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--danger);
+      flex-shrink: 0;
+    }
+
+    /* CTA sidebar card */
+    .sidebar-cta {
+      background: linear-gradient(135deg, #1A1A2E 0%, #0F3460 100%);
+      border-radius: var(--radius, 12px);
+      padding: 1.25rem;
+      color: #fff;
+    }
+    .sidebar-cta h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .sidebar-cta p  { font-size: 0.78rem; color: rgba(255,255,255,0.7); margin-bottom: 0.875rem; }
+    .sidebar-cta ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1rem;
+    }
+    .sidebar-cta ul li {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.85);
+      padding: 0.2rem 0;
+    }
+    .sidebar-cta ul li::before { content: '✓ '; color: #28C76F; font-weight: 700; }
+
+    /* Trend chart card */
+    .chart-container {
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      min-height: 180px;
+      padding: 0.5rem 0 0;
+    }
+    .chart-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      min-width: 28px;
+    }
+    .chart-bar {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(to top, var(--primary), #FF9A6C);
+      transition: opacity 0.2s;
+      cursor: pointer;
+      min-height: 6px;
+    }
+    .chart-bar:hover { opacity: 0.75; }
+    .chart-label {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Posts list */
+    .entity-posts-list { display: flex; flex-direction: column; gap: 0.875rem; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      gap: 0;
+      margin-bottom: 1.25rem;
+      overflow-x: auto;
+    }
+    .tab-item {
+      padding: 0.65rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .tab-item:hover { color: var(--primary); }
+    .tab-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .entity-sidebar { display: none; }
+    }
+    @media (max-width: 768px) {
+      .stats-grid-4 { grid-template-columns: 1fr 1fr; }
+      .entity-stats { flex-wrap: wrap; }
+      .entity-stat-item { min-width: 33%; }
+      .entity-hero-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV (auto-injected) -->
+  <div id="nav-placeholder" data-active="entity"></div>
+
+  <!-- ===== ENTITY HERO ===== -->
+  <div class="entity-hero">
+    <div class="container">
+
+      <!-- Hero row: logo + info + score ring -->
+      <div class="entity-hero-row">
+        <!-- Logo -->
+        <div class="entity-logo" id="hero-logo">📡</div>
+
+        <!-- Entity info -->
+        <div class="entity-hero-info">
+          <h1 id="hero-name">Loading…</h1>
+          <div class="entity-hero-meta">
+            <span class="category-tag-hero" id="hero-category-tag"></span>
+            <span class="badge-claimed-hero" id="hero-claimed-badge" style="display:none;">✓ Claimed</span>
+            <span class="entity-hero-claim-link" id="hero-unclaimed-link" style="display:none;" onclick="openModal('modal-claim')">Unclaimed — Claim this profile</span>
+          </div>
+        </div>
+
+        <!-- Score ring -->
+        <div class="score-ring medium" id="hero-score-ring">
+          <div class="score-value" id="hero-score-value">—</div>
+          <div class="score-lbl">Bhadaas Score</div>
+        </div>
+      </div>
+
+      <!-- Entity Stats row -->
+      <div class="entity-stats">
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" id="stat-total" style="color:var(--danger);">—</div>
+          <div class="entity-stat-label">Total Bhadaas</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" id="stat-severity" style="color:var(--warning);">—</div>
+          <div class="entity-stat-label">Avg Severity</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" id="stat-resolution" style="color:var(--success);">—</div>
+          <div class="entity-stat-label">Resolution Rate</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" id="stat-response" style="color:#4F8EF7;">—</div>
+          <div class="entity-stat-label">Response Rate</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" style="color:var(--primary);">+43</div>
+          <div class="entity-stat-label">This Week</div>
+        </div>
+      </div>
+
+      <!-- Hero action buttons -->
+      <div class="entity-hero-actions">
+        <button class="btn btn-primary" onclick="window.location='post.html'">🏷️ Post Bhadaas About This</button>
+        <button class="btn-hero-outline" id="hero-dashboard-btn" style="display:none;" onclick="window.location='company-dashboard.html'">💼 Company Dashboard</button>
+      </div>
+
+    </div>
+  </div>
+  <!-- END entity hero -->
+
+  <!-- ===== BREADCRUMB ===== -->
+  <div style="background:#fff;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span>›</span>
+        <a href="feed.html">Browse</a>
+        <span>›</span>
+        <span id="breadcrumb-name" style="color:var(--text);font-weight:600;">Entity</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="entity-page">
+    <div class="container">
+      <div class="entity-layout">
+
+        <!-- ==================================
+             LEFT: MAIN COLUMN
+             ================================== -->
+        <div style="flex:1;min-width:0;">
+
+          <!-- Stats Overview Cards -->
+          <div class="stats-grid-4">
+            <!-- Total Bhadaas -->
+            <div class="stat-card">
+              <div class="stat-icon orange">📊</div>
+              <div>
+                <div class="stat-value" id="sc-total">—</div>
+                <div class="stat-label">Total Bhadaas</div>
+              </div>
+            </div>
+            <!-- Resolved -->
+            <div class="stat-card">
+              <div class="stat-icon green">✅</div>
+              <div>
+                <div class="stat-value" id="sc-resolved">—</div>
+                <div class="stat-label">Resolved</div>
+              </div>
+            </div>
+            <!-- Response Rate -->
+            <div class="stat-card">
+              <div class="stat-icon blue">💬</div>
+              <div>
+                <div class="stat-value" id="sc-response">—</div>
+                <div class="stat-label">Response Rate</div>
+              </div>
+            </div>
+            <!-- Avg Severity -->
+            <div class="stat-card">
+              <div class="stat-icon red">⚠️</div>
+              <div>
+                <div class="stat-value" id="sc-severity">—</div>
+                <div class="stat-label">Avg Severity</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trend Chart Card -->
+          <div class="card mb-3">
+            <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+              <h3 style="font-size:0.95rem;font-weight:700;">Bhadaas Trend — Last 12 Months</h3>
+              <span class="badge badge-danger" style="font-size:0.72rem;">This entity is trending ↑</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <div id="trend-chart"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs: All / Resolved / Has Response / Most Upvoted -->
+          <div data-tabs-container>
+            <div class="tabs">
+              <div class="tab-item active" data-tab="tab-all">All Bhadaas</div>
+              <div class="tab-item" data-tab="tab-resolved">Resolved</div>
+              <div class="tab-item" data-tab="tab-responded">Has Company Response</div>
+              <div class="tab-item" data-tab="tab-upvoted">Most Upvoted</div>
+            </div>
+
+            <!-- ALL BHADAAS -->
+            <div class="tab-content active" id="tab-all">
+              <div id="posts-all" class="entity-posts-list"></div>
+            </div>
+
+            <!-- RESOLVED -->
+            <div class="tab-content" id="tab-resolved">
+              <div id="posts-resolved" class="entity-posts-list"></div>
+            </div>
+
+            <!-- HAS COMPANY RESPONSE -->
+            <div class="tab-content" id="tab-responded">
+              <div id="posts-responded" class="entity-posts-list"></div>
+            </div>
+
+            <!-- MOST UPVOTED -->
+            <div class="tab-content" id="tab-upvoted">
+              <div id="posts-upvoted" class="entity-posts-list"></div>
+            </div>
+
+          </div>
+          <!-- END tabs -->
+
+          <!-- Load More -->
+          <div style="margin-top:1.5rem;">
+            <button class="btn btn-outline btn-block" onclick="showToast('Loading more Bhadaas…','info')">Load More Bhadaas</button>
+          </div>
+
+        </div>
+        <!-- END main column -->
+
+        <!-- ==================================
+             RIGHT: SIDEBAR
+             ================================== -->
+        <div class="entity-sidebar">
+
+          <!-- Card 1: About This Entity -->
+          <div class="card">
+            <div class="card-header">
+              <h3 style="font-size:0.88rem;font-weight:700;">About This Entity</h3>
+            </div>
+            <div class="card-body" style="padding:0.875rem 1rem;">
+              <div id="about-verified-badge" style="display:none;margin-bottom:0.875rem;">
+                <div class="alert alert-success" style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:8px;">
+                  <div style="font-weight:700;margin-bottom:0.2rem;">✅ Verified Company Profile</div>
+                  <div>This company actively monitors and responds to Bhadaas.</div>
+                </div>
+              </div>
+              <div id="about-unclaimed-badge" style="display:none;margin-bottom:0.875rem;">
+                <div class="alert alert-warning" style="padding:0.5rem 0.75rem;font-size:0.78rem;border-radius:8px;">
+                  <div style="font-weight:700;margin-bottom:0.2rem;">⚠️ Unclaimed Profile</div>
+                  <div>This entity hasn't claimed this profile. All data is user-reported. Is this your company?</div>
+                </div>
+              </div>
+              <div class="about-row">
+                <span class="label">Name</span>
+                <span class="value" id="about-name">—</span>
+              </div>
+              <div class="about-row">
+                <span class="label">Category</span>
+                <span class="value" id="about-category">—</span>
+              </div>
+              <div class="about-row">
+                <span class="label">Status</span>
+                <span class="value" id="about-status">—</span>
+              </div>
+              <div class="about-row">
+                <span class="label">Listed Since</span>
+                <span class="value">Jan 2023</span>
+              </div>
+              <div class="about-row">
+                <span class="label">Website</span>
+                <span class="value" id="about-website">—</span>
+              </div>
+              <div id="about-claim-btn-wrap" style="display:none;margin-top:0.875rem;">
+                <button class="btn btn-outline btn-block" style="border-color:var(--primary);color:var(--primary);font-size:0.82rem;" onclick="openModal('modal-claim')">
+                  Claim This Profile →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Resolution Breakdown -->
+          <div class="card">
+            <div class="card-header">
+              <h3 style="font-size:0.88rem;font-weight:700;">Resolution Breakdown</h3>
+            </div>
+            <div class="card-body">
+              <div class="res-item">
+                <div class="res-label">
+                  <span>✅ Resolved</span>
+                  <span id="res-resolved-pct" style="color:var(--success);">—</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar success" id="res-resolved-bar" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="res-item">
+                <div class="res-label">
+                  <span>💬 Responded</span>
+                  <span id="res-responded-pct" style="color:var(--warning);">—</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar warning" id="res-responded-bar" style="width:0%"></div>
+                </div>
+              </div>
+              <div class="res-item">
+                <div class="res-label">
+                  <span>🔴 Open / Unresolved</span>
+                  <span id="res-open-pct" style="color:var(--danger);">—</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar danger" id="res-open-bar" style="width:0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Severity Distribution -->
+          <div class="card">
+            <div class="card-header">
+              <h3 style="font-size:0.88rem;font-weight:700;">Severity Distribution</h3>
+            </div>
+            <div class="card-body">
+              <div id="severity-dist"></div>
+            </div>
+          </div>
+
+          <!-- Card 4: Similar Entities -->
+          <div class="card">
+            <div class="card-header">
+              <h3 style="font-size:0.88rem;font-weight:700;">Similar Entities</h3>
+            </div>
+            <div class="card-body" style="padding:0.5rem 1rem;">
+              <div id="similar-entities"></div>
+            </div>
+          </div>
+
+          <!-- Card 5: CTA for Company (unclaimed only) -->
+          <div class="sidebar-cta" id="sidebar-cta" style="display:none;">
+            <h4>Is this your company?</h4>
+            <p>Take control of your brand reputation on Bhadaas.</p>
+            <ul>
+              <li>View detailed analytics</li>
+              <li>Respond to complaints officially</li>
+              <li>Protect your reputation</li>
+            </ul>
+            <button class="btn btn-primary btn-block" onclick="openModal('modal-claim')">Claim Profile →</button>
+          </div>
+
+        </div>
+        <!-- END sidebar -->
+
+      </div>
+    </div>
+  </div>
+  <!-- END main content -->
+
+  <!-- ===== CLAIM MODAL ===== -->
+  <div class="modal-overlay" id="modal-claim">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 style="font-size:1rem;font-weight:800;">Claim This Entity Profile</h3>
+        <button class="modal-close" onclick="closeModal('modal-claim')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;">
+          Submit your business details to claim this profile. We'll verify and activate within 48 hours.
+        </p>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:0.35rem;">Company Email *</label>
+          <input type="email" class="form-control" placeholder="official@company.com" id="claim-email">
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:0.35rem;">Your Role *</label>
+          <input type="text" class="form-control" placeholder="e.g. Legal Head, Customer Experience Manager" id="claim-role">
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:0.35rem;">Business Registration Number *</label>
+          <input type="text" class="form-control" placeholder="e.g. CIN / GSTIN / ROC number" id="claim-regno">
+        </div>
+        <div style="margin-bottom:0.5rem;">
+          <label style="font-size:0.8rem;font-weight:600;display:block;margin-bottom:0.35rem;">Upload Business Proof</label>
+          <input type="file" class="form-control" id="claim-proof" accept=".pdf,.jpg,.jpeg,.png">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Accepted: PDF, JPG, PNG (max 5 MB)</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="submitClaim()">Submit Claim Request</button>
+        <button class="btn btn-outline" onclick="closeModal('modal-claim')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // =========== PAGE INIT ===========
+
+    let currentEntity = null;
+    let entityPosts   = [];
+
+    function getUrlParam(key) {
+      return new URLSearchParams(window.location.search).get(key);
+    }
+
+    function loadEntityPage() {
+      const idParam = getUrlParam('id');
+      currentEntity = (idParam && ENTITIES.find(e => e.id === idParam)) || ENTITIES[0];
+
+      populateHero(currentEntity);
+      populateBreadcrumb(currentEntity);
+      populateStatCards(currentEntity);
+      populateTrendChart(currentEntity);
+      populateSidebar(currentEntity);
+      populatePosts(currentEntity);
+    }
+
+    // =========== HERO ===========
+
+    function populateHero(entity) {
+      const cat = getCategoryInfo(entity.category);
+
+      document.getElementById('hero-logo').textContent = entity.icon;
+      document.getElementById('hero-name').textContent = entity.name;
+      document.title = entity.name + ' — Bhadaas';
+
+      document.getElementById('hero-category-tag').textContent = cat.icon + ' ' + cat.label;
+
+      if (entity.claimed) {
+        document.getElementById('hero-claimed-badge').style.display = '';
+        document.getElementById('hero-unclaimed-link').style.display = 'none';
+        document.getElementById('hero-dashboard-btn').style.display = '';
+      } else {
+        document.getElementById('hero-claimed-badge').style.display = 'none';
+        document.getElementById('hero-unclaimed-link').style.display = '';
+        document.getElementById('hero-dashboard-btn').style.display = 'none';
+      }
+
+      // Score ring
+      const score = Math.round(entity.avgSeverity * 10);
+      const ringClass = entity.avgSeverity >= 4 ? 'high' : entity.avgSeverity >= 3 ? 'medium' : 'low';
+      const ring = document.getElementById('hero-score-ring');
+      ring.className = 'score-ring ' + ringClass;
+      document.getElementById('hero-score-value').textContent = score;
+
+      // Stats
+      document.getElementById('stat-total').textContent     = formatNumber(entity.bhadaasCount);
+      document.getElementById('stat-severity').textContent  = entity.avgSeverity.toFixed(1);
+      document.getElementById('stat-resolution').textContent = entity.resolutionRate + '%';
+      document.getElementById('stat-response').textContent  = entity.responseRate + '%';
+    }
+
+    // =========== BREADCRUMB ===========
+
+    function populateBreadcrumb(entity) {
+      document.getElementById('breadcrumb-name').textContent = entity.name;
+    }
+
+    // =========== STAT CARDS ===========
+
+    function populateStatCards(entity) {
+      document.getElementById('sc-total').textContent    = formatNumber(entity.bhadaasCount);
+      document.getElementById('sc-resolved').textContent = entity.resolutionRate + '%';
+      document.getElementById('sc-response').textContent = entity.responseRate + '%';
+      document.getElementById('sc-severity').textContent = entity.avgSeverity.toFixed(1);
+    }
+
+    // =========== TREND CHART ===========
+
+    function populateTrendChart(entity) {
+      // Generate 12 months of realistic fake data peaking in recent months
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const base = Math.round(entity.bhadaasCount / 18);
+      const trendData = [
+        { label: 'Jan', value: base + Math.round(base * 0.15) },
+        { label: 'Feb', value: base + Math.round(base * 0.08) },
+        { label: 'Mar', value: base - Math.round(base * 0.05) },
+        { label: 'Apr', value: base + Math.round(base * 0.22) },
+        { label: 'May', value: base + Math.round(base * 0.35) },
+        { label: 'Jun', value: base + Math.round(base * 0.18) },
+        { label: 'Jul', value: base + Math.round(base * 0.42) },
+        { label: 'Aug', value: base + Math.round(base * 0.55) },
+        { label: 'Sep', value: base + Math.round(base * 0.60) },
+        { label: 'Oct', value: base + Math.round(base * 0.78) },
+        { label: 'Nov', value: base + Math.round(base * 0.90) },
+        { label: 'Dec', value: base + Math.round(base * 1.10) },
+      ];
+      document.getElementById('trend-chart').innerHTML = renderBarChart(trendData);
+    }
+
+    // =========== POSTS ===========
+
+    function populatePosts(entity) {
+      // Find posts for this entity
+      let matched = POSTS.filter(p => p.entity.id === entity.id);
+      // If fewer than 2 found, use all posts for demo
+      if (matched.length < 2) matched = POSTS;
+      entityPosts = matched;
+
+      const resolved  = matched.filter(p => p.status === 'resolved');
+      const responded = matched.filter(p => p.hasCompanyResponse);
+      const upvoted   = [...matched].sort((a, b) => b.upvotes - a.upvotes);
+
+      renderPostList('posts-all',      matched);
+      renderPostList('posts-resolved', resolved.length ? resolved : matched);
+      renderPostList('posts-responded',responded.length ? responded : matched);
+      renderPostList('posts-upvoted',  upvoted);
+    }
+
+    function renderPostList(containerId, posts) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      if (!posts.length) {
+        el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No Bhadaas found in this category.</p></div>';
+        return;
+      }
+      el.innerHTML = posts.map(p => renderPostCard(p)).join('');
+    }
+
+    // =========== SIDEBAR ===========
+
+    function populateSidebar(entity) {
+      const cat = getCategoryInfo(entity.category);
+
+      // About card
+      document.getElementById('about-name').textContent     = entity.name;
+      document.getElementById('about-category').textContent = cat.icon + ' ' + cat.label;
+      document.getElementById('about-status').innerHTML     = entity.claimed
+        ? '<span style="color:var(--success);font-weight:700;">✓ Claimed</span>'
+        : '<span style="color:var(--warning);font-weight:700;">Unclaimed</span>';
+
+      // Fake website based on entity id
+      const websiteMap = {
+        airtel: 'airtel.in', hdfc: 'hdfcbank.com', amazon: 'amazon.in',
+        bsnl: 'bsnl.co.in', swiggy: 'swiggy.com', irctc: 'irctc.co.in',
+        byju: 'byjus.com', bses: 'bsesdelhi.com', zomato: 'zomato.com',
+        paytm: 'paytm.com', flipkart: 'flipkart.com', ola: 'olacabs.com',
+      };
+      const site = websiteMap[entity.id] || entity.id + '.com';
+      document.getElementById('about-website').innerHTML =
+        `<a href="https://${site}" target="_blank" rel="noopener noreferrer" style="color:var(--primary);">${site}</a>`;
+
+      if (entity.claimed) {
+        document.getElementById('about-verified-badge').style.display = '';
+        document.getElementById('about-unclaimed-badge').style.display = 'none';
+        document.getElementById('about-claim-btn-wrap').style.display  = 'none';
+        document.getElementById('sidebar-cta').style.display           = 'none';
+      } else {
+        document.getElementById('about-verified-badge').style.display = 'none';
+        document.getElementById('about-unclaimed-badge').style.display = '';
+        document.getElementById('about-claim-btn-wrap').style.display  = '';
+        document.getElementById('sidebar-cta').style.display           = '';
+      }
+
+      // Resolution breakdown
+      const resRate = entity.resolutionRate;
+      const respRate = entity.responseRate;
+      const openRate = Math.max(0, 100 - resRate);
+      document.getElementById('res-resolved-pct').textContent  = resRate + '%';
+      document.getElementById('res-responded-pct').textContent = respRate + '%';
+      document.getElementById('res-open-pct').textContent      = openRate + '%';
+      // Animate bars after a short delay
+      setTimeout(() => {
+        document.getElementById('res-resolved-bar').style.width  = resRate + '%';
+        document.getElementById('res-responded-bar').style.width = respRate + '%';
+        document.getElementById('res-open-bar').style.width      = openRate + '%';
+      }, 120);
+
+      // Severity distribution
+      populateSeverityDist(entity);
+
+      // Similar entities
+      populateSimilarEntities(entity);
+    }
+
+    function populateSeverityDist(entity) {
+      // Fake distribution summing to bhadaasCount
+      const total = entity.bhadaasCount;
+      // Weights depend on avgSeverity — higher severity means more in upper buckets
+      const avg = entity.avgSeverity;
+      const w5  = Math.max(0.05, (avg - 2) * 0.20);
+      const w4  = Math.max(0.08, (avg - 1.5) * 0.18);
+      const w3  = 0.25;
+      const w2  = Math.max(0.05, (4 - avg) * 0.15);
+      const w1  = Math.max(0.02, (4 - avg) * 0.10);
+      const wTotal = w5 + w4 + w3 + w2 + w1;
+      const counts = [
+        Math.round(total * w5 / wTotal),
+        Math.round(total * w4 / wTotal),
+        Math.round(total * w3 / wTotal),
+        Math.round(total * w2 / wTotal),
+        0,
+      ];
+      counts[4] = total - counts[0] - counts[1] - counts[2] - counts[3];
+
+      const sevColors = ['', '#28C76F', '#7BC67E', '#FF9F43', '#FF6B35', '#EA5455'];
+      const sevLabels = ['', 'Minor', 'Noteworthy', 'Significant', 'Serious', 'Critical'];
+      const maxCount  = Math.max(...counts, 1);
+
+      const html = [5,4,3,2,1].map(sev => {
+        const count = counts[sev - 1];
+        const pct   = Math.round((count / maxCount) * 100);
+        return `
+        <div class="sev-dist-item">
+          <div class="sev-dist-label" style="color:${sevColors[sev]};font-size:0.72rem;">${sevLabels[sev]}</div>
+          <div class="sev-dist-bar-wrap">
+            <div class="sev-dist-bar" style="width:${pct}%;background:${sevColors[sev]};"></div>
+          </div>
+          <div class="sev-dist-count">${formatNumber(count)}</div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('severity-dist').innerHTML = html;
+    }
+
+    function populateSimilarEntities(entity) {
+      const similar = ENTITIES
+        .filter(e => e.id !== entity.id && e.category === entity.category)
+        .slice(0, 3);
+
+      // If fewer than 3 in same category, fill from any category
+      const extras = similar.length < 3
+        ? ENTITIES.filter(e => e.id !== entity.id && e.category !== entity.category).slice(0, 3 - similar.length)
+        : [];
+
+      const list = [...similar, ...extras];
+
+      document.getElementById('similar-entities').innerHTML = list.map(e => `
+        <a href="entity.html?id=${e.id}" class="similar-entity-row">
+          <div class="similar-entity-icon">${e.icon}</div>
+          <div class="similar-entity-info">
+            <div class="similar-entity-name">${e.name}</div>
+            <div class="similar-entity-meta">${e.claimed ? '✓ Claimed' : 'Unclaimed'} · Sev ${e.avgSeverity.toFixed(1)}</div>
+          </div>
+          <div class="similar-entity-count">${formatNumber(e.bhadaasCount)}</div>
+        </a>`).join('');
+    }
+
+    // =========== CLAIM SUBMIT ===========
+
+    function submitClaim() {
+      const email  = document.getElementById('claim-email').value.trim();
+      const role   = document.getElementById('claim-role').value.trim();
+      const regno  = document.getElementById('claim-regno').value.trim();
+      if (!email || !role || !regno) {
+        showToast('Please fill in all required fields.', 'warning');
+        return;
+      }
+      closeModal('modal-claim');
+      showToast("Claim request submitted! We'll verify within 48 hours.", 'success');
+    }
+
+    // =========== BOOTSTRAP ===========
+    document.addEventListener('DOMContentLoaded', loadEntityPage);
+  </script>
+</body>
+</html>

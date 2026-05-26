@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Bhadaas — Speak Up India</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ---- Post Page Specific Styles ---- */
+    .post-page { padding: 2rem 0 3rem; }
+
+    .post-layout {
+      display: flex;
+      gap: 1.75rem;
+      align-items: flex-start;
+    }
+    .post-main { flex: 1; min-width: 0; }
+    .post-sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(var(--nav-height) + 1.5rem);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Page header */
+    .post-page-header {
+      margin-bottom: 1.75rem;
+    }
+    .post-page-header h1 {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .post-page-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+
+    /* ---- Steps Indicator ---- */
+    .steps {
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: calc(18px + 0.5rem);
+      right: calc(18px + 0.5rem);
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+    .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .step-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+    .step.active .step-num {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(255,107,53,0.18);
+    }
+    .step.active .step-label { color: var(--primary); }
+    .step.done .step-num {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+    .step.done .step-label { color: var(--success); }
+
+    /* ---- Step Cards ---- */
+    .step-card { display: none; }
+    .step-card.active { display: block; }
+
+    .step-card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .step-card-header .step-icon {
+      font-size: 1.5rem;
+    }
+    .step-card-header h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .step-card-header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .step-card-body { padding: 1.5rem; }
+    .step-card-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    /* ---- Form enhancements ---- */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .form-label .required { color: var(--danger); margin-left: 2px; }
+    .form-control {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--text);
+      background: #fff;
+      transition: var(--transition);
+      outline: none;
+    }
+    .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+    .form-control.error { border-color: var(--danger); }
+    textarea.form-control { resize: vertical; min-height: 140px; line-height: 1.6; }
+    .form-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; }
+    .form-error { font-size: 0.75rem; color: var(--danger); margin-top: 0.35rem; font-weight: 600; }
+
+    /* Char count */
+    .char-count {
+      text-align: right;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .char-count.warn { color: var(--warning); }
+    .char-count.over  { color: var(--danger); font-weight: 700; }
+
+    /* ---- Severity Slider ---- */
+    .severity-slider-wrap { margin-top: 0.5rem; }
+    .severity-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, #28C76F, #7BC67E, #FF9F43, #FF6B35, #EA5455);
+      outline: none;
+      cursor: pointer;
+    }
+    .severity-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2.5px solid var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+      transition: var(--transition);
+    }
+    .severity-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .severity-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2.5px solid var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    }
+    .severity-display {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .severity-dots {
+      display: flex;
+      gap: 4px;
+    }
+    .severity-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: var(--transition);
+    }
+    .severity-dot.filled { background: var(--current-sev-color, var(--primary)); }
+
+    /* ---- Entity Search ---- */
+    .entity-search-wrap { position: relative; }
+    .entity-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      z-index: 50;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .entity-dropdown.hidden { display: none; }
+    .entity-result-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid var(--border);
+    }
+    .entity-result-row:last-child { border-bottom: none; }
+    .entity-result-row:hover { background: var(--primary-light); }
+    .entity-result-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .entity-result-info { flex: 1; min-width: 0; }
+    .entity-result-name { font-size: 0.85rem; font-weight: 600; }
+    .entity-result-meta { font-size: 0.72rem; color: var(--text-muted); }
+    .entity-result-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--danger);
+      flex-shrink: 0;
+    }
+
+    /* Selected entity card */
+    .selected-entity-card {
+      display: none;
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1rem;
+      background: var(--primary-light);
+      margin-top: 0.75rem;
+    }
+    .selected-entity-card.visible { display: flex; align-items: center; gap: 0.875rem; }
+    .selected-entity-icon { font-size: 2rem; flex-shrink: 0; }
+    .selected-entity-info { flex: 1; min-width: 0; }
+    .selected-entity-name { font-size: 1rem; font-weight: 700; }
+    .selected-entity-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+    /* New entity collapse */
+    .new-entity-toggle {
+      font-size: 0.82rem;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+    .new-entity-toggle:hover { text-decoration: underline; }
+    .new-entity-form {
+      margin-top: 0.875rem;
+      background: #F8F9FC;
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      border: 1px solid var(--border);
+    }
+    .new-entity-form.hidden { display: none; }
+
+    /* ---- Tags / Chips Input ---- */
+    .tags-input-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      min-height: 42px;
+      padding: 0.375rem 0.625rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+      cursor: text;
+      transition: var(--transition);
+      align-items: center;
+    }
+    .tags-input-wrap:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+    .tags-input-wrap input {
+      border: none;
+      outline: none;
+      flex: 1;
+      min-width: 120px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      background: transparent;
+      color: var(--text);
+    }
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.55rem;
+      background: var(--primary-light);
+      border: 1px solid rgba(255,107,53,0.3);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .tag-chip-remove {
+      cursor: pointer;
+      opacity: 0.6;
+      line-height: 1;
+      font-size: 0.85rem;
+    }
+    .tag-chip-remove:hover { opacity: 1; }
+
+    /* ---- Amount input with prefix ---- */
+    .input-prefix-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-prefix {
+      position: absolute;
+      left: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .input-prefix-wrap .form-control { padding-left: 1.75rem; }
+
+    /* ---- File upload area ---- */
+    .file-upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: #FAFBFE;
+      position: relative;
+    }
+    .file-upload-area:hover,
+    .file-upload-area.drag-over {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .file-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .file-upload-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+    .file-upload-text { font-size: 0.82rem; color: var(--text-muted); }
+    .file-upload-text strong { color: var(--primary); }
+    .file-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .file-preview-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.625rem;
+      background: #EEF0F6;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .file-preview-chip button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--danger);
+      font-size: 0.85rem;
+      padding: 0;
+      line-height: 1;
+    }
+
+    /* ---- Preview card ---- */
+    .preview-post-card {
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .preview-severity-bar {
+      height: 5px;
+      background: var(--border);
+    }
+    .preview-severity-bar-fill {
+      height: 100%;
+      border-radius: 0;
+      transition: width 0.3s ease;
+    }
+    .sev-1 { background: #28C76F; width: 20%; }
+    .sev-2 { background: #7BC67E; width: 40%; }
+    .sev-3 { background: #FF9F43; width: 60%; }
+    .sev-4 { background: #FF6B35; width: 80%; }
+    .sev-5 { background: #EA5455; width: 100%; }
+    .preview-card-header { padding: 1rem 1.25rem 0.5rem; }
+    .preview-card-body { padding: 0.5rem 1.25rem 1rem; }
+    .preview-card-footer {
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .preview-title { font-size: 1rem; font-weight: 700; color: var(--text); margin: 0.5rem 0 0.375rem; }
+    .preview-excerpt { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+    .preview-label {
+      background: var(--primary-light);
+      border: 1px solid rgba(255,107,53,0.25);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .preview-label strong { display: block; font-size: 0.88rem; margin-bottom: 0.15rem; }
+
+    /* ---- Info panel cards (sidebar) ---- */
+    .info-list { padding: 0; }
+    .info-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.375rem 0;
+      font-size: 0.82rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .info-list li:last-child { border-bottom: none; }
+    .info-list li .info-icon { flex-shrink: 0; margin-top: 1px; }
+
+    .timeline-list { padding: 0; }
+    .timeline-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      position: relative;
+    }
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 32px;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      border: 2px solid rgba(255,107,53,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .timeline-text { font-size: 0.8rem; color: var(--text); padding-top: 3px; }
+
+    /* ---- Modals ---- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 1.5rem 1.5rem 0.875rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-body { padding: 1.5rem; }
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.75rem;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.875rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+      padding: 0.25rem;
+    }
+    .modal-close:hover { color: var(--text); }
+
+    /* Success modal specific */
+    .modal-success-emoji { font-size: 3.5rem; line-height: 1; margin-bottom: 0.75rem; }
+    .notify-list { padding: 0; margin: 0; }
+    .notify-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      padding: 0.3rem 0;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 900px) {
+      .post-sidebar { display: none; }
+    }
+    @media (max-width: 600px) {
+      .post-page { padding: 1rem 0 2rem; }
+      .steps::before { display: none; }
+      .step-label { font-size: 0.65rem; }
+      .step-card-body { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV (auto-injected by shared.js) -->
+  <div id="nav-placeholder" data-active="post"></div>
+
+  <!-- ===== MAIN PAGE ===== -->
+  <div class="post-page">
+    <div class="container">
+
+      <!-- Page header -->
+      <div class="post-page-header">
+        <h1>✊ Post a Bhadaas</h1>
+        <p>Your complaint is anonymous. Your voice is powerful. Let's hold them accountable.</p>
+      </div>
+
+      <div class="post-layout">
+
+        <!-- =============================
+             LEFT: MULTI-STEP FORM
+             ============================= -->
+        <div class="post-main">
+
+          <!-- Step Progress -->
+          <div class="steps" id="steps-indicator">
+            <div class="step active" data-step="1">
+              <div class="step-num">1</div>
+              <div class="step-label">Your Story</div>
+            </div>
+            <div class="step" data-step="2">
+              <div class="step-num">2</div>
+              <div class="step-label">Tag Entity</div>
+            </div>
+            <div class="step" data-step="3">
+              <div class="step-num">3</div>
+              <div class="step-label">Details</div>
+            </div>
+            <div class="step" data-step="4">
+              <div class="step-num">4</div>
+              <div class="step-label">Preview &amp; Post</div>
+            </div>
+          </div>
+
+          <!-- ---- STEP 1: Your Story ---- -->
+          <div class="card step-card active" id="step-card-1">
+            <div class="step-card-header">
+              <span class="step-icon">📝</span>
+              <div>
+                <h2>Your Story</h2>
+                <p>Tell us what happened. Be specific and factual.</p>
+              </div>
+            </div>
+            <div class="step-card-body">
+
+              <div class="form-group">
+                <label class="form-label" for="post-title">
+                  Title / Headline <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="post-title"
+                  class="form-control"
+                  placeholder="e.g., Airtel charged me for a plan I never subscribed to"
+                  maxlength="120"
+                  autocomplete="off"
+                >
+                <div class="form-error hidden" id="title-error">Title must be at least 5 characters.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="post-description">
+                  Your Experience <span class="required">*</span>
+                </label>
+                <textarea
+                  id="post-description"
+                  class="form-control"
+                  placeholder="Describe what happened in detail. When did it start? What is the impact? What steps have you taken?"
+                  maxlength="2000"
+                ></textarea>
+                <div class="char-count" id="desc-char-count">0 / 2000 chars</div>
+                <div class="form-error hidden" id="desc-error">Please describe your experience (minimum 50 characters).</div>
+              </div>
+
+            </div>
+            <div class="step-card-footer">
+              <span class="text-sm text-muted">Step 1 of 4</span>
+              <button class="btn btn-primary" id="step1-next" onclick="goToStep(2)">
+                Next: Tag the Entity &nbsp;→
+              </button>
+            </div>
+          </div>
+
+          <!-- ---- STEP 2: Tag Entity ---- -->
+          <div class="card step-card" id="step-card-2">
+            <div class="step-card-header">
+              <span class="step-icon">🏢</span>
+              <div>
+                <h2>Tag the Entity</h2>
+                <p>Which company, service, or government body let you down?</p>
+              </div>
+            </div>
+            <div class="step-card-body">
+
+              <!-- Search -->
+              <div class="form-group">
+                <label class="form-label" for="entity-search">Search Entity</label>
+                <div class="entity-search-wrap">
+                  <input
+                    type="text"
+                    id="entity-search"
+                    class="form-control"
+                    placeholder="Search for company, government office, website…"
+                    autocomplete="off"
+                    oninput="handleEntitySearch(this.value)"
+                    onfocus="handleEntitySearch(this.value)"
+                  >
+                  <div class="entity-dropdown hidden" id="entity-dropdown">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
+                <div class="form-hint">Start typing to search from our database of entities.</div>
+                <div class="form-error hidden" id="entity-error">Please select an entity before proceeding.</div>
+              </div>
+
+              <!-- Selected entity preview -->
+              <div class="selected-entity-card" id="selected-entity-card">
+                <div class="selected-entity-icon" id="sel-entity-icon">📦</div>
+                <div class="selected-entity-info">
+                  <div class="selected-entity-name" id="sel-entity-name">—</div>
+                  <div class="selected-entity-meta">
+                    <span id="sel-entity-cat"></span>
+                    <span id="sel-entity-claimed"></span>
+                    <span id="sel-entity-count"></span>
+                  </div>
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="clearEntitySelection()" style="flex-shrink:0;">Change</button>
+              </div>
+
+              <!-- Create new entity -->
+              <button class="new-entity-toggle" onclick="toggleNewEntityForm()" id="new-entity-toggle-btn">
+                <span id="new-entity-toggle-icon">▼</span> Don't find it? Create New Entity
+              </button>
+              <div class="new-entity-form hidden" id="new-entity-form">
+                <div class="form-group">
+                  <label class="form-label" for="new-entity-name">Entity Name</label>
+                  <input type="text" id="new-entity-name" class="form-control" placeholder="e.g., XYZ Telecom" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="new-entity-category">Category</label>
+                  <select id="new-entity-category" class="form-control">
+                    <option value="">Select category…</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0.75rem;">
+                  <label class="form-label" for="new-entity-website">Website (optional)</label>
+                  <input type="url" id="new-entity-website" class="form-control" placeholder="https://example.com">
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="addNewEntity()">+ Add Entity</button>
+              </div>
+
+            </div>
+            <div class="step-card-footer">
+              <button class="btn btn-outline" onclick="goToStep(1)">← Back</button>
+              <button class="btn btn-primary" onclick="goToStep(3)">
+                Next: Add Details &nbsp;→
+              </button>
+            </div>
+          </div>
+
+          <!-- ---- STEP 3: Details ---- -->
+          <div class="card step-card" id="step-card-3">
+            <div class="step-card-header">
+              <span class="step-icon">🔍</span>
+              <div>
+                <h2>Details</h2>
+                <p>More context makes your Bhadaas more credible and actionable.</p>
+              </div>
+            </div>
+            <div class="step-card-body">
+
+              <div class="form-group">
+                <label class="form-label" for="post-category">Category <span class="required">*</span></label>
+                <select id="post-category" class="form-control">
+                  <option value="">Select a category…</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Severity Level <span class="required">*</span></label>
+                <div class="severity-slider-wrap">
+                  <input
+                    type="range"
+                    class="severity-slider"
+                    id="severity-input"
+                    min="1"
+                    max="5"
+                    value="3"
+                    oninput="updateSeverityDisplay(this.value)"
+                  >
+                  <div class="severity-display">
+                    <div class="severity-dots" id="severity-dots">
+                      <div class="severity-dot" data-dot="1"></div>
+                      <div class="severity-dot" data-dot="2"></div>
+                      <div class="severity-dot" data-dot="3"></div>
+                      <div class="severity-dot" data-dot="4"></div>
+                      <div class="severity-dot" data-dot="5"></div>
+                    </div>
+                    <span id="severity-label-text" class="font-semibold">Significant</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tags / Keywords</label>
+                <div class="tags-input-wrap" id="tags-input-wrap" onclick="document.getElementById('tag-input').focus()">
+                  <input
+                    type="text"
+                    id="tag-input"
+                    placeholder="Type tag and press Enter or comma…"
+                    onkeydown="handleTagKeydown(event)"
+                  >
+                </div>
+                <div class="form-hint">Add relevant keywords. Press <strong>Enter</strong> or <strong>,</strong> to add each tag.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="incident-date">Date of Incident</label>
+                <input type="date" id="incident-date" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="amount-involved">Amount Involved (optional)</label>
+                <div class="input-prefix-wrap">
+                  <span class="input-prefix">₹</span>
+                  <input
+                    type="number"
+                    id="amount-involved"
+                    class="form-control"
+                    placeholder="0"
+                    min="0"
+                    step="1"
+                  >
+                </div>
+                <div class="form-hint">Enter the money amount at stake, if applicable.</div>
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Attach Evidence (optional)</label>
+                <div class="file-upload-area" id="file-upload-area">
+                  <input type="file" id="evidence-files" accept="image/*,.pdf" multiple onchange="handleFileSelect(this)">
+                  <div class="file-upload-icon">📎</div>
+                  <div class="file-upload-text">
+                    <strong>Click or drag</strong> to upload images / PDFs<br>
+                    <span style="font-size:0.72rem;">Max 5 files · 10MB each · JPG, PNG, PDF</span>
+                  </div>
+                </div>
+                <div class="file-previews" id="file-previews"></div>
+              </div>
+
+            </div>
+            <div class="step-card-footer">
+              <button class="btn btn-outline" onclick="goToStep(2)">← Back</button>
+              <button class="btn btn-primary" onclick="goToStep(4)">
+                Preview &nbsp;→
+              </button>
+            </div>
+          </div>
+
+          <!-- ---- STEP 4: Preview & Post ---- -->
+          <div class="card step-card" id="step-card-4">
+            <div class="step-card-header">
+              <span class="step-icon">👁️</span>
+              <div>
+                <h2>Preview &amp; Post</h2>
+                <p>This is how your Bhadaas will appear publicly.</p>
+              </div>
+            </div>
+            <div class="step-card-body">
+
+              <div class="preview-label">
+                <strong>👆 Preview — Read Only</strong>
+                Your identity is never shown. Only your trust score is visible.
+              </div>
+
+              <!-- Preview post card -->
+              <div class="preview-post-card" id="preview-post-card">
+                <div class="preview-severity-bar">
+                  <div class="preview-severity-bar-fill" id="preview-sev-bar"></div>
+                </div>
+                <div class="preview-card-header">
+                  <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;">
+                    <span class="entity-tag" id="preview-entity-tag">—</span>
+                    <span class="category-tag" id="preview-cat-tag">—</span>
+                    <span class="badge badge-danger">🔴 Open</span>
+                  </div>
+                  <div class="text-xs text-muted" style="margin-top:0.35rem;">Just now &nbsp;·&nbsp; Trust score: 85</div>
+                  <div class="preview-title" id="preview-title">Your headline will appear here</div>
+                  <div class="preview-excerpt" id="preview-excerpt">Your description will appear here…</div>
+                </div>
+                <div class="preview-card-body" id="preview-tags-row" style="padding-top:0;"></div>
+                <div class="preview-card-footer">
+                  <button class="btn btn-sm btn-outline" style="pointer-events:none;">✊ Me Too <span>0</span></button>
+                  <span class="text-sm text-muted">💬 0</span>
+                  <span class="text-sm font-semibold" style="margin-left:auto;" id="preview-sev-label"></span>
+                </div>
+              </div>
+
+            </div>
+            <div class="step-card-footer">
+              <button class="btn btn-outline" onclick="goToStep(3)">← Back</button>
+              <button class="btn btn-primary btn-lg" onclick="submitBhadaas()">
+                ✊ Post My Bhadaas
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- END left column -->
+
+        <!-- =============================
+             RIGHT: INFO PANEL (sticky)
+             ============================= -->
+        <div class="post-sidebar">
+
+          <!-- Card 1: Why Post Anonymously -->
+          <div class="card">
+            <div class="card-header" style="padding:0.875rem 1rem;">
+              <h5 style="font-size:0.875rem;">🔒 Why Post Anonymously?</h5>
+            </div>
+            <div class="card-body" style="padding:0.75rem 1rem;">
+              <ul class="info-list">
+                <li><span class="info-icon">✅</span> Your name is never shown publicly</li>
+                <li><span class="info-icon">✅</span> Only your trust score is visible</li>
+                <li><span class="info-icon">✅</span> Verified = more credible posts</li>
+                <li><span class="info-icon">✅</span> Companies take verified posts seriously</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Card 2: What Happens Next -->
+          <div class="card">
+            <div class="card-header" style="padding:0.875rem 1rem;">
+              <h5 style="font-size:0.875rem;">🚀 What Happens Next?</h5>
+            </div>
+            <div class="card-body" style="padding:0.75rem 1rem;">
+              <ul class="timeline-list">
+                <li class="timeline-item">
+                  <div class="timeline-num">1</div>
+                  <div class="timeline-text">📝 Post verified — goes live in &lt;5 min after moderation</div>
+                </li>
+                <li class="timeline-item">
+                  <div class="timeline-num">2</div>
+                  <div class="timeline-text">✊ Others can "Me Too" your experience</div>
+                </li>
+                <li class="timeline-item">
+                  <div class="timeline-num">3</div>
+                  <div class="timeline-text">🔔 Company gets notified (if claimed profile)</div>
+                </li>
+                <li class="timeline-item">
+                  <div class="timeline-num">4</div>
+                  <div class="timeline-text">💬 Company can officially respond (paid)</div>
+                </li>
+                <li class="timeline-item">
+                  <div class="timeline-num">5</div>
+                  <div class="timeline-text">✅ You confirm resolution</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Card 3: Tips -->
+          <div class="card">
+            <div class="card-header" style="padding:0.875rem 1rem;">
+              <h5 style="font-size:0.875rem;">💡 Tips for Effective Bhadaas</h5>
+            </div>
+            <div class="card-body" style="padding:0.75rem 1rem;">
+              <ul class="info-list">
+                <li><span class="info-icon">📅</span> Be specific with dates, amounts, order IDs</li>
+                <li><span class="info-icon">🔢</span> Include reference numbers when available</li>
+                <li><span class="info-icon">⚖️</span> Stay factual — no personal attacks</li>
+                <li><span class="info-icon">📸</span> Attach screenshots if possible</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <!-- END right sidebar -->
+
+      </div>
+      <!-- END post-layout -->
+
+    </div>
+  </div>
+
+  <!-- ===== SUCCESS MODAL ===== -->
+  <div class="modal-overlay" id="modal-success">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('modal-success')" aria-label="Close">&times;</button>
+      <div class="modal-header">
+        <div class="modal-success-emoji">✊</div>
+        <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:0.25rem;">Your Bhadaas is Live!</h3>
+        <p class="text-muted text-sm" style="margin:0;">It will appear after quick moderation (usually &lt;5 minutes).</p>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm font-semibold" style="margin-bottom:0.5rem;">You'll get notified when:</p>
+        <ul class="notify-list">
+          <li>✊ <span>Someone Me Too's your post</span></li>
+          <li>💬 <span>The company responds</span></li>
+          <li>✅ <span>Your issue gets resolved</span></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="feed.html" class="btn btn-primary" style="flex:1;text-align:center;">View My Post</a>
+        <button class="btn btn-outline" style="flex:1;" onclick="resetForm()">Post Another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="../js/shared.js"></script>
+  <script>
+    // ============================================================
+    //   POST PAGE — State & Initialization
+    // ============================================================
+
+    let currentStep = 1;
+    const TOTAL_STEPS = 4;
+
+    // Selected entity object
+    let selectedEntity = null;
+
+    // Tags array
+    let postTags = [];
+
+    // Attached files
+    let attachedFiles = [];
+
+    // ---- Populate dropdowns on load ----
+    document.addEventListener('DOMContentLoaded', function () {
+      // Category select (step 3)
+      const catSelect = document.getElementById('post-category');
+      CATEGORIES.forEach(function (c) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.icon + ' ' + c.label;
+        catSelect.appendChild(opt);
+      });
+
+      // New entity category select (step 2)
+      const newCatSelect = document.getElementById('new-entity-category');
+      CATEGORIES.forEach(function (c) {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.icon + ' ' + c.label;
+        newCatSelect.appendChild(opt);
+      });
+
+      // Set default date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('incident-date').value = today;
+      document.getElementById('incident-date').max = today;
+
+      // Initial severity display
+      updateSeverityDisplay(3);
+
+      // Character counter init
+      document.getElementById('post-description').addEventListener('input', updateCharCount);
+
+      // Drag-drop highlight
+      const uploadArea = document.getElementById('file-upload-area');
+      uploadArea.addEventListener('dragover', function (e) { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+      uploadArea.addEventListener('dragleave', function () { uploadArea.classList.remove('drag-over'); });
+      uploadArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        uploadArea.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) {
+          handleFileSelect({ files: e.dataTransfer.files });
+        }
+      });
+
+      // Close entity dropdown on outside click
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.entity-search-wrap')) {
+          document.getElementById('entity-dropdown').classList.add('hidden');
+        }
+      });
+    });
+
+    // ============================================================
+    //   STEP NAVIGATION
+    // ============================================================
+
+    function goToStep(target) {
+      if (target > currentStep) {
+        // Validate before advancing
+        if (!validateStep(currentStep)) return;
+      }
+
+      // Mark steps as done/active
+      const stepEls = document.querySelectorAll('#steps-indicator .step');
+      stepEls.forEach(function (el) {
+        const num = parseInt(el.dataset.step);
+        el.classList.remove('active', 'done');
+        if (num < target) el.classList.add('done');
+        else if (num === target) el.classList.add('active');
+      });
+
+      // Show correct card
+      document.querySelectorAll('.step-card').forEach(function (card) {
+        card.classList.remove('active');
+      });
+      const targetCard = document.getElementById('step-card-' + target);
+      if (targetCard) targetCard.classList.add('active');
+
+      currentStep = target;
+
+      // If navigating to step 4, populate preview
+      if (target === 4) populatePreview();
+
+      // Scroll to top of form
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ============================================================
+    //   VALIDATION
+    // ============================================================
+
+    function validateStep(step) {
+      if (step === 1) {
+        const title = document.getElementById('post-title').value.trim();
+        const desc  = document.getElementById('post-description').value.trim();
+        let valid = true;
+
+        const titleErr = document.getElementById('title-error');
+        const descErr  = document.getElementById('desc-error');
+        const titleInput = document.getElementById('post-title');
+        const descInput  = document.getElementById('post-description');
+
+        if (title.length < 5) {
+          titleErr.classList.remove('hidden');
+          titleInput.classList.add('error');
+          valid = false;
+        } else {
+          titleErr.classList.add('hidden');
+          titleInput.classList.remove('error');
+        }
+
+        if (desc.length < 50) {
+          descErr.classList.remove('hidden');
+          descInput.classList.add('error');
+          valid = false;
+        } else {
+          descErr.classList.add('hidden');
+          descInput.classList.remove('error');
+        }
+
+        if (!valid) {
+          showToast('Please fill in the required fields before continuing.', 'warning');
+        }
+        return valid;
+      }
+
+      if (step === 2) {
+        if (!selectedEntity) {
+          document.getElementById('entity-error').classList.remove('hidden');
+          showToast('Please select an entity before continuing.', 'warning');
+          return false;
+        }
+        document.getElementById('entity-error').classList.add('hidden');
+        return true;
+      }
+
+      return true;
+    }
+
+    // ============================================================
+    //   CHARACTER COUNT
+    // ============================================================
+
+    function updateCharCount() {
+      const textarea = document.getElementById('post-description');
+      const count = textarea.value.length;
+      const el = document.getElementById('desc-char-count');
+      el.textContent = count + ' / 2000 chars';
+      el.classList.remove('warn', 'over');
+      if (count > 1800) el.classList.add('warn');
+      if (count >= 2000) el.classList.add('over');
+    }
+
+    // ============================================================
+    //   ENTITY SEARCH
+    // ============================================================
+
+    function handleEntitySearch(query) {
+      const dropdown = document.getElementById('entity-dropdown');
+      const q = query.trim().toLowerCase();
+
+      let results = ENTITIES;
+      if (q.length > 0) {
+        results = ENTITIES.filter(function (e) {
+          return e.name.toLowerCase().includes(q) ||
+                 e.category.toLowerCase().includes(q);
+        });
+      }
+
+      if (results.length === 0) {
+        dropdown.innerHTML = '<div style="padding:0.875rem;text-align:center;font-size:0.82rem;color:var(--text-muted);">No results found. Try creating a new entity below.</div>';
+        dropdown.classList.remove('hidden');
+        return;
+      }
+
+      dropdown.innerHTML = results.map(function (e) {
+        const cat = getCategoryInfo(e.category);
+        return '<div class="entity-result-row" onclick="selectEntity(\'' + e.id + '\')">' +
+          '<div class="entity-result-icon">' + e.icon + '</div>' +
+          '<div class="entity-result-info">' +
+            '<div class="entity-result-name">' + e.name + '</div>' +
+            '<div class="entity-result-meta">' + cat.icon + ' ' + cat.label + (e.claimed ? ' &nbsp;·&nbsp; ✓ Claimed' : '') + '</div>' +
+          '</div>' +
+          '<div class="entity-result-count">' + formatNumber(e.bhadaasCount) + ' posts</div>' +
+        '</div>';
+      }).join('');
+
+      dropdown.classList.remove('hidden');
+    }
+
+    function selectEntity(entityId) {
+      selectedEntity = ENTITIES.find(function (e) { return e.id === entityId; });
+      if (!selectedEntity) return;
+
+      const cat = getCategoryInfo(selectedEntity.category);
+
+      // Fill selected card
+      document.getElementById('sel-entity-icon').textContent  = selectedEntity.icon;
+      document.getElementById('sel-entity-name').textContent  = selectedEntity.name;
+      document.getElementById('sel-entity-cat').textContent   = cat.icon + ' ' + cat.label;
+      document.getElementById('sel-entity-claimed').innerHTML = selectedEntity.claimed
+        ? '<span class="badge badge-claimed" style="font-size:0.7rem;">✓ Claimed</span>'
+        : '<span class="badge badge-secondary" style="font-size:0.7rem;">Unclaimed</span>';
+      document.getElementById('sel-entity-count').textContent = formatNumber(selectedEntity.bhadaasCount) + ' Bhadaas';
+
+      document.getElementById('selected-entity-card').classList.add('visible');
+      document.getElementById('entity-error').classList.add('hidden');
+
+      // Clear search
+      document.getElementById('entity-search').value = '';
+      document.getElementById('entity-dropdown').classList.add('hidden');
+
+      // Auto-select category in step 3 if it matches
+      const catSelect = document.getElementById('post-category');
+      if (selectedEntity.category) catSelect.value = selectedEntity.category;
+    }
+
+    function clearEntitySelection() {
+      selectedEntity = null;
+      document.getElementById('selected-entity-card').classList.remove('visible');
+      document.getElementById('entity-search').value = '';
+      document.getElementById('entity-search').focus();
+    }
+
+    // ---- New entity form ----
+    function toggleNewEntityForm() {
+      const form = document.getElementById('new-entity-form');
+      const icon = document.getElementById('new-entity-toggle-icon');
+      const hidden = form.classList.toggle('hidden');
+      icon.textContent = hidden ? '▼' : '▲';
+    }
+
+    function addNewEntity() {
+      const name    = document.getElementById('new-entity-name').value.trim();
+      const cat     = document.getElementById('new-entity-category').value;
+      const website = document.getElementById('new-entity-website').value.trim();
+
+      if (!name) { showToast('Please enter an entity name.', 'warning'); return; }
+      if (!cat)  { showToast('Please select a category.', 'warning'); return; }
+
+      const catInfo = getCategoryInfo(cat);
+      const newId   = 'custom-' + Date.now();
+      const newEnt  = { id: newId, name: name, category: cat, icon: catInfo.icon, claimed: false, bhadaasCount: 0 };
+
+      ENTITIES.push(newEnt);
+      selectEntity(newId);
+      document.getElementById('new-entity-form').classList.add('hidden');
+      document.getElementById('new-entity-toggle-icon').textContent = '▼';
+      document.getElementById('new-entity-name').value = '';
+      document.getElementById('new-entity-category').value = '';
+      document.getElementById('new-entity-website').value = '';
+
+      showToast('New entity "' + name + '" added!', 'success');
+    }
+
+    // ============================================================
+    //   SEVERITY SLIDER
+    // ============================================================
+
+    function updateSeverityDisplay(val) {
+      val = parseInt(val);
+      const label  = getSeverityLabel(val);
+      const color  = getSeverityColor(val);
+      const labelEl = document.getElementById('severity-label-text');
+      labelEl.textContent = label;
+      labelEl.style.color = color;
+
+      document.querySelectorAll('#severity-dots .severity-dot').forEach(function (dot) {
+        const dotNum = parseInt(dot.dataset.dot);
+        dot.classList.toggle('filled', dotNum <= val);
+        dot.style.setProperty('--current-sev-color', color);
+        if (dotNum <= val) dot.style.background = color;
+        else dot.style.background = '';
+      });
+    }
+
+    // ============================================================
+    //   TAGS / CHIPS
+    // ============================================================
+
+    function handleTagKeydown(e) {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const input = document.getElementById('tag-input');
+        const value = input.value.replace(',', '').trim().toLowerCase();
+        if (value && !postTags.includes(value) && postTags.length < 10) {
+          postTags.push(value);
+          renderTags();
+        } else if (postTags.includes(value)) {
+          showToast('Tag already added.', 'info');
+        }
+        input.value = '';
+      }
+    }
+
+    function renderTags() {
+      const wrap = document.getElementById('tags-input-wrap');
+      // Remove existing chips
+      wrap.querySelectorAll('.tag-chip').forEach(function (c) { c.remove(); });
+      const input = document.getElementById('tag-input');
+      postTags.forEach(function (tag) {
+        const chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.innerHTML = tag + '<span class="tag-chip-remove" onclick="removeTag(\'' + tag + '\')">&times;</span>';
+        wrap.insertBefore(chip, input);
+      });
+    }
+
+    function removeTag(tag) {
+      postTags = postTags.filter(function (t) { return t !== tag; });
+      renderTags();
+    }
+
+    // ============================================================
+    //   FILE UPLOAD
+    // ============================================================
+
+    function handleFileSelect(input) {
+      const files = Array.from(input.files || []);
+      files.forEach(function (file) {
+        if (attachedFiles.length >= 5) { showToast('Max 5 files allowed.', 'warning'); return; }
+        if (file.size > 10 * 1024 * 1024) { showToast(file.name + ' is too large (max 10MB).', 'danger'); return; }
+        attachedFiles.push(file);
+      });
+      renderFilePreviews();
+      // Reset input so same file can be re-selected
+      document.getElementById('evidence-files').value = '';
+    }
+
+    function renderFilePreviews() {
+      const container = document.getElementById('file-previews');
+      container.innerHTML = attachedFiles.map(function (f, i) {
+        return '<div class="file-preview-chip">' +
+          (f.type.startsWith('image/') ? '🖼️' : '📄') + ' ' + f.name +
+          '<button onclick="removeFile(' + i + ')" title="Remove">&times;</button>' +
+        '</div>';
+      }).join('');
+    }
+
+    function removeFile(index) {
+      attachedFiles.splice(index, 1);
+      renderFilePreviews();
+    }
+
+    // ============================================================
+    //   PREVIEW POPULATION
+    // ============================================================
+
+    function populatePreview() {
+      const title    = document.getElementById('post-title').value.trim();
+      const desc     = document.getElementById('post-description').value.trim();
+      const severity = parseInt(document.getElementById('severity-input').value);
+      const catId    = document.getElementById('post-category').value;
+      const cat      = getCategoryInfo(catId);
+
+      // Title
+      document.getElementById('preview-title').textContent = title || 'Your headline will appear here';
+
+      // Excerpt (first 200 chars)
+      document.getElementById('preview-excerpt').textContent = desc
+        ? (desc.length > 200 ? desc.slice(0, 200) + '…' : desc)
+        : 'Your description will appear here…';
+
+      // Entity tag
+      if (selectedEntity) {
+        document.getElementById('preview-entity-tag').textContent = selectedEntity.icon + ' ' + selectedEntity.name;
+      } else {
+        document.getElementById('preview-entity-tag').textContent = '🏢 Entity';
+      }
+
+      // Category tag
+      document.getElementById('preview-cat-tag').textContent = catId ? (cat.icon + ' ' + cat.label) : '📌 Category';
+
+      // Severity bar
+      const sevBar = document.getElementById('preview-sev-bar');
+      sevBar.className = 'preview-severity-bar-fill sev-' + severity;
+
+      // Severity label
+      const sevLabel = document.getElementById('preview-sev-label');
+      sevLabel.textContent = getSeverityLabel(severity);
+      sevLabel.style.color = getSeverityColor(severity);
+
+      // Tags row
+      const tagsRow = document.getElementById('preview-tags-row');
+      if (postTags.length > 0) {
+        tagsRow.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:0.3rem;padding-bottom:0.5rem;">' +
+          postTags.map(function (t) { return '<span class="chip" style="padding:0.2rem 0.6rem;font-size:0.72rem;border-color:var(--border);">#' + t + '</span>'; }).join('') +
+        '</div>';
+      } else {
+        tagsRow.innerHTML = '';
+      }
+    }
+
+    // ============================================================
+    //   SUBMIT
+    // ============================================================
+
+    function submitBhadaas() {
+      openModal('modal-success');
+    }
+
+    // ============================================================
+    //   RESET FORM
+    // ============================================================
+
+    function resetForm() {
+      closeModal('modal-success');
+
+      // Reset state
+      selectedEntity = null;
+      postTags = [];
+      attachedFiles = [];
+
+      // Clear inputs
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-description').value = '';
+      document.getElementById('entity-search').value = '';
+      document.getElementById('post-category').value = '';
+      document.getElementById('severity-input').value = '3';
+      document.getElementById('incident-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('amount-involved').value = '';
+      document.getElementById('tag-input').value = '';
+
+      // Reset UI
+      document.getElementById('desc-char-count').textContent = '0 / 2000 chars';
+      document.getElementById('selected-entity-card').classList.remove('visible');
+      document.getElementById('entity-error').classList.add('hidden');
+      document.getElementById('title-error').classList.add('hidden');
+      document.getElementById('desc-error').classList.add('hidden');
+      document.getElementById('post-title').classList.remove('error');
+      document.getElementById('post-description').classList.remove('error');
+
+      renderTags();
+      renderFilePreviews();
+      updateSeverityDisplay(3);
+
+      // Close new entity form if open
+      document.getElementById('new-entity-form').classList.add('hidden');
+      document.getElementById('new-entity-toggle-icon').textContent = '▼';
+
+      // Go back to step 1
+      goToStep(1);
+    }
+  </script>
+</body>
+</html>

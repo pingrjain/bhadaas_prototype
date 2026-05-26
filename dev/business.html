@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Model & Features — Bhadaas Dev Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ── Hero ─────────────────────────────────────────────────────── */
+    .biz-hero {
+      background: linear-gradient(135deg, #0D1F12 0%, #1A1A2E 60%);
+      color: #fff;
+      padding: 3.5rem 0 2.5rem;
+    }
+    .biz-hero .breadcrumb {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .biz-hero .breadcrumb a { color: rgba(255,107,53,0.8); }
+    .biz-hero .breadcrumb a:hover { color: var(--primary); }
+    .biz-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .biz-hero p.subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 720px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .hero-stat-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.02em;
+    }
+    .hero-badge.badge-success { border-color: rgba(40,199,111,0.5); color: #7EFBB3; }
+    .hero-badge.badge-warn { border-color: rgba(255,159,67,0.5); color: #FFCF80; }
+    .hero-badge.badge-accent { border-color: rgba(74,144,217,0.5); color: #9CC8FF; }
+    .hero-badge.badge-primary { border-color: rgba(255,107,53,0.5); color: #FFB38A; }
+
+    /* ── Layout ───────────────────────────────────────────────────── */
+    .biz-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 2.5rem 0 4rem;
+    }
+    .biz-main { flex: 1; min-width: 0; }
+
+    /* ── TOC Sidebar ──────────────────────────────────────────────── */
+    .toc-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .toc-sidebar h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .toc-sidebar a {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-sidebar a:hover { color: var(--primary); border-left-color: var(--primary); }
+    .toc-sidebar a.active { color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+
+    /* ── Sections ─────────────────────────────────────────────────── */
+    .biz-section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .biz-section.visible { opacity: 1; transform: translateY(0); }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-number {
+      width: 32px; height: 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.5rem; font-weight: 800; margin: 0; }
+    .section-subtitle { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+    /* ── Alert Boxes ──────────────────────────────────────────────── */
+    .alert {
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid transparent;
+      line-height: 1.6;
+    }
+    .alert-success {
+      background: var(--success-light);
+      border-color: rgba(40,199,111,0.3);
+      color: #1a7a46;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .alert-info {
+      background: #EFF6FF;
+      border-color: rgba(74,144,217,0.3);
+      color: #1e4f8a;
+    }
+
+    /* ── Revenue Cards ────────────────────────────────────────────── */
+    .revenue-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .revenue-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 32px rgba(255,107,53,0.1);
+      transform: translateY(-4px);
+    }
+    .revenue-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .revenue-card .rev-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.85rem; line-height: 1.5; }
+    .rev-badge {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .rev-badge.primary { background: var(--primary-light); color: var(--primary); }
+    .rev-badge.green { background: var(--success-light); color: var(--success); }
+    .rev-badge.blue { background: #EBF5FF; color: #1A6CBD; }
+    .rev-badge.purple { background: #F0EBFF; color: #7C4DFF; }
+    .rev-badge.orange { background: var(--warning-light); color: var(--warning); }
+    .rev-detail-list { list-style: none; padding: 0; margin: 0; }
+    .rev-detail-list li {
+      font-size: 0.83rem;
+      color: var(--text);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+    }
+    .rev-detail-list li:last-child { border-bottom: none; }
+    .rev-detail-list li::before { content: '›'; color: var(--primary); font-weight: 800; flex-shrink: 0; }
+
+    /* ── Plan Cards ───────────────────────────────────────────────── */
+    .plan-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .plan-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .plan-card.featured {
+      border-color: var(--primary);
+      background: linear-gradient(180deg, #FFF8F5, #fff);
+    }
+    .plan-popular-badge {
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .plan-name { font-size: 1.25rem; font-weight: 900; margin-bottom: 0.2rem; }
+    .plan-price { font-size: 2rem; font-weight: 900; color: var(--primary); line-height: 1; }
+    .plan-price-period { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+    .plan-who { font-size: 0.8rem; color: var(--text-muted); margin: 0.75rem 0 1rem; padding: 0.5rem 0.75rem; background: var(--bg); border-radius: 8px; }
+    .plan-features { list-style: none; padding: 0; margin: 0; }
+    .plan-features li {
+      font-size: 0.85rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0.6rem;
+      line-height: 1.45;
+    }
+    .plan-features li:last-child { border-bottom: none; }
+    .plan-features li .fi { flex-shrink: 0; font-size: 0.9rem; margin-top: 1px; }
+    .fi-yes { color: var(--success); }
+    .fi-no { color: var(--text-muted); opacity: 0.6; }
+    .plan-divider {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.75rem 0 0.25rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Year / Revenue Projection Cards ─────────────────────────── */
+    .year-card {
+      border-radius: 14px;
+      padding: 2rem;
+      border: 2px solid var(--border);
+      background: #fff;
+      position: relative;
+      cursor: default;
+    }
+    .year-card.featured {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, #fff, #FFF8F5);
+    }
+    .year-card .year-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--secondary);
+      color: rgba(255,255,255,0.85);
+      font-size: 0.72rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .year-card:hover .year-tooltip { display: block; }
+    .year-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .year-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+    .year-revenue { font-size: 2rem; font-weight: 900; color: var(--primary); line-height: 1; }
+    .year-revenue-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .year-metric {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .year-metric:last-of-type { border-bottom: none; }
+    .year-metric .ym-label { color: var(--text-muted); }
+    .year-metric .ym-val { font-weight: 700; color: var(--text); }
+    .year-milestones { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .year-milestones h5 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .year-milestones li { font-size: 0.8rem; color: var(--text-muted); padding: 0.2rem 0; display: flex; gap: 0.4rem; }
+    .year-milestones li::before { content: '◆'; color: var(--primary); font-size: 0.5rem; margin-top: 4px; flex-shrink: 0; }
+
+    /* ── Unit Economics Table ─────────────────────────────────────── */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      background: #fff;
+    }
+    thead th {
+      background: var(--bg);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #FAFBFF; }
+
+    /* ── Feature Tabs ─────────────────────────────────────────────── */
+    .tabs-nav {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--primary); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .feature-table-section { margin-bottom: 1.25rem; }
+    .feature-category-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .feature-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      background: #fff;
+      line-height: 1.45;
+    }
+    .feature-row:last-child { border-bottom: none; }
+    .feature-check { color: var(--success); font-weight: 800; flex-shrink: 0; }
+    .feature-cross { color: var(--text-muted); flex-shrink: 0; opacity: 0.5; }
+    .feature-pro-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 1px 7px;
+      border-radius: 10px;
+      margin-left: 0.25rem;
+    }
+    .trust-tier-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .tier-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .tier-bronze { background: #F5E8D8; color: #8B5E3C; }
+    .tier-silver { background: #E8EAED; color: #5F6368; }
+    .tier-gold { background: #FFF8E1; color: #B8860B; }
+    .tier-platinum { background: #E8F5FD; color: #1565C0; }
+
+    /* ── Company Feature Comparison Table ────────────────────────── */
+    .compare-table th { background: #F8F9FC; }
+    .compare-table .col-bhadaas { background: rgba(255,107,53,0.04); font-weight: 700; }
+    .compare-table .col-basic { background: rgba(255,255,255,1); }
+    .compare-table .col-pro { background: rgba(40,199,111,0.03); }
+    .compare-table .col-enterprise { background: rgba(74,144,217,0.03); }
+    .compare-table thead th.col-basic { background: #F8F9FC; }
+    .compare-table thead th.col-pro { background: rgba(40,199,111,0.08); color: #0D8A46; }
+    .compare-table thead th.col-enterprise { background: rgba(74,144,217,0.08); color: #1A6CBD; }
+    .feat-yes { color: var(--success); font-weight: 800; }
+    .feat-no { color: var(--text-muted); opacity: 0.55; }
+    .feat-partial { color: var(--warning); font-weight: 700; }
+
+    /* ── Admin Feature Cards ──────────────────────────────────────── */
+    .admin-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border-left: 4px solid var(--primary);
+    }
+    .admin-card.green { border-left-color: var(--success); }
+    .admin-card.blue { border-left-color: var(--accent); }
+    .admin-card.warning { border-left-color: var(--warning); }
+    .admin-card.danger { border-left-color: var(--danger); }
+    .admin-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .admin-feature-list { list-style: none; padding: 0; margin: 0; }
+    .admin-feature-list li {
+      font-size: 0.85rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .admin-feature-list li:last-child { border-bottom: none; }
+    .admin-feature-list li::before { content: '◎'; color: var(--primary); font-size: 0.65rem; margin-top: 3px; flex-shrink: 0; }
+
+    /* ── Competitive Comparison Table ────────────────────────────── */
+    .comp-table thead th.col-bhadaas-h {
+      background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,107,53,0.06));
+      color: var(--primary);
+      font-weight: 900;
+    }
+    .comp-table tbody td.col-bhadaas-v { background: rgba(255,107,53,0.04); font-weight: 700; }
+    .comp-table thead th { font-size: 0.75rem; }
+    .comp-table tbody td { font-size: 0.83rem; }
+
+    /* ── Phase Cards ──────────────────────────────────────────────── */
+    .phase-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+    }
+    .phase-card.p1 { border-top: 4px solid var(--primary); }
+    .phase-card.p2 { border-top: 4px solid var(--success); }
+    .phase-card.p3 { border-top: 4px solid var(--accent); }
+    .phase-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+    .phase-tag.p1 { background: var(--primary-light); color: var(--primary); }
+    .phase-tag.p2 { background: var(--success-light); color: var(--success); }
+    .phase-tag.p3 { background: #EBF5FF; color: #1A6CBD; }
+    .phase-timeline {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .phase-card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; }
+    .phase-detail-list { list-style: none; padding: 0; margin: 0; }
+    .phase-detail-list li {
+      font-size: 0.85rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0.6rem;
+      line-height: 1.45;
+    }
+    .phase-detail-list li:last-child { border-bottom: none; }
+    .phase-detail-list li .pdi { flex-shrink: 0; font-weight: 700; min-width: 90px; color: var(--text-muted); font-size: 0.78rem; }
+    .phase-revenue-target {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 0.875rem;
+    }
+    .phase-revenue-target strong { color: var(--primary); }
+
+    /* ── Page Footer ──────────────────────────────────────────────── */
+    .page-footer {
+      background: var(--secondary);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      margin-top: 3rem;
+    }
+    .page-footer a { color: var(--primary); }
+
+    /* ── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .toc-sidebar { display: none; }
+    }
+    @media (max-width: 700px) {
+      .biz-hero h1 { font-size: 1.9rem; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-name">भड़ास</span>
+      <span class="brand-tagline">Speak Up India</span>
+    </a>
+    <div class="nav-links">
+      <a href="../pages/feed.html">Browse</a>
+      <a href="../pages/post.html">Post Bhadaas</a>
+      <a href="../pages/company-dashboard.html">For Companies</a>
+      <a href="../pages/admin-dashboard.html">Admin</a>
+      <a href="index.html" style="color:rgba(255,180,80,0.85);">Dev Details</a>
+    </div>
+    <div class="nav-actions">
+      <a href="index.html" class="btn btn-outline btn-sm" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.2);">← Dev Hub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════════════ -->
+<section class="biz-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Dev Details</a> &nbsp;/&nbsp; Business Model &amp; Features
+    </div>
+    <h1>💼 Business Model &amp; Feature Design</h1>
+    <p class="subtitle">
+      Revenue streams, pricing strategy, feature matrix, competitive advantage, and growth roadmap.
+    </p>
+    <div class="hero-stat-badges">
+      <span class="hero-badge badge-primary">💰 6 Revenue Streams</span>
+      <span class="hero-badge badge-warn">📈 ₹6 Cr ARR by Year 3</span>
+      <span class="hero-badge badge-accent">👥 3 User Types</span>
+      <span class="hero-badge badge-success">🚫 Zero Ads Required</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MAIN LAYOUT
+═══════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <div class="biz-layout">
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+    <main class="biz-main">
+
+      <!-- §1 — Revenue Model -->
+      <section class="biz-section" id="s1">
+        <div class="section-header">
+          <div class="section-number">1</div>
+          <h2>Revenue Model Overview</h2>
+        </div>
+
+        <div style="margin-bottom:0.35rem;">
+          <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:1rem;color:var(--secondary);">Why This Business Makes Money</h3>
+        </div>
+
+        <div class="alert alert-success">
+          💡 Key Insight: Bhadaas makes money from companies (B2B), NOT from users. Users are always free.
+          This ensures maximum user growth while companies pay for access to that audience.
+        </div>
+
+        <div class="grid grid-3 gap-3" style="margin-top:1.5rem;">
+
+          <!-- Card 1 -->
+          <div class="revenue-card">
+            <span class="rev-badge primary">PRIMARY · Est. 60% of revenue</span>
+            <div style="font-size:1.75rem;margin-bottom:0.5rem;">🏢</div>
+            <h3>Company Subscriptions</h3>
+            <p class="rev-desc">Companies pay monthly for visibility, analytics, and response capability.</p>
+            <ul class="rev-detail-list">
+              <li>Basic ₹9,999/month</li>
+              <li>Professional ₹29,999/month</li>
+              <li>Enterprise ₹99,999+/month</li>
+              <li>Trigger: Company has &gt;20 Bhadaas posts</li>
+            </ul>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="revenue-card">
+            <span class="rev-badge orange">TRANSACTIONAL · Est. 15% of revenue</span>
+            <div style="font-size:1.75rem;margin-bottom:0.5rem;">💬</div>
+            <h3>Pay-Per-Response</h3>
+            <p class="rev-desc">Basic plan companies pay ₹1,999 per official response to a Bhadaas post.</p>
+            <ul class="rev-detail-list">
+              <li>₹1,999 per official response (Basic plan)</li>
+              <li>Delivered to OP + ALL Me Too users</li>
+              <li>Higher plans include unlimited responses</li>
+              <li>Psychology: silence = guilt perception</li>
+            </ul>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="revenue-card">
+            <span class="rev-badge blue">PREMIUM · Est. 10% of revenue</span>
+            <div style="font-size:1.75rem;margin-bottom:0.5rem;">📊</div>
+            <h3>Data &amp; Analytics Reports</h3>
+            <p class="rev-desc">Detailed intelligence reports for companies, analysts, media, and government.</p>
+            <ul class="rev-detail-list">
+              <li>One-time entity report: ₹4,999</li>
+              <li>Crisis alert package: ₹14,999/month</li>
+              <li>API access: ₹50K–₹5L/year</li>
+              <li>Buyers: research firms, analysts, media, govt</li>
+            </ul>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="revenue-card">
+            <span class="rev-badge green">INNOVATIVE · Est. 8% of revenue</span>
+            <div style="font-size:1.75rem;margin-bottom:0.5rem;">✅</div>
+            <h3>Resolution Marketplace</h3>
+            <p class="rev-desc">Companies pay per verified resolution — incentivising actual problem-solving.</p>
+            <ul class="rev-detail-list">
+              <li>₹499–₹2,999 per verified resolution</li>
+              <li>Resolution badge visible publicly</li>
+              <li>User confirms resolution (prevents gaming)</li>
+              <li>Reputation benefit drives adoption</li>
+            </ul>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="revenue-card">
+            <span class="rev-badge orange">SUPPLEMENTAL · Est. 5% of revenue</span>
+            <div style="font-size:1.75rem;margin-bottom:0.5rem;">👑</div>
+            <h3>Premium User Features</h3>
+            <p class="rev-desc">Optional Bhadaas Pro for power users — keeps 95% of features free.</p>
+            <ul class="rev-detail-list">
+              <li>Bhadaas Pro: ₹199/month</li>
+              <li>Priority posting, direct escalation</li>
+              <li>Detailed post tracking &amp; analytics</li>
+              <li>Upsell: "Upgrade to priority position"</li>
+            </ul>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="revenue-card">
+            <span class="rev-badge purple">SCALABLE · Est. 12% of revenue</span>
+            <div style="font-size:1.75rem;margin-bottom:0.5rem;">🗃️</div>
+            <h3>Aggregated Data Licensing</h3>
+            <p class="rev-desc">Anonymized consumer sentiment data as a sellable economic indicator.</p>
+            <ul class="rev-detail-list">
+              <li>Pricing: ₹50K–₹5L/year per license</li>
+              <li>Buyers: investment firms, market research</li>
+              <li>RBI data teams, media &amp; think-tanks</li>
+              <li>Consumer sentiment as economic signal</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- §2 — B2B Subscription Plans -->
+      <section class="biz-section" id="s2">
+        <div class="section-header">
+          <div class="section-number">2</div>
+          <h2>B2B Subscription Plans</h2>
+        </div>
+        <p class="section-subtitle">Detailed breakdown of company subscription tiers and feature entitlements.</p>
+
+        <div class="grid grid-3 gap-3" style="margin-top:1rem;">
+
+          <!-- Basic -->
+          <div class="plan-card">
+            <div class="plan-name">Basic</div>
+            <div style="display:flex;align-items:baseline;gap:0.3rem;margin-top:0.25rem;">
+              <span class="plan-price">₹9,999</span>
+              <span class="plan-price-period">/month</span>
+            </div>
+            <div class="plan-who">Best for companies with 20–200 posts/month</div>
+            <ul class="plan-features">
+              <li><span class="fi fi-yes">✅</span> Claim company profile (verified badge)</li>
+              <li><span class="fi fi-yes">✅</span> Aggregated sentiment score</li>
+              <li><span class="fi fi-yes">✅</span> Category-wise complaint breakdown</li>
+              <li><span class="fi fi-yes">✅</span> 5 official responses/month<br><small style="color:var(--text-muted);">₹1,999 each additional</small></li>
+              <li><span class="fi fi-yes">✅</span> Weekly email summary</li>
+              <li><span class="fi fi-yes">✅</span> Basic analytics dashboard</li>
+              <div class="plan-divider">Not Included</div>
+              <li><span class="fi fi-no">✗</span> Geographic distribution</li>
+              <li><span class="fi fi-no">✗</span> API access</li>
+              <li><span class="fi fi-no">✗</span> Bulk response</li>
+              <li><span class="fi fi-no">✗</span> Competitor benchmarking</li>
+            </ul>
+          </div>
+
+          <!-- Professional -->
+          <div class="plan-card featured">
+            <div class="plan-popular-badge">⭐ MOST POPULAR</div>
+            <div class="plan-name">Professional</div>
+            <div style="display:flex;align-items:baseline;gap:0.3rem;margin-top:0.25rem;">
+              <span class="plan-price">₹29,999</span>
+              <span class="plan-price-period">/month</span>
+            </div>
+            <div class="plan-who">Mid-size to large companies, 200–2000 posts/month</div>
+            <ul class="plan-features">
+              <li><span class="fi fi-yes">✅</span> Everything in Basic</li>
+              <li><span class="fi fi-yes">✅</span> <strong>Unlimited</strong> official responses</li>
+              <li><span class="fi fi-yes">✅</span> Advanced analytics (demographics, trends, geography)</li>
+              <li><span class="fi fi-yes">✅</span> Priority support (24h SLA)</li>
+              <li><span class="fi fi-yes">✅</span> Bulk response to related posts</li>
+              <li><span class="fi fi-yes">✅</span> Real-time alerts (email + SMS)</li>
+              <li><span class="fi fi-yes">✅</span> Resolution badge on resolved posts</li>
+              <li><span class="fi fi-yes">✅</span> Monthly detailed PDF report</li>
+              <li><span class="fi fi-yes">✅</span> API access (1,000 calls/month)</li>
+              <div class="plan-divider">Not Included</div>
+              <li><span class="fi fi-no">✗</span> Custom integrations</li>
+              <li><span class="fi fi-no">✗</span> Dedicated account manager</li>
+            </ul>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="plan-card" style="border-color:var(--accent);">
+            <div class="plan-name" style="color:var(--accent);">Enterprise</div>
+            <div style="display:flex;align-items:baseline;gap:0.3rem;margin-top:0.25rem;">
+              <span class="plan-price" style="color:var(--accent);">₹99,999+</span>
+              <span class="plan-price-period">/month · Custom Pricing</span>
+            </div>
+            <div class="plan-who">Large enterprises with 2,000+ posts/month</div>
+            <ul class="plan-features">
+              <li><span class="fi fi-yes">✅</span> Everything in Professional</li>
+              <li><span class="fi fi-yes">✅</span> Full API access (unlimited)</li>
+              <li><span class="fi fi-yes">✅</span> Bulk data export (CSV/JSON)</li>
+              <li><span class="fi fi-yes">✅</span> Competitor benchmarking</li>
+              <li><span class="fi fi-yes">✅</span> Custom integrations (Salesforce, Zendesk…)</li>
+              <li><span class="fi fi-yes">✅</span> Dedicated account manager</li>
+              <li><span class="fi fi-yes">✅</span> SLA guarantee (2h response)</li>
+              <li><span class="fi fi-yes">✅</span> White-label reports</li>
+              <li><span class="fi fi-yes">✅</span> Historical data access (2+ years)</li>
+              <li><span class="fi fi-yes">✅</span> Quarterly strategic review</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- §3 — Revenue Projections -->
+      <section class="biz-section" id="s3">
+        <div class="section-header">
+          <div class="section-number">3</div>
+          <h2>Revenue Projections</h2>
+        </div>
+        <p class="section-subtitle">Conservative estimates based on comparable Indian SaaS &amp; platform businesses.</p>
+
+        <div class="grid grid-3 gap-3" style="margin-top:1rem;">
+
+          <!-- Year 1 -->
+          <div class="year-card">
+            <div class="year-tooltip">Estimated based on comparable platforms</div>
+            <div class="year-num">Year 1</div>
+            <span class="year-tag" style="background:var(--primary-light);color:var(--primary);">Seed Phase</span>
+            <div class="year-revenue">₹8–12L</div>
+            <div class="year-revenue-label">per month &nbsp;·&nbsp; ₹1–1.5 Cr annually</div>
+            <div class="year-metric"><span class="ym-label">Users</span><span class="ym-val">50,000</span></div>
+            <div class="year-metric"><span class="ym-label">Paying Companies</span><span class="ym-val">50</span></div>
+            <div class="year-metric"><span class="ym-label">Subscriptions</span><span class="ym-val">₹6.5L/mo</span></div>
+            <div class="year-metric"><span class="ym-label">Pay-per-response</span><span class="ym-val">₹80K/mo</span></div>
+            <div class="year-metric"><span class="ym-label">Data reports</span><span class="ym-val">₹40K/mo</span></div>
+            <div class="year-milestones">
+              <h5>Key Milestones</h5>
+              <ul style="list-style:none;padding:0;margin:0;">
+                <li class="year-milestones li">◆ MVP launch</li>
+                <li class="year-milestones li">◆ Delhi pilot</li>
+                <li class="year-milestones li">◆ 50 company sign-ups</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Year 2 — featured -->
+          <div class="year-card featured">
+            <div class="year-tooltip">Estimated based on comparable platforms</div>
+            <div class="year-num">Year 2</div>
+            <span class="year-tag" style="background:var(--primary);color:#fff;">⚡ Inflection Point</span>
+            <div class="year-revenue">₹1.2–1.5Cr</div>
+            <div class="year-revenue-label">per month &nbsp;·&nbsp; ₹14–18 Cr annually</div>
+            <div class="year-metric"><span class="ym-label">Users</span><span class="ym-val">5,00,000</span></div>
+            <div class="year-metric"><span class="ym-label">Paying Companies</span><span class="ym-val">500</span></div>
+            <div class="year-metric"><span class="ym-label">Subscriptions</span><span class="ym-val">₹80L/mo</span></div>
+            <div class="year-metric"><span class="ym-label">Pay-per-response</span><span class="ym-val">₹12L/mo</span></div>
+            <div class="year-metric"><span class="ym-label">Data licensing</span><span class="ym-val">₹25L/mo</span></div>
+            <div class="year-milestones">
+              <h5>Key Milestones</h5>
+              <ul style="list-style:none;padding:0;margin:0;">
+                <li class="year-milestones li">◆ Pan-India expansion</li>
+                <li class="year-milestones li">◆ Mobile apps launch</li>
+                <li class="year-milestones li">◆ SSMI registration</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Year 3 -->
+          <div class="year-card" style="border-color:var(--success);">
+            <div class="year-tooltip">Estimated based on comparable platforms</div>
+            <div class="year-num">Year 3</div>
+            <span class="year-tag" style="background:var(--success-light);color:var(--success);">Monetize &amp; Scale</span>
+            <div class="year-revenue" style="color:var(--success);">₹5–6Cr</div>
+            <div class="year-revenue-label">per month &nbsp;·&nbsp; ₹60–72 Cr annually</div>
+            <div class="year-metric"><span class="ym-label">Users</span><span class="ym-val">25,00,000</span></div>
+            <div class="year-metric"><span class="ym-label">Paying Companies</span><span class="ym-val">2,000</span></div>
+            <div class="year-metric"><span class="ym-label">Subscriptions</span><span class="ym-val">₹4.2Cr/mo</span></div>
+            <div class="year-metric"><span class="ym-label">Data licensing</span><span class="ym-val">₹80L/mo</span></div>
+            <div class="year-metric"><span class="ym-label">Resolution marketplace</span><span class="ym-val">₹45L/mo</span></div>
+            <div class="year-milestones">
+              <h5>Key Milestones</h5>
+              <ul style="list-style:none;padding:0;margin:0;">
+                <li class="year-milestones li">◆ Govt data partnerships</li>
+                <li class="year-milestones li">◆ Series A funding</li>
+                <li class="year-milestones li">◆ Top 50 enterprises on platform</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Unit Economics Table -->
+        <h3 style="font-size:1.1rem;font-weight:800;margin:2rem 0 1rem;">Unit Economics</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CAC — Company Acquisition Cost</strong></td>
+                <td>₹8,000–₹15,000</td>
+              </tr>
+              <tr>
+                <td><strong>LTV — Basic plan (18 month avg)</strong></td>
+                <td>₹1,79,982</td>
+              </tr>
+              <tr>
+                <td><strong>LTV / CAC Ratio</strong></td>
+                <td style="color:var(--success);font-weight:800;">12x–22x &nbsp;<span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">(excellent)</span></td>
+              </tr>
+              <tr>
+                <td><strong>CAC — User Acquisition</strong></td>
+                <td>₹50–₹200</td>
+              </tr>
+              <tr>
+                <td><strong>Monthly Churn (Company)</strong></td>
+                <td>~5% target</td>
+              </tr>
+              <tr>
+                <td><strong>Gross Margin</strong></td>
+                <td>~75% <span style="font-size:0.78rem;color:var(--text-muted);">(SaaS typical)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- §4 — User Features -->
+      <section class="biz-section" id="s4">
+        <div class="section-header">
+          <div class="section-number">4</div>
+          <h2>User Features Matrix</h2>
+        </div>
+        <p class="section-subtitle">Feature breakdown across all user tiers. 95% of features remain free.</p>
+
+        <!-- Tabs -->
+        <div data-tabs-container>
+          <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="free">Free Users</button>
+            <button class="tab-btn" data-tab="pro">Bhadaas Pro (₹199/mo)</button>
+            <button class="tab-btn" data-tab="verified">Verified Users</button>
+          </div>
+
+          <!-- Free Users Panel -->
+          <div class="tab-panel active" id="tab-free">
+            <div class="table-container" style="border-radius:12px;">
+              <div class="feature-category-label">Posting</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Post unlimited Bhadaas (after phone verification)</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Tag 1–3 entities per post</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Add images/documents</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Set severity level (1–5)</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Add tags/keywords</div>
+
+              <div class="feature-category-label">Discovery</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Browse all Bhadaas</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Search by entity/keyword</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Filter by category/severity</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Me Too (upvote) any post</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Comment on posts</div>
+
+              <div class="feature-category-label">Notifications</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Email notifications</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Me Too updates on your posts</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Company response notifications</div>
+              <div class="feature-row"><span class="feature-cross">✗</span> SMS notifications <span class="feature-pro-label">PRO</span></div>
+              <div class="feature-row"><span class="feature-cross">✗</span> Priority response alerts <span class="feature-pro-label">PRO</span></div>
+
+              <div class="feature-category-label">Profile</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Bhadaas Score (credibility)</div>
+              <div class="feature-row"><span class="feature-check">✅</span> Post history</div>
+              <div class="feature-row"><span class="feature-cross">✗</span> Analytics on your posts <span class="feature-pro-label">PRO</span></div>
+              <div class="feature-row"><span class="feature-cross">✗</span> Direct escalation to company <span class="feature-pro-label">PRO</span></div>
+            </div>
+          </div>
+
+          <!-- Pro Users Panel -->
+          <div class="tab-panel" id="tab-pro">
+            <div class="alert alert-info" style="margin-bottom:1rem;">
+              Bhadaas Pro users get everything free users have, plus priority features. The goal is to keep 95% free — Pro is a <strong>power user upgrade</strong>, not a paywall.
+            </div>
+            <div class="table-container" style="border-radius:12px;">
+              <div class="feature-category-label">All Free Features + Pro Exclusives</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>Priority posting</strong> — faster moderation queue</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>Analytics dashboard</strong> for own posts (views, Me Too trends, response rate)</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>Direct escalation</strong> to company's verified account</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>SMS notifications</strong> for responses and updates</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>Boosted visibility</strong> — posts rank 20% higher in feed algorithm</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>Download post history</strong> (PDF/CSV)</div>
+              <div class="feature-row"><span class="feature-check">✅</span> <strong>Early access</strong> to new features</div>
+              <div class="feature-row"><span class="feature-check">✅</span> All Posting, Discovery, Notification, Profile features from Free tier</div>
+            </div>
+          </div>
+
+          <!-- Verified Users Panel -->
+          <div class="tab-panel" id="tab-verified">
+            <div class="alert alert-info" style="margin-bottom:1rem;">
+              Verification tiers determine post weight, credibility score, and trust in the feed algorithm. Higher tiers = more impact per post.
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div class="trust-tier-card">
+                <div class="tier-icon tier-bronze">🟤</div>
+                <div>
+                  <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.2rem;">Bronze — Phone Verified</div>
+                  <div style="font-size:0.83rem;color:var(--text-muted);">All registered users. Phone OTP required to post. Standard post weight.</div>
+                </div>
+              </div>
+              <div class="trust-tier-card">
+                <div class="tier-icon tier-silver">⚪</div>
+                <div>
+                  <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.2rem;">Silver — Email + Phone Verified</div>
+                  <div style="font-size:0.83rem;color:var(--text-muted);">Both phone OTP and email confirmed. Higher post weight in feed ranking. Unlocks comment moderation tools.</div>
+                </div>
+              </div>
+              <div class="trust-tier-card">
+                <div class="tier-icon tier-gold">🟡</div>
+                <div>
+                  <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.2rem;">Gold — PAN Verified</div>
+                  <div style="font-size:0.83rem;color:var(--text-muted);">PAN verified + 6 months account tenure + Trust Score &gt;90. Posts weighted 2× in algorithm. Legal contact for notices goes via platform.</div>
+                </div>
+              </div>
+              <div class="trust-tier-card">
+                <div class="tier-icon tier-platinum">🔵</div>
+                <div>
+                  <div style="font-weight:800;font-size:0.95rem;margin-bottom:0.2rem;">Platinum — Top Contributor</div>
+                  <div style="font-size:0.83rem;color:var(--text-muted);">Aadhaar optional + Gold tier + 20+ posts with ≥80% accuracy rating. Highest post weight. Eligible for Bhadaas Expert badge. Always anonymous publicly.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §5 — Company Features -->
+      <section class="biz-section" id="s5">
+        <div class="section-header">
+          <div class="section-number">5</div>
+          <h2>Company Features Matrix</h2>
+        </div>
+        <p class="section-subtitle">Feature comparison across company tiers — from unclaimed to enterprise.</p>
+
+        <div class="table-container compare-table">
+          <table>
+            <thead>
+              <tr>
+                <th style="min-width:220px;">Feature</th>
+                <th>Free (Unclaimed)</th>
+                <th class="col-basic">Basic<br><small style="font-weight:400;color:var(--text-muted);">₹9,999/mo</small></th>
+                <th class="col-pro">Professional<br><small style="font-weight:400;">₹29,999/mo</small></th>
+                <th class="col-enterprise">Enterprise<br><small style="font-weight:400;">₹99,999+/mo</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Entity page on platform</strong></td>
+                <td class="feat-yes">✅ (user-reported)</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Verified / Claimed badge</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Respond to posts</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-partial">⚠ 5/month (₹1,999 extra)</td>
+                <td class="feat-yes">✅ Unlimited</td>
+                <td class="feat-yes">✅ Unlimited</td>
+              </tr>
+              <tr>
+                <td><strong>Sentiment score &amp; analytics</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅ Basic</td>
+                <td class="feat-yes">✅ Advanced</td>
+                <td class="feat-yes">✅ Full</td>
+              </tr>
+              <tr>
+                <td><strong>Geographic breakdown</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Real-time alert notifications</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅ Email + SMS</td>
+                <td class="feat-yes">✅ + Webhook</td>
+              </tr>
+              <tr>
+                <td><strong>Bulk response to related posts</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Monthly PDF report</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅ White-label</td>
+              </tr>
+              <tr>
+                <td><strong>API access</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-partial">⚠ 1,000 calls/mo</td>
+                <td class="feat-yes">✅ Unlimited</td>
+              </tr>
+              <tr>
+                <td><strong>Competitor benchmarking</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Custom integrations (Salesforce, Zendesk)</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Dedicated account manager</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Historical data access (2+ yrs)</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Resolution badge</strong></td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Support SLA</strong></td>
+                <td class="feat-no">None</td>
+                <td>Best effort</td>
+                <td>24h</td>
+                <td class="feat-yes" style="color:var(--success);">2h SLA guarantee</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- §6 — Admin Features -->
+      <section class="biz-section" id="s6">
+        <div class="section-header">
+          <div class="section-number">6</div>
+          <h2>Admin Panel Features</h2>
+        </div>
+        <p class="section-subtitle">Complete admin capabilities required to operate the platform at scale.</p>
+
+        <div class="grid grid-2 gap-3">
+
+          <div class="admin-card">
+            <h3>🛡️ Content Moderation</h3>
+            <ul class="admin-feature-list">
+              <li>AI-powered auto-moderation (keyword detection, spam, doxxing prevention)</li>
+              <li>Human review queue for flagged content</li>
+              <li>Batch approve/reject with reason logging</li>
+              <li>Edit functionality — remove PII, not content substance</li>
+              <li>Appeals management with 7-day window</li>
+            </ul>
+          </div>
+
+          <div class="admin-card green">
+            <h3>🏢 Entity Management</h3>
+            <ul class="admin-feature-list">
+              <li>Entity creation, editing, and categorisation</li>
+              <li>Duplicate detection and intelligent merging</li>
+              <li>Company claim verification (document review workflow)</li>
+              <li>Category management and taxonomy control</li>
+            </ul>
+          </div>
+
+          <div class="admin-card blue">
+            <h3>👤 User Management</h3>
+            <ul class="admin-feature-list">
+              <li>Verification status management (Bronze → Platinum)</li>
+              <li>Trust score manual adjustment with audit log</li>
+              <li>Suspension and permanent ban workflow</li>
+              <li>Identity verification response (for legal requests only)</li>
+              <li>Users remain anonymous publicly at all times</li>
+            </ul>
+          </div>
+
+          <div class="admin-card warning">
+            <h3>💳 Revenue Management</h3>
+            <ul class="admin-feature-list">
+              <li>Subscription management (upgrades, downgrades, cancellations)</li>
+              <li>Automated invoice generation</li>
+              <li>Churn tracking and early-warning dashboard</li>
+              <li>Usage-based billing for pay-per-response</li>
+            </ul>
+          </div>
+
+          <div class="admin-card danger" style="grid-column: 1 / -1;">
+            <h3>⚖️ Legal Compliance</h3>
+            <ul class="admin-feature-list" style="column-count:2;column-gap:2rem;">
+              <li>Legal notice logging with timestamp and source</li>
+              <li>Takedown workflow with mandatory 36h compliance timer</li>
+              <li>Court order tracking and response log</li>
+              <li>DPDPA deletion requests queue</li>
+              <li>Quarterly transparency report generation</li>
+              <li>Grievance Appellate Committee liaison workflow</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- §7 — Competitive Advantage -->
+      <section class="biz-section" id="s7">
+        <div class="section-header">
+          <div class="section-number">7</div>
+          <h2>Competitive Advantage</h2>
+        </div>
+        <p class="section-subtitle">How Bhadaas compares to existing alternatives in the Indian market.</p>
+
+        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;">Why Bhadaas Wins</h3>
+
+        <div class="table-container comp-table">
+          <table>
+            <thead>
+              <tr>
+                <th style="min-width:200px;">Feature</th>
+                <th class="col-bhadaas-h">Bhadaas</th>
+                <th>MouthShut</th>
+                <th>Google Reviews</th>
+                <th>Reddit/Quora</th>
+                <th>Consumer Forum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Verified users</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Phone verified</td>
+                <td class="feat-no">✗ Anonymous</td>
+                <td class="feat-no">✗ Anonymous</td>
+                <td class="feat-no">✗ Anonymous</td>
+                <td class="feat-yes">✅ (slow process)</td>
+              </tr>
+              <tr>
+                <td><strong>Entity-specific pages</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Rich profiles</td>
+                <td class="feat-yes">✅ Basic</td>
+                <td class="feat-yes">✅ Basic</td>
+                <td class="feat-no">✗ Scattered</td>
+                <td class="feat-no">✗</td>
+              </tr>
+              <tr>
+                <td><strong>"Me Too" amplification</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Core feature</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅ Upvotes</td>
+                <td class="feat-no">✗</td>
+              </tr>
+              <tr>
+                <td><strong>Company response system</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Paid, structured</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+              </tr>
+              <tr>
+                <td><strong>B2B revenue model</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Strong SaaS</td>
+                <td class="feat-no">✗ Ads only</td>
+                <td>N/A</td>
+                <td class="feat-no">✗ Ads only</td>
+                <td>N/A (Govt)</td>
+              </tr>
+              <tr>
+                <td><strong>Mobile app</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ v2 planned</td>
+                <td class="feat-yes">✅ (outdated)</td>
+                <td>N/A</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-no">✗</td>
+              </tr>
+              <tr>
+                <td><strong>Action-oriented / resolution</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Resolution system</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-yes">✅ (very slow)</td>
+              </tr>
+              <tr>
+                <td><strong>India-specific focus</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ India-only</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-no">✗ Global</td>
+                <td class="feat-no">✗ Global</td>
+                <td class="feat-yes">✅</td>
+              </tr>
+              <tr>
+                <td><strong>Modern, clean UI</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅</td>
+                <td class="feat-no">✗ Outdated</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-no">✗</td>
+              </tr>
+              <tr>
+                <td><strong>SEO per entity page</strong></td>
+                <td class="col-bhadaas-v feat-yes">✅ Built-in</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-yes">✅</td>
+                <td class="feat-no">✗</td>
+                <td class="feat-no">✗</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-success" style="margin-top:1rem;">
+          🏆 Bhadaas is the only platform that combines: verified Indian users + Me Too amplification + structured B2B response system + resolution marketplace + a modern consumer-first UX. No direct competitor does all five.
+        </div>
+      </section>
+
+      <!-- §8 — Growth Strategy -->
+      <section class="biz-section" id="s8">
+        <div class="section-header">
+          <div class="section-number">8</div>
+          <h2>Growth Strategy</h2>
+        </div>
+        <p class="section-subtitle">A phased, city-first launch reduces risk and validates product-market fit before scaling.</p>
+
+        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1.25rem;">Phased Launch Strategy</h3>
+
+        <div class="grid grid-3 gap-3">
+
+          <!-- Phase 1 -->
+          <div class="phase-card p1">
+            <div class="phase-timeline">0–6 Months</div>
+            <span class="phase-tag p1">Phase 1</span>
+            <h3>Seed &amp; Validate</h3>
+            <ul class="phase-detail-list">
+              <li><span class="pdi">Scope</span> Delhi or Mumbai only</li>
+              <li><span class="pdi">Categories</span> Telecom, Banking, E-commerce only</li>
+              <li><span class="pdi">Platform</span> Web only (mobile-responsive)</li>
+              <li><span class="pdi">Moderation</span> Manual team of 2</li>
+              <li><span class="pdi">Seeding</span> Founders + early users post 200 Bhadaas manually</li>
+              <li><span class="pdi">Goal</span> 5,000 users, 1,000 posts, 5 company sign-ups</li>
+            </ul>
+            <div class="phase-revenue-target">
+              Revenue target: <strong>₹1–2L/month</strong>
+            </div>
+          </div>
+
+          <!-- Phase 2 -->
+          <div class="phase-card p2">
+            <div class="phase-timeline">6–18 Months</div>
+            <span class="phase-tag p2">Phase 2</span>
+            <h3>Scale</h3>
+            <ul class="phase-detail-list">
+              <li><span class="pdi">Scope</span> Pan-India (top 10 cities)</li>
+              <li><span class="pdi">Categories</span> All 12 categories</li>
+              <li><span class="pdi">Platform</span> Web + React Native mobile app</li>
+              <li><span class="pdi">Moderation</span> AI-assisted + 5 human moderators</li>
+              <li><span class="pdi">Marketing</span> PR stories, resolved complaint case studies, social media</li>
+              <li><span class="pdi">Goal</span> 5,00,000 users, 50,000 posts, 200 company sign-ups</li>
+            </ul>
+            <div class="phase-revenue-target" style="border-color:var(--success);">
+              Revenue target: <strong style="color:var(--success);">₹50–80L/month</strong>
+            </div>
+          </div>
+
+          <!-- Phase 3 -->
+          <div class="phase-card p3">
+            <div class="phase-timeline">18–36 Months</div>
+            <span class="phase-tag p3">Phase 3</span>
+            <h3>Monetize &amp; Expand</h3>
+            <ul class="phase-detail-list">
+              <li><span class="pdi">Scope</span> All India</li>
+              <li><span class="pdi">Platform</span> Web + Mobile + API</li>
+              <li><span class="pdi">Partnerships</span> RBI, TRAI, Consumer Forums data exchange</li>
+              <li><span class="pdi">Enterprise</span> Top 50 companies on platform</li>
+              <li><span class="pdi">Funding</span> Series A ₹15–25 Cr at ₹100 Cr valuation</li>
+              <li><span class="pdi">Exit options</span> CRISIL, ICRA, Reliance, Tata acquisition</li>
+            </ul>
+            <div class="phase-revenue-target" style="border-color:var(--accent);">
+              Revenue target: <strong style="color:var(--accent);">₹3–5 Crore/month</strong>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main><!-- /biz-main -->
+
+    <!-- ── TOC SIDEBAR ───────────────────────────────────────────── -->
+    <aside class="toc-sidebar" id="toc">
+      <h4>On This Page</h4>
+      <a href="#s1" class="toc-link">Revenue Streams</a>
+      <a href="#s2" class="toc-link">B2B Pricing Plans</a>
+      <a href="#s3" class="toc-link">Revenue Projections</a>
+      <a href="#s4" class="toc-link">User Features</a>
+      <a href="#s5" class="toc-link">Company Features</a>
+      <a href="#s6" class="toc-link">Admin Features</a>
+      <a href="#s7" class="toc-link">Competitive Advantage</a>
+      <a href="#s8" class="toc-link">Growth Strategy</a>
+    </aside>
+
+  </div><!-- /biz-layout -->
+</div><!-- /container -->
+
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════════ -->
+<footer class="page-footer">
+  <p>भड़ास Developer Reference &mdash; <strong>Business Model &amp; Features</strong> &mdash; Last updated May 2026</p>
+  <p style="margin-top:0.35rem;">
+    <a href="index.html">← Dev Hub</a> &nbsp;·&nbsp;
+    <a href="legal.html">Legal Guide</a> &nbsp;·&nbsp;
+    <a href="technical.html">Technical Spec</a> &nbsp;·&nbsp;
+    <a href="../index.html">Back to Site</a>
+  </p>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════════ -->
+<script src="../js/shared.js"></script>
+<script>
+  /* ── Sticky TOC Active Highlight ─────────────────────────────── */
+  const sections = Array.from(document.querySelectorAll('.biz-section'));
+  const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
+
+  function onScroll() {
+    const scrollY = window.scrollY + 100;
+    let active = sections[0];
+    for (const s of sections) {
+      if (s.offsetTop <= scrollY) active = s;
+    }
+    tocLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + active.id);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ── IntersectionObserver — Animate sections in ─────────────── */
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.06 }
+  );
+  sections.forEach(s => observer.observe(s));
+
+  /* ── Smooth-scroll TOC links ─────────────────────────────────── */
+  tocLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  /* ── Tab switching ───────────────────────────────────────────── */
+  document.querySelectorAll('[data-tabs-container]').forEach(container => {
+    const buttons = container.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        container.querySelectorAll('.tab-panel').forEach(p => {
+          p.classList.toggle('active', p.id === 'tab-' + tabId);
+        });
+      });
+    });
+  });
+
+  /* ── Year card hover tooltip ─────────────────────────────────── */
+  // Tooltip is CSS-driven (.year-tooltip on hover), but ensure it
+  // doesn't break small screens by removing it below 600px
+  if (window.innerWidth < 600) {
+    document.querySelectorAll('.year-tooltip').forEach(t => t.remove());
+  }
+</script>
+
+</body>
+</html>

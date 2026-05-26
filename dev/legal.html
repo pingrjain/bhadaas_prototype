@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal & Compliance Guide — Bhadaas Dev Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ── Progress Bar ─────────────────────────────────────────────── */
+    #compliance-progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #28C76F, #FF6B35);
+      z-index: 200;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    #compliance-progress-label {
+      position: fixed;
+      top: 6px; right: 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--success);
+      z-index: 201;
+      background: rgba(255,255,255,0.9);
+      padding: 1px 8px;
+      border-radius: 10px;
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────────────── */
+    .legal-hero {
+      background: linear-gradient(135deg, #1a0a0a 0%, #1A1A2E 60%);
+      color: #fff;
+      padding: 3.5rem 0 2.5rem;
+    }
+    .legal-hero .breadcrumb {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .legal-hero .breadcrumb a { color: rgba(255,107,53,0.8); }
+    .legal-hero .breadcrumb a:hover { color: var(--primary); }
+    .legal-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .legal-hero p.subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 720px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .hero-stat-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.02em;
+    }
+    .hero-badge.badge-danger { border-color: rgba(234,84,85,0.5); color: #FF9F9F; }
+    .hero-badge.badge-success { border-color: rgba(40,199,111,0.5); color: #7EFBB3; }
+    .hero-badge.badge-warn { border-color: rgba(255,159,67,0.5); color: #FFCF80; }
+    .hero-badge.badge-accent { border-color: rgba(74,144,217,0.5); color: #9CC8FF; }
+
+    /* ── Layout ───────────────────────────────────────────────────── */
+    .legal-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 2.5rem 0 4rem;
+    }
+    .legal-main { flex: 1; min-width: 0; }
+
+    /* ── TOC Sidebar ──────────────────────────────────────────────── */
+    .toc-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .toc-sidebar h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .toc-sidebar a {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 0.35rem 0;
+      border-left: 2px solid transparent;
+      padding-left: 0.75rem;
+      transition: all 0.2s;
+    }
+    .toc-sidebar a:hover { color: var(--primary); border-left-color: var(--primary); }
+    .toc-sidebar a.active { color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+
+    /* ── Legal Sections ───────────────────────────────────────────── */
+    .legal-section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .legal-section.visible { opacity: 1; transform: translateY(0); }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-number {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0;
+    }
+    .section-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Alert Boxes ──────────────────────────────────────────────── */
+    .alert {
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid transparent;
+      line-height: 1.6;
+    }
+    .alert-success {
+      background: var(--success-light);
+      border-color: rgba(40,199,111,0.3);
+      color: #1a7a46;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .alert-info {
+      background: #EFF6FF;
+      border-color: rgba(74,144,217,0.3);
+      color: #1e4f8a;
+    }
+    .alert-warning {
+      background: var(--warning-light);
+      border-color: rgba(255,159,67,0.4);
+      color: #8a5000;
+    }
+    .alert-danger {
+      background: var(--danger-light);
+      border-color: rgba(234,84,85,0.4);
+      color: #8a1010;
+    }
+    .alert-defamation {
+      background: linear-gradient(135deg, #fff5e6, #ffe6d5);
+      border: 2px solid var(--warning);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .alert-defamation .defam-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #8a3800;
+      margin-bottom: 0.5rem;
+    }
+    .alert-defamation p {
+      font-size: 0.9rem;
+      color: #6b3000;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Tables ───────────────────────────────────────────────────── */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      background: #fff;
+    }
+    thead th {
+      background: var(--bg);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #FAFBFF; }
+    .condition-met { color: var(--success); font-weight: 700; }
+    .condition-warn { color: var(--warning); font-weight: 700; }
+
+    /* ── Law Cards ────────────────────────────────────────────────── */
+    .law-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .law-card.featured {
+      border-color: var(--primary);
+      border-top: 3px solid var(--primary);
+    }
+    .law-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── Compliance Cards (IT Rules grid) ─────────────────────────── */
+    .compliance-col {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+    }
+    .compliance-col h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .req-item {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    .req-item:last-child { border-bottom: none; }
+    .req-dot { font-size: 0.9rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── DPDPA numbered cards ─────────────────────────────────────── */
+    .dpdpa-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .dpdpa-req-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      gap: 0.875rem;
+      align-items: flex-start;
+    }
+    .dpdpa-req-card .req-num {
+      width: 28px;
+      height: 28px;
+      background: var(--secondary);
+      color: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .dpdpa-req-card .req-text strong {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .dpdpa-req-card .req-text span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Precedent Cards ──────────────────────────────────────────── */
+    .precedent-card {
+      background: #FAFBFD;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .precedent-card .case-name {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+    .precedent-card .case-ruling {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ── Officer Cards ────────────────────────────────────────────── */
+    .officer-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+    .officer-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+    .officer-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .officer-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .req-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--danger-light);
+      color: var(--danger);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    .officer-detail {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.835rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .officer-detail:last-child { border-bottom: none; }
+    .officer-detail .dl { color: var(--text-muted); min-width: 110px; flex-shrink: 0; font-size: 0.78rem; }
+
+    /* ── Content Policy ───────────────────────────────────────────── */
+    .content-policy-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    .ci-required { color: var(--success); font-weight: 700; font-size: 1rem; }
+    .ci-recommended { color: var(--warning); font-weight: 700; font-size: 1rem; }
+
+    /* ── Compliance Checklist ─────────────────────────────────────── */
+    .compliance-checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .checklist-col-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .checklist-col-card h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .checklist-col-card .col-count {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .compliance-item {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+      border-radius: 4px;
+    }
+    .compliance-item:last-child { border-bottom: none; }
+    .compliance-item:hover { background: var(--bg); padding-left: 4px; }
+    .compliance-item .check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      margin-top: 1px;
+    }
+    .compliance-item.checked .check {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+    .compliance-item.checked > span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* ── "What to do" list ────────────────────────────────────────── */
+    .action-list { margin: 0; padding: 0; }
+    .action-list li {
+      display: flex;
+      gap: 0.6rem;
+      font-size: 0.875rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.5;
+    }
+    .action-list li:last-child { border-bottom: none; }
+    .action-list li::before {
+      content: '→';
+      color: var(--primary);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Defamation comparison table ─────────────────────────────── */
+    .defam-table { background: #fff; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+    .defam-table table thead th:first-child { width: 160px; background: var(--secondary); color: rgba(255,255,255,0.6); }
+    .defam-table table thead th:nth-child(2) { background: rgba(74,144,217,0.08); color: var(--accent); }
+    .defam-table table thead th:nth-child(3) { background: rgba(234,84,85,0.08); color: var(--danger); }
+    .defam-table table tbody td:first-child { font-weight: 700; font-size: 0.8rem; color: var(--text-muted); background: #FAFBFD; }
+
+    /* ── Footer ───────────────────────────────────────────────────── */
+    .page-footer {
+      background: var(--secondary);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      margin-top: 3rem;
+    }
+    .page-footer a { color: var(--primary); }
+
+    /* ── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .toc-sidebar { display: none; }
+      .compliance-checklist-grid { grid-template-columns: 1fr; }
+      .dpdpa-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .legal-hero h1 { font-size: 1.9rem; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     COMPLIANCE PROGRESS BAR
+═══════════════════════════════════════════════════════════════════ -->
+<div id="compliance-progress-bar"></div>
+<div id="compliance-progress-label">0% Complete</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-name">भड़ास</span>
+      <span class="brand-tagline">Speak Up India</span>
+    </a>
+    <div class="nav-links">
+      <a href="../pages/feed.html">Browse</a>
+      <a href="../pages/post.html">Post Bhadaas</a>
+      <a href="../pages/company-dashboard.html">For Companies</a>
+      <a href="../pages/admin-dashboard.html">Admin</a>
+      <a href="index.html" style="color:rgba(255,180,80,0.85);">⚠️ Dev Details</a>
+    </div>
+    <div class="nav-actions">
+      <a href="index.html" class="btn btn-outline btn-sm" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.2);padding:0.3rem 0.9rem;border:1px solid rgba(255,255,255,0.2);border-radius:8px;font-size:0.8rem;">← Dev Hub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════════════ -->
+<section class="legal-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Dev Details</a> &nbsp;/&nbsp; Legal &amp; Compliance
+    </div>
+    <h1>⚖️ Legal &amp; Compliance Guide</h1>
+    <p class="subtitle">
+      Everything you need to know to legally operate Bhadaas in India.
+      Updated for IT Rules 2021, DPDPA 2023, and Bharatiya Nyaya Sanhita 2023.
+    </p>
+    <div class="hero-stat-badges">
+      <span class="hero-badge badge-accent">📚 6 Laws Apply</span>
+      <span class="hero-badge badge-warn">⏱ 36h Compliance Window</span>
+      <span class="hero-badge badge-danger">💰 ₹250Cr Max Fine</span>
+      <span class="hero-badge badge-success">🛡️ Safe Harbor Available</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MAIN LAYOUT (Content + TOC)
+═══════════════════════════════════════════════════════════════════ -->
+<div class="container">
+  <div class="legal-layout">
+
+    <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+    <main class="legal-main">
+
+      <!-- §1 — Legal Standing -->
+      <section class="legal-section" id="s1">
+        <div class="section-header">
+          <div class="section-number">1</div>
+          <h2>Legal Standing — Is Bhadaas Legal?</h2>
+        </div>
+
+        <div class="alert alert-success">
+          ✅ YES — Bhadaas is legally permissible in India, subject to compliance conditions below.
+        </div>
+
+        <div class="grid grid-2 gap-3">
+          <div class="law-card" style="border-top:3px solid var(--success);">
+            <h3 style="color:var(--success);">✅ What Makes It Legal</h3>
+            <ul class="action-list" style="margin-top:0.5rem;">
+              <li>Consumer review platforms are protected as intermediaries under IT Act 2000, Section 79</li>
+              <li><strong>Shreya Singhal v. Union of India (2015)</strong> — intermediary not liable for user content unless they have actual knowledge</li>
+              <li>Consumer Protection Act 2019 actively supports consumer feedback mechanisms</li>
+              <li>MouthShut.com, TripAdvisor India, Google Reviews all operate legally with a similar model</li>
+              <li>Platform does NOT editorialize or endorse individual posts</li>
+            </ul>
+          </div>
+          <div class="law-card" style="border-top:3px solid var(--danger);">
+            <h3 style="color:var(--danger);">🚫 What Could Make It Illegal</h3>
+            <ul class="action-list" style="margin-top:0.5rem;">
+              <li>Failing to comply with valid court/government takedown orders within the required window</li>
+              <li>Allowing targeted harassment of private individuals</li>
+              <li>Facilitating doxxing (sharing personal addresses / phone numbers)</li>
+              <li>Allowing political content or election-related content</li>
+              <li>Not removing content after actual knowledge of illegality</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- §2 — Section 79 Safe Harbor -->
+      <section class="legal-section" id="s2">
+        <div class="section-header">
+          <div class="section-number">2</div>
+          <h2>IT Act 2000 — Section 79 (Safe Harbor)</h2>
+        </div>
+        <p class="section-subtitle">Your most important legal protection as an intermediary platform.</p>
+
+        <div class="law-card featured" style="margin-bottom:1.5rem;">
+          <h3>🛡️ Your Most Important Legal Protection</h3>
+          <div class="alert alert-info" style="margin-top:1rem;margin-bottom:0;">
+            Section 79 grants immunity to intermediaries (platforms like Bhadaas) from liability for
+            user-generated content, <strong>PROVIDED you meet all conditions below.</strong>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>What It Means</th>
+                <th>How to Comply</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Don't initiate content</strong></td>
+                <td>You cannot be the one who posts or modifies content</td>
+                <td>Only users can post — never add editorial commentary to specific posts</td>
+                <td><span class="condition-met">✅ Easy</span></td>
+              </tr>
+              <tr>
+                <td><strong>Act on takedown notices</strong></td>
+                <td>Remove content when ordered by courts/government within 36 hours</td>
+                <td>Build a takedown workflow, track all requests, log every compliance action</td>
+                <td><span class="condition-warn">🟡 Requires Process</span></td>
+              </tr>
+              <tr>
+                <td><strong>Due diligence</strong></td>
+                <td>Follow IT Rules 2021 due diligence requirements</td>
+                <td>Appoint officers, publish policy, quarterly reports</td>
+                <td><span class="condition-warn">🟡 Requires Setup</span></td>
+              </tr>
+              <tr>
+                <td><strong>Don't select beneficiaries</strong></td>
+                <td>Don't curate content for one entity's benefit</td>
+                <td>Algorithmic ranking only — never manual curation favouring specific companies</td>
+                <td><span class="condition-met">✅ Easy</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- §3 — IT Rules 2021 -->
+      <section class="legal-section" id="s3">
+        <div class="section-header">
+          <div class="section-number">3</div>
+          <h2>IT Rules 2021 — Intermediary Guidelines</h2>
+        </div>
+        <p class="section-subtitle">Due diligence requirements that every intermediary must satisfy.</p>
+
+        <div class="grid grid-2 gap-3" style="margin-bottom:1.5rem;">
+          <div class="compliance-col">
+            <h4>📋 Required from Day 1</h4>
+            <div class="req-item"><span class="req-dot">✅</span> Publish Terms of Service (ToS) in English AND at least one Indian language</div>
+            <div class="req-item"><span class="req-dot">✅</span> Publish Privacy Policy (DPDPA-compliant)</div>
+            <div class="req-item"><span class="req-dot">✅</span> Publish Content Policy / Community Guidelines</div>
+            <div class="req-item"><span class="req-dot">✅</span> Appoint Grievance Officer (India-resident, name + contact on website)</div>
+            <div class="req-item"><span class="req-dot">✅</span> Acknowledge grievance within 24 hours, resolve within 15 days</div>
+          </div>
+          <div class="compliance-col">
+            <h4>🚀 Required after 50 Lakh Users (SSMI)</h4>
+            <div class="req-item"><span class="req-dot">📌</span> Register as Significant Social Media Intermediary (SSMI)</div>
+            <div class="req-item"><span class="req-dot">📌</span> Appoint Resident Grievance Officer (RGO)</div>
+            <div class="req-item"><span class="req-dot">📌</span> Appoint Nodal Contact Officer (NCO) for law enforcement</div>
+            <div class="req-item"><span class="req-dot">📌</span> Appoint Chief Compliance Officer (CCO)</div>
+            <div class="req-item"><span class="req-dot">📌</span> Publish monthly compliance report</div>
+            <div class="req-item"><span class="req-dot">📌</span> Provide voluntary user verification mechanism</div>
+          </div>
+        </div>
+
+        <div class="alert alert-warning">
+          ⚠️ <strong>Start compliance from Day 1, even as a small platform.</strong> Courts have ruled
+          that non-compliant platforms cannot claim Section 79 protection regardless of size.
+        </div>
+      </section>
+
+      <!-- §4 — DPDPA 2023 -->
+      <section class="legal-section" id="s4">
+        <div class="section-header">
+          <div class="section-number">4</div>
+          <h2>DPDPA 2023 — Digital Personal Data Protection Act</h2>
+        </div>
+
+        <div class="alert alert-danger" style="border:2px solid var(--danger);font-size:0.95rem;margin-bottom:1.75rem;">
+          🔴 <strong>This is the biggest new compliance requirement.</strong> DPDPA 2023 is India's GDPR
+          equivalent. Fines go up to <strong>₹250 Crore</strong>.
+        </div>
+
+        <h4 style="margin-bottom:0.75rem;">What Data You Collect &amp; The Rules</h4>
+        <div class="table-container" style="margin-bottom:1.75rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Data Type</th>
+                <th>Why Collected</th>
+                <th>Consent</th>
+                <th>Retention</th>
+                <th>Deletion Right</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Phone Number</strong></td>
+                <td>User verification</td>
+                <td>Yes — explicit</td>
+                <td>Duration of account</td>
+                <td>Yes, within 30 days</td>
+              </tr>
+              <tr>
+                <td><strong>Email</strong></td>
+                <td>Account + notifications</td>
+                <td>Yes — explicit</td>
+                <td>Duration of account</td>
+                <td>Yes, within 30 days</td>
+              </tr>
+              <tr>
+                <td><strong>Aadhaar</strong> <span style="font-size:0.75rem;color:var(--text-muted);">(optional)</span></td>
+                <td>Trust score boost</td>
+                <td>Yes — explicit, separate</td>
+                <td style="color:var(--danger);font-weight:600;">Do not store — verify &amp; discard</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td><strong>Post Content</strong></td>
+                <td>Service delivery</td>
+                <td>Yes — by posting</td>
+                <td>Until user deletes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><strong>IP Address</strong></td>
+                <td>Fraud prevention</td>
+                <td>Implied</td>
+                <td>90 days</td>
+                <td>Not applicable</td>
+              </tr>
+              <tr>
+                <td><strong>Device Info</strong></td>
+                <td>Security</td>
+                <td>Implied</td>
+                <td>90 days</td>
+                <td>Not applicable</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="margin-bottom:0.25rem;">8 Core DPDPA Requirements</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;">These apply to every data principal (user) whose data you process.</p>
+        <div class="dpdpa-grid">
+          <div class="dpdpa-req-card">
+            <div class="req-num">1</div>
+            <div class="req-text">
+              <strong>Informed Consent</strong>
+              <span>Must be free, specific, informed, unconditional, and unambiguous</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">2</div>
+            <div class="req-text">
+              <strong>Purpose Limitation</strong>
+              <span>Collected data used only for the stated, consented purpose</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">3</div>
+            <div class="req-text">
+              <strong>Data Minimization</strong>
+              <span>Collect only what is strictly necessary for the purpose</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">4</div>
+            <div class="req-text">
+              <strong>Accuracy</strong>
+              <span>Provide a mechanism for users to correct inaccurate data</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">5</div>
+            <div class="req-text">
+              <strong>Storage Limitation</strong>
+              <span>Delete personal data when the collection purpose is served</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">6</div>
+            <div class="req-text">
+              <strong>Right to Erasure</strong>
+              <span>User can request full account deletion; fulfil within 30 days</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">7</div>
+            <div class="req-text">
+              <strong>Right to Access</strong>
+              <span>User can request a copy of all data you hold about them</span>
+            </div>
+          </div>
+          <div class="dpdpa-req-card">
+            <div class="req-num">8</div>
+            <div class="req-text">
+              <strong>Breach Notification</strong>
+              <span>Notify the Data Protection Board within 72 hours of a data breach</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §5 — Defamation -->
+      <section class="legal-section" id="s5">
+        <div class="section-header">
+          <div class="section-number">5</div>
+          <h2>Defamation Law</h2>
+        </div>
+
+        <div class="alert-defamation">
+          <div class="defam-title">⚠️ DEFAMATION is your #1 operational risk.</div>
+          <p>You <strong>WILL</strong> receive defamation notices. This is not <em>if</em> — it's <em>when</em>.
+          Be prepared with documented procedures before you go live.</p>
+        </div>
+
+        <h4 style="margin-bottom:0.75rem;">Civil vs. Criminal Defamation</h4>
+        <div class="defam-table" style="margin-bottom:1.75rem;">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Civil Defamation</th>
+                <th>Criminal Defamation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Law</td>
+                <td>BNS 2023, Section 356 (replaces IPC 499/500)</td>
+                <td>Same — BNS 2023, Section 356</td>
+              </tr>
+              <tr>
+                <td>Who Can File</td>
+                <td>Any person or company</td>
+                <td>Any person or company</td>
+              </tr>
+              <tr>
+                <td>Against Who</td>
+                <td>Platform + Poster</td>
+                <td>Platform + Poster</td>
+              </tr>
+              <tr>
+                <td>Platform Liability</td>
+                <td>Intermediary protection applies if compliant</td>
+                <td>Higher risk — government can act suo motu</td>
+              </tr>
+              <tr>
+                <td>Penalty (Platform)</td>
+                <td>Damages (monetary)</td>
+                <td>Criminal charges if non-compliant</td>
+              </tr>
+              <tr>
+                <td>Mitigation</td>
+                <td>Quick takedown of court-ordered content</td>
+                <td>Same + ensure no editorial endorsement of posts</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-2 gap-3">
+          <div>
+            <h4 style="margin-bottom:0.75rem;">Key Precedents</h4>
+            <div class="precedent-card">
+              <div class="case-name">Shreya Singhal v. Union of India (2015)</div>
+              <div class="case-ruling">Platforms protected unless actual knowledge + failure to act. Struck down blanket Section 66A.</div>
+            </div>
+            <div class="precedent-card">
+              <div class="case-name">Google India v. Visaka Industries (2019)</div>
+              <div class="case-ruling">Search/platform not liable for user-generated links and content it merely hosts.</div>
+            </div>
+            <div class="precedent-card">
+              <div class="case-name">MouthShut.com cases (multiple)</div>
+              <div class="case-ruling">Consumer review platforms have survived multiple defamation suits by maintaining editorial neutrality.</div>
+            </div>
+            <div class="precedent-card">
+              <div class="case-name">Facebook India v. Union of India</div>
+              <div class="case-ruling">Platform must appoint India-resident officers — non-residency is not a valid defence.</div>
+            </div>
+          </div>
+          <div>
+            <h4 style="margin-bottom:0.75rem;">What You Must Do</h4>
+            <ul class="action-list" style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:1rem;">
+              <li>Never add editorial headlines or promotional framing to specific negative posts</li>
+              <li>Always include disclaimer: <em>"Views expressed are solely those of the individual user"</em></li>
+              <li>Maintain a documented Notice &amp; Takedown procedure, publicly accessible</li>
+              <li>Log every legal notice and your response with timestamps</li>
+              <li>Respond to every notice within 36 hours, even if only to say "under review"</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- §6 — Mandatory Officers -->
+      <section class="legal-section" id="s6">
+        <div class="section-header">
+          <div class="section-number">6</div>
+          <h2>Mandatory Officers — Whom to Appoint</h2>
+        </div>
+        <p class="section-subtitle">These are legal requirements, not optional roles. Non-compliance voids your Section 79 protection.</p>
+
+        <div class="grid grid-3 gap-3">
+          <!-- Grievance Officer -->
+          <div class="officer-card">
+            <div class="officer-icon">🧑‍⚖️</div>
+            <h3>Grievance Officer</h3>
+            <span class="req-badge">Required: IT Rules 2021</span>
+            <div class="officer-detail"><span class="dl">Rule</span> Rule 3(2)(a)</div>
+            <div class="officer-detail"><span class="dl">Must be</span> India-resident, named on website</div>
+            <div class="officer-detail"><span class="dl">Duties</span> Receive complaints, acknowledge 24h, resolve 15 days, monthly reporting</div>
+            <div class="officer-detail"><span class="dl">Salary</span> ₹30,000 – ₹80,000 / month</div>
+            <div class="officer-detail"><span class="dl">Note</span> Can be same person as CCO initially</div>
+          </div>
+          <!-- Nodal Contact Officer -->
+          <div class="officer-card">
+            <div class="officer-icon">👮</div>
+            <h3>Nodal Contact Officer</h3>
+            <span class="req-badge" style="background:#FFF5E6;color:var(--warning);">Required at 50L+ Users</span>
+            <div class="officer-detail"><span class="dl">Rule</span> IT Rules 2021, Rule 3(2)(b) — SSMI only</div>
+            <div class="officer-detail"><span class="dl">Must be</span> India-resident senior employee</div>
+            <div class="officer-detail"><span class="dl">Duties</span> Liaison for law enforcement; respond to police/court within 72h</div>
+            <div class="officer-detail"><span class="dl">Salary</span> Senior employee level</div>
+            <div class="officer-detail"><span class="dl">Note</span> Can be the Grievance Officer initially</div>
+          </div>
+          <!-- DPO -->
+          <div class="officer-card">
+            <div class="officer-icon">🔐</div>
+            <h3>Data Protection Officer</h3>
+            <span class="req-badge">Required: DPDPA 2023</span>
+            <div class="officer-detail"><span class="dl">Act</span> DPDPA 2023</div>
+            <div class="officer-detail"><span class="dl">Must be</span> Qualified in data protection law</div>
+            <div class="officer-detail"><span class="dl">Duties</span> Oversee data processing, handle DPDPA requests, interface with Data Protection Board</div>
+            <div class="officer-detail"><span class="dl">Salary</span> ₹60,000 – ₹1.5L / month</div>
+            <div class="officer-detail"><span class="dl">Note</span> Can hire externally — vCDPO service available</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §7 — Content Policy -->
+      <section class="legal-section" id="s7">
+        <div class="section-header">
+          <div class="section-number">7</div>
+          <h2>Content Policy Requirements</h2>
+        </div>
+        <p class="section-subtitle">What your publicly published Content Policy <strong>must</strong> cover.</p>
+
+        <div class="grid grid-2 gap-3">
+          <div>
+            <h4 style="margin-bottom:0.75rem;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">🚫 Prohibited Content</h4>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Doxxing — personal addresses or phone numbers of private individuals</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Threats of violence or harm</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Sexual content of any kind</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Political content and election-related posts</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Content about minors</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Sharing personal financial details of others (bank account numbers, card details)</div>
+          </div>
+          <div>
+            <h4 style="margin-bottom:0.75rem;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">⚠️ Recommended Restrictions</h4>
+            <div class="content-policy-item"><span class="ci-recommended">⚠️</span> Individual person tagging restricted to public figures (CEOs, politicians — professional capacity only)</div>
+            <div class="content-policy-item"><span class="ci-recommended">⚠️</span> Government officer complaints restricted to service quality — not personal attacks</div>
+            <div class="content-policy-item"><span class="ci-recommended">⚠️</span> Cap at 3 posts per user per day to prevent coordinated spam campaigns</div>
+            <h4 style="margin-bottom:0.75rem;margin-top:1rem;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">📋 Process Requirements</h4>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Describe clearly how users can report content</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Describe appeals process for rejected posts</div>
+            <div class="content-policy-item"><span class="ci-required">✅</span> Describe how you handle legal notices and court orders</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- §8 — State-Specific Risks -->
+      <section class="legal-section" id="s8">
+        <div class="section-header">
+          <div class="section-number">8</div>
+          <h2>State-Specific Risks</h2>
+        </div>
+        <p class="section-subtitle">India is not one jurisdiction — individual states add complexity.</p>
+
+        <div class="alert alert-info" style="margin-bottom:1.25rem;">
+          ℹ️ Individual states have additional laws and courts that may affect operations. Moderation
+          SLAs and content scrutiny should be calibrated by region.
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>Risk Level</th>
+                <th>Specific Law / Issue</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>All India</strong></td>
+                <td><span class="condition-warn">🟡 Standard</span></td>
+                <td>IT Act + BNS — Defamation, Section 79</td>
+                <td>Standard compliance procedures</td>
+              </tr>
+              <tr>
+                <td><strong>Uttar Pradesh</strong></td>
+                <td><span style="color:var(--danger);font-weight:700;">🔴 High</span></td>
+                <td>Higher political sensitivity; aggressive local defamation cases</td>
+                <td>Extra moderation for UP-tagged entities</td>
+              </tr>
+              <tr>
+                <td><strong>Maharashtra</strong></td>
+                <td><span class="condition-warn">🟡 Medium</span></td>
+                <td>High corporate density; Mumbai companies have large legal departments</td>
+                <td>Faster response SLA for Mumbai-based cases</td>
+              </tr>
+              <tr>
+                <td><strong>Delhi</strong></td>
+                <td><span style="color:var(--danger);font-weight:700;">🔴 High</span></td>
+                <td>Government offices + courts; high risk of government body complaints</td>
+                <td>Dedicated moderation for Delhi government entities</td>
+              </tr>
+              <tr>
+                <td><strong>Tamil Nadu</strong></td>
+                <td><span class="condition-warn">🟡 Medium</span></td>
+                <td>Language — Tamil medium complaints; DPDPA includes regional language rights</td>
+                <td>Support Tamil language posts in v2</td>
+              </tr>
+              <tr>
+                <td><strong>West Bengal</strong></td>
+                <td><span style="color:var(--danger);font-weight:700;">🔴 High</span></td>
+                <td>Political sensitivity; high political organisation activity</td>
+                <td>Strict no-political-content enforcement; extra flags for WB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- §9 — Compliance Checklist -->
+      <section class="legal-section" id="s9" style="border-bottom:none;">
+        <div class="section-header">
+          <div class="section-number">9</div>
+          <h2>Complete Compliance Checklist</h2>
+        </div>
+        <p class="section-subtitle">Check these off before going live. Progress is tracked at the top of this page.</p>
+
+        <div class="compliance-checklist-grid">
+
+          <!-- Column 1 — Legal Setup -->
+          <div class="checklist-col-card">
+            <h4>⚖️ Legal Setup</h4>
+            <p class="col-count">7 items</p>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Incorporate Bhadaas Technologies Pvt. Ltd.</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Draft DPDPA-compliant Privacy Policy (lawyer review)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Draft Terms of Service (lawyer review)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Draft Content Policy (lawyer review)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Get D&amp;O (Directors &amp; Officers) Insurance</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Secure domain: bhadaas.com + bhadaas.in</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Get legal retainer (₹3–5L/year budget)</span></div>
+          </div>
+
+          <!-- Column 2 — Officers & Contacts -->
+          <div class="checklist-col-card">
+            <h4>👤 Officers &amp; Contacts</h4>
+            <p class="col-count">7 items</p>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Appoint Grievance Officer (named, India-resident)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Publish Grievance Officer contact on website</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Set up grievance@bhadaas.in email</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Set up dpo@bhadaas.in email</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Set up legal@bhadaas.in email</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Appoint Data Protection Officer (or hire vCDPO)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Create public legal notices page</span></div>
+          </div>
+
+          <!-- Column 3 — Technical Compliance -->
+          <div class="checklist-col-card">
+            <h4>🛠️ Technical Compliance</h4>
+            <p class="col-count">7 items</p>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Phone OTP verification (mandatory to post)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Consent checkbox at registration (explicit, DPDPA)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Data deletion request workflow</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>36-hour takedown capability built into admin panel</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Legal notice logging system</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>No individual private person tagging (v1)</span></div>
+            <div class="compliance-item" onclick="toggleCheck(this)"><span class="check"></span><span>Automatic political content filtering</span></div>
+          </div>
+
+        </div>
+      </section>
+
+    </main><!-- /legal-main -->
+
+    <!-- ── TOC SIDEBAR ───────────────────────────────────────────── -->
+    <aside class="toc-sidebar" id="toc">
+      <h4>On This Page</h4>
+      <a href="#s1" class="toc-link">Legal Standing</a>
+      <a href="#s2" class="toc-link">IT Act 2000 — Section 79</a>
+      <a href="#s3" class="toc-link">IT Rules 2021</a>
+      <a href="#s4" class="toc-link">DPDPA 2023</a>
+      <a href="#s5" class="toc-link">Defamation Law</a>
+      <a href="#s6" class="toc-link">Mandatory Officers</a>
+      <a href="#s7" class="toc-link">Content Policy</a>
+      <a href="#s8" class="toc-link">State-Specific Risks</a>
+      <a href="#s9" class="toc-link">Compliance Checklist</a>
+      <div style="margin-top:1.25rem;padding-top:0.75rem;border-top:1px solid var(--border);">
+        <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:0.4rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Checklist Progress</div>
+        <div style="background:var(--bg);border-radius:4px;height:6px;overflow:hidden;">
+          <div id="toc-progress-fill" style="height:100%;background:linear-gradient(90deg,#28C76F,#FF6B35);width:0%;transition:width 0.4s;"></div>
+        </div>
+        <div id="toc-progress-text" style="font-size:0.75rem;color:var(--text-muted);margin-top:0.35rem;font-weight:600;">0 / 21 complete</div>
+      </div>
+    </aside>
+
+  </div><!-- /legal-layout -->
+</div><!-- /container -->
+
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════════ -->
+<footer class="page-footer">
+  <p>भड़ास Developer Reference &mdash; <strong>Legal &amp; Compliance Guide</strong> &mdash; Last updated May 2026</p>
+  <p style="margin-top:0.35rem;">
+    <a href="index.html">← Dev Hub</a> &nbsp;·&nbsp;
+    <a href="business.html">Business Analysis</a> &nbsp;·&nbsp;
+    <a href="technical.html">Technical Spec</a> &nbsp;·&nbsp;
+    <a href="../index.html">Back to Site</a>
+  </p>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Compliance Checkbox Toggle ──────────────────────────────── */
+  const TOTAL_ITEMS = document.querySelectorAll('.compliance-item').length;
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    el.querySelector('.check').textContent = el.classList.contains('checked') ? '✓' : '';
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const checked = document.querySelectorAll('.compliance-item.checked').length;
+    const pct = Math.round((checked / TOTAL_ITEMS) * 100);
+
+    // Top bar
+    const bar = document.getElementById('compliance-progress-bar');
+    const label = document.getElementById('compliance-progress-label');
+    bar.style.width = pct + '%';
+    label.textContent = pct + '% Complete';
+    label.style.opacity = pct > 0 ? '1' : '0';
+
+    // TOC mini bar
+    document.getElementById('toc-progress-fill').style.width = pct + '%';
+    document.getElementById('toc-progress-text').textContent = checked + ' / ' + TOTAL_ITEMS + ' complete';
+  }
+
+  /* ── Sticky TOC Active Highlight ─────────────────────────────── */
+  const sections = Array.from(document.querySelectorAll('.legal-section'));
+  const tocLinks = Array.from(document.querySelectorAll('.toc-link'));
+
+  function onScroll() {
+    const scrollY = window.scrollY + 100;
+    let active = sections[0];
+    for (const s of sections) {
+      if (s.offsetTop <= scrollY) active = s;
+    }
+    tocLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + active.id);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run once on load
+
+  /* ── IntersectionObserver — Animate sections in ─────────────── */
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.06 }
+  );
+  sections.forEach(s => observer.observe(s));
+
+  /* ── Smooth-scroll TOC links ─────────────────────────────────── */
+  tocLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>

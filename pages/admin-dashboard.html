@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Bhadaas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ── Page-specific additions ── */
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 1.75rem; gap: 1rem; flex-wrap: wrap;
+    }
+    .page-header h1 { font-size: 1.55rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .page-header p  { color: var(--text-muted); font-size: 0.875rem; }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    @media (max-width: 1100px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .grid-4 { grid-template-columns: 1fr; } }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px)  { .grid-3 { grid-template-columns: 1fr; } }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 900px)  { .grid-2 { grid-template-columns: 1fr; } }
+
+    .layout-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-top: 1.5rem; }
+    @media (max-width: 1000px) { .layout-2-1 { grid-template-columns: 1fr; } }
+
+    /* Filter chips */
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.35rem 0.9rem; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--card-bg); color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    /* Activity feed */
+    .activity-list { list-style: none; margin: 0; padding: 0; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      padding: 0.75rem 0; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-time { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; min-width: 68px; padding-top: 0.15rem; }
+    .activity-dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; margin-top: 0.45rem; }
+    .activity-text { flex: 1; font-size: 0.84rem; line-height: 1.5; min-width: 140px; }
+    .activity-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+    /* Chart */
+    .chart-container { overflow-x: auto; padding-bottom: 0.5rem; }
+    .chart-bars { display: flex; align-items: flex-end; gap: 8px; min-height: 180px; padding: 0 4px; }
+    .chart-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 0.4rem; min-width: 32px; }
+    .chart-bar {
+      width: 100%; border-radius: 4px 4px 0 0;
+      background: linear-gradient(to top, var(--primary), var(--primary)99);
+      min-height: 8px; transition: opacity 0.2s; cursor: pointer;
+    }
+    .chart-bar:hover { opacity: 0.8; }
+    .chart-label { font-size: 0.65rem; color: var(--text-muted); text-align: center; white-space: nowrap; }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 0.875rem; font-weight: 500; }
+    .toggle-switch { position: relative; width: 40px; height: 22px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: 20px;
+      background: var(--border); cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-track::after {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; left: 3px; top: 3px;
+      transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(18px); }
+
+    /* Bulk actions bar */
+    .bulk-bar {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.875rem 1.25rem; background: var(--primary-light);
+      border-radius: var(--radius-sm); margin-top: 1rem; flex-wrap: wrap;
+    }
+
+    /* Company grid cards */
+    .company-card {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem;
+      transition: box-shadow 0.2s;
+    }
+    .company-card:hover { box-shadow: var(--shadow); }
+    .company-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .company-card-name { font-weight: 700; font-size: 0.95rem; }
+    .company-stat-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.82rem; }
+    .company-stat-row .key { color: var(--text-muted); }
+
+    /* Legal row urgency */
+    .urgent-row td { background: #fff5f5; }
+
+    /* Score badge inline */
+    .score-pill {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 22px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .score-pill.high   { background: var(--danger-light);   color: var(--danger);  }
+    .score-pill.medium { background: var(--warning-light);  color: var(--warning); }
+    .score-pill.low    { background: var(--success-light);  color: var(--success); }
+
+    /* Report cards */
+    .report-card {
+      background: var(--card-bg); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+    }
+    .report-card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .report-card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .report-card-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .report-card-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    /* Mini stat inline */
+    .mini-stat-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem;
+    }
+    .mini-stat-row:last-child { border-bottom: none; }
+    .mini-stat-row .key { color: var(--text-muted); }
+    .mini-stat-row .val { font-weight: 700; }
+
+    /* Duplicate pair */
+    .dupe-pair {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .dupe-pair:last-child { border-bottom: none; }
+    .dupe-name { font-size: 0.875rem; font-weight: 600; flex: 1; }
+    .dupe-sep  { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Hidden by default (handled by shared.js initSidebarNav) */
+    .dashboard-section.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav injected by shared.js -->
+  <div id="nav-placeholder" data-active="admin"></div>
+
+  <!-- ═══════════════════════════════════════════
+       APP LAYOUT
+  ═══════════════════════════════════════════ -->
+  <div class="app-layout">
+
+    <!-- ──────────── SIDEBAR ──────────── -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-logo">
+        <div style="font-size:1.8rem;margin-bottom:0.4rem;">🔐</div>
+        <div style="font-weight:800;font-size:1rem;color:#fff;line-height:1.2;">Bhadaas Admin</div>
+        <div style="font-size:0.72rem;color:rgba(255,255,255,0.45);margin-top:0.25rem;">Admin Panel</div>
+      </div>
+
+      <span class="sidebar-label">Operations</span>
+      <div class="sidebar-item active" data-section="overview">
+        <span class="icon">📊</span>
+        <span class="label">Overview</span>
+      </div>
+      <div class="sidebar-item" data-section="moderation">
+        <span class="icon">🛡️</span>
+        <span class="label">Moderation</span>
+        <span class="sidebar-badge">127</span>
+      </div>
+      <div class="sidebar-item" data-section="entities">
+        <span class="icon">🏷️</span>
+        <span class="label">Entities</span>
+        <span class="sidebar-badge">18</span>
+      </div>
+      <div class="sidebar-item" data-section="users">
+        <span class="icon">👥</span>
+        <span class="label">Users</span>
+      </div>
+
+      <span class="sidebar-label">Revenue</span>
+      <div class="sidebar-item" data-section="revenue">
+        <span class="icon">💰</span>
+        <span class="label">Revenue</span>
+      </div>
+      <div class="sidebar-item" data-section="companies">
+        <span class="icon">🏢</span>
+        <span class="label">Companies</span>
+      </div>
+
+      <span class="sidebar-label">Legal</span>
+      <div class="sidebar-item" data-section="legal">
+        <span class="icon">⚖️</span>
+        <span class="label">Legal Queue</span>
+        <span class="sidebar-badge">3</span>
+      </div>
+      <div class="sidebar-item" data-section="reports">
+        <span class="icon">📋</span>
+        <span class="label">Reports</span>
+      </div>
+
+    </aside>
+
+    <!-- ──────────── MAIN CONTENT ──────────── -->
+    <main class="main-content" id="main-content">
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Overview
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section" id="section-overview">
+
+        <div class="page-header">
+          <div>
+            <h1>Platform Overview</h1>
+            <p id="overview-date">Loading date…</p>
+          </div>
+          <span class="badge badge-primary" style="font-size:0.8rem;padding:0.4rem 1rem;align-self:flex-start;">Logged in as: Admin</span>
+        </div>
+
+        <!-- Row 1 of stat cards -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-icon orange">📊</div>
+            <div>
+              <div class="stat-value">48,291</div>
+              <div class="stat-label">Total Posts</div>
+              <div class="stat-change up">+312 today ↑</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">👥</div>
+            <div>
+              <div class="stat-value">1.2L</div>
+              <div class="stat-label">Total Users</div>
+              <div class="stat-change up">+2,340 this week ↑</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon red">🛡️</div>
+            <div>
+              <div class="stat-value">127</div>
+              <div class="stat-label">Pending Moderation</div>
+              <div class="stat-change down">Act now</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">💰</div>
+            <div>
+              <div class="stat-value">₹8.5L</div>
+              <div class="stat-label">Monthly Revenue</div>
+              <div class="stat-change up">+12% vs last month ↑</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2 of stat cards -->
+        <div class="grid-4" style="margin-top:1rem;">
+          <div class="stat-card">
+            <div class="stat-icon purple">🏢</div>
+            <div>
+              <div class="stat-value">89</div>
+              <div class="stat-label">Active Companies</div>
+              <div class="stat-change up">+7 new this month</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">🏷️</div>
+            <div>
+              <div class="stat-value">342</div>
+              <div class="stat-label">Claimed Entities</div>
+              <div class="stat-change up">of 8,734 total</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">✅</div>
+            <div>
+              <div class="stat-value">2,847</div>
+              <div class="stat-label">Resolved This Month</div>
+              <div class="stat-change up">+432 ↑</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon yellow">📈</div>
+            <div>
+              <div class="stat-value">1,247</div>
+              <div class="stat-label">Avg Daily Posts</div>
+              <div class="stat-change up">growing</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two-column: activity feed + quick cards -->
+        <div class="layout-2-1">
+
+          <!-- LEFT: Recent Activity -->
+          <div class="card">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <span style="font-weight:700;font-size:1rem;">Recent Activity</span>
+                <span class="badge badge-success" style="font-size:0.68rem;">● Live</span>
+              </div>
+            </div>
+            <div class="card-body" style="padding:0 1.5rem 1rem;">
+              <ul class="activity-list" id="activity-feed">
+                <li class="activity-item">
+                  <span class="activity-time">2 min ago</span>
+                  <span class="activity-dot"></span>
+                  <span class="activity-text">New post: <strong>'HDFC Bank froze my account without notice'</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">5 min ago</span>
+                  <span class="activity-dot" style="background:var(--warning);"></span>
+                  <span class="activity-text">Company claimed entity: <strong>Zomato</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening claim review…','info')">Review</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">8 min ago</span>
+                  <span class="activity-dot" style="background:var(--danger);"></span>
+                  <span class="activity-text">Legal takedown request: <strong>Post #4821</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=legal]').click()">View</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">12 min ago</span>
+                  <span class="activity-dot" style="background:var(--accent);"></span>
+                  <span class="activity-text">New user registered: phone <strong>+91-98xx-xxxx</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=users]').click()">View</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">15 min ago</span>
+                  <span class="activity-dot" style="background:var(--primary);"></span>
+                  <span class="activity-text">Post #1247 went viral: <strong>1000+ Me Toos</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening viral post…','info')">View</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">1h ago</span>
+                  <span class="activity-dot" style="background:var(--success);"></span>
+                  <span class="activity-text">Company response sent: <strong>Amazon India → 567 users</strong></span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">2h ago</span>
+                  <span class="activity-dot" style="background:var(--warning);"></span>
+                  <span class="activity-text">Entity created: <strong>'XYZ Builders Delhi'</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=entities]').click()">Review</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">3h ago</span>
+                  <span class="activity-dot" style="background:var(--text-muted);"></span>
+                  <span class="activity-text">Report submitted for <strong>post #2341</strong></span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=moderation]').click()">Review</button>
+                  </span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">4h ago</span>
+                  <span class="activity-dot" style="background:var(--success);"></span>
+                  <span class="activity-text">Subscription upgraded: <strong>HDFC Bank → Enterprise — ₹99,999</strong></span>
+                </li>
+                <li class="activity-item">
+                  <span class="activity-time">5h ago</span>
+                  <span class="activity-dot" style="background:var(--danger);"></span>
+                  <span class="activity-text">Grievance officer request received</span>
+                  <span class="activity-actions">
+                    <button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=legal]').click()">View</button>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- RIGHT: Mini cards -->
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+
+            <!-- Moderation queue mini -->
+            <div class="card">
+              <div class="card-header" style="padding-bottom:0.5rem;">
+                <span style="font-weight:700;font-size:0.9rem;">🛡️ Moderation Queue</span>
+              </div>
+              <div class="card-body" style="padding-top:0.75rem;">
+                <div style="font-size:2rem;font-weight:900;color:var(--danger);margin-bottom:0.2rem;">127</div>
+                <div class="text-sm text-muted" style="margin-bottom:0.75rem;">45 flagged as potentially defamatory, 82 awaiting first review</div>
+                <button class="btn btn-primary btn-sm w-full" onclick="document.querySelector('[data-section=moderation]').click()">Go to Moderation →</button>
+              </div>
+            </div>
+
+            <!-- Revenue mini -->
+            <div class="card">
+              <div class="card-header" style="padding-bottom:0.5rem;">
+                <span style="font-weight:700;font-size:0.9rem;">💰 Monthly Revenue</span>
+              </div>
+              <div class="card-body" style="padding-top:0.75rem;">
+                <div style="font-size:1.6rem;font-weight:900;color:var(--success);margin-bottom:0.2rem;">₹8.47L</div>
+                <div class="text-xs text-muted" style="margin-bottom:0.5rem;">Goal: ₹10L</div>
+                <div class="progress" style="margin-bottom:0.75rem;">
+                  <div class="progress-bar success" style="width:84.7%"></div>
+                </div>
+                <div class="text-xs text-muted text-right" style="text-align:right;">84.7% of goal</div>
+              </div>
+            </div>
+
+            <!-- Quick stats -->
+            <div class="card">
+              <div class="card-header" style="padding-bottom:0.5rem;">
+                <span style="font-weight:700;font-size:0.9rem;">⚡ Today's Quick Stats</span>
+              </div>
+              <div class="card-body" style="padding-top:0.5rem;">
+                <div class="mini-stat-row"><span class="key">Posts today</span><span class="val text-primary">312</span></div>
+                <div class="mini-stat-row"><span class="key">New users</span><span class="val text-success">45</span></div>
+                <div class="mini-stat-row"><span class="key">Legal requests</span><span class="val text-danger">3</span></div>
+              </div>
+            </div>
+
+          </div><!-- /right col -->
+        </div><!-- /layout-2-1 -->
+      </div><!-- /section-overview -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Moderation
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-moderation">
+
+        <div class="page-header">
+          <div>
+            <h1>Content Moderation Queue</h1>
+            <p>Review and action flagged posts before they go live</p>
+          </div>
+          <span class="badge badge-danger" style="font-size:0.8rem;padding:0.4rem 1rem;align-self:flex-start;">127 pending</span>
+        </div>
+
+        <!-- Filter chips -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+          <span class="chip active" onclick="setChipActive(this)">All</span>
+          <span class="chip" onclick="setChipActive(this)">Flagged</span>
+          <span class="chip" onclick="setChipActive(this)">New</span>
+          <span class="chip" onclick="setChipActive(this)">Reported</span>
+          <span class="chip" onclick="setChipActive(this)">Auto-Flagged</span>
+        </div>
+
+        <!-- 3 inline stat cards -->
+        <div class="grid-3" style="margin-bottom:1.25rem;">
+          <div class="stat-card" style="padding:1rem 1.25rem;">
+            <div class="stat-icon red">🛡️</div>
+            <div>
+              <div class="stat-value" style="font-size:1.4rem;">127</div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+          </div>
+          <div class="stat-card" style="padding:1rem 1.25rem;">
+            <div class="stat-icon green">✅</div>
+            <div>
+              <div class="stat-value" style="font-size:1.4rem;">1,247</div>
+              <div class="stat-label">Auto-Approved Today</div>
+            </div>
+          </div>
+          <div class="stat-card" style="padding:1rem 1.25rem;">
+            <div class="stat-icon yellow">🚫</div>
+            <div>
+              <div class="stat-value" style="font-size:1.4rem;">23</div>
+              <div class="stat-label">Rejected Today</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Moderation Table -->
+        <div class="card">
+          <div class="card-header">
+            <span style="font-weight:700;font-size:1rem;">Moderation Queue</span>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all-mod" onchange="toggleSelectAll('mod-row-cb', this.checked)"> #</th>
+                  <th>Content Preview</th>
+                  <th>Entity</th>
+                  <th>Category</th>
+                  <th>User Score</th>
+                  <th>Flags</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 1</td>
+                  <td class="text-sm">"HDFC Bank fraud — they reversed my dispute without telling me…"</td>
+                  <td><span class="badge badge-secondary">🏦 HDFC Bank</span></td>
+                  <td>Banking</td>
+                  <td><span class="score-pill high">94</span></td>
+                  <td><span class="text-warning">⚠️ Defamation?</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening edit view…','info')">Edit</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening post details…','info')">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 2</td>
+                  <td class="text-sm">"Byju's sent me a legal threat for asking for a refund…"</td>
+                  <td><span class="badge badge-secondary">🎓 Byju's</span></td>
+                  <td>Education</td>
+                  <td><span class="score-pill high">96</span></td>
+                  <td><span class="text-danger">🔴 Viral (2.3K)</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening post details…','info')">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 3</td>
+                  <td class="text-sm">"Zomato delivery always late, no refund after 2 hours delay…"</td>
+                  <td><span class="badge badge-secondary">🍕 Zomato</span></td>
+                  <td>Food</td>
+                  <td><span class="score-pill medium">71</span></td>
+                  <td><span class="text-muted">None</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 4</td>
+                  <td class="text-sm">"BSNL network down for 3 days, nobody picking up customer care…"</td>
+                  <td><span class="badge badge-secondary">☎️ BSNL</span></td>
+                  <td>Telecom</td>
+                  <td><span class="score-pill medium">65</span></td>
+                  <td><span class="text-muted">None</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 5</td>
+                  <td class="text-sm">"Amazon sent empty box, replacement also empty, no refund…"</td>
+                  <td><span class="badge badge-secondary">📦 Amazon</span></td>
+                  <td>E-Commerce</td>
+                  <td><span class="score-pill medium">82</span></td>
+                  <td><span class="text-warning">⚠️ Flagged</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 6</td>
+                  <td class="text-sm">"XYZ Builder took ₹15L, project still incomplete after 4 years…"</td>
+                  <td><span class="badge badge-secondary">🏠 XYZ Builders</span></td>
+                  <td>Real Estate</td>
+                  <td><span class="score-pill low">45</span></td>
+                  <td><span class="text-danger">🔴 Spam?</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('🗑️ Post deleted permanently','danger')">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 7</td>
+                  <td class="text-sm">"Paytm froze ₹12,000 in my wallet citing suspicious activity…"</td>
+                  <td><span class="badge badge-secondary">💳 Paytm</span></td>
+                  <td>Banking</td>
+                  <td><span class="score-pill medium">88</span></td>
+                  <td><span class="text-muted">None</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="mod-row-cb"> 8</td>
+                  <td class="text-sm">"Airtel billing fraud — charged twice for same month, no credit…"</td>
+                  <td><span class="badge badge-secondary">📡 Airtel</span></td>
+                  <td>Telecom</td>
+                  <td><span class="score-pill medium">87</span></td>
+                  <td><span class="text-warning">⚠️ Duplicate?</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening merge tool…','info')">Merge</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Bulk actions -->
+          <div class="bulk-bar">
+            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:500;cursor:pointer;">
+              <input type="checkbox" id="bulk-select-all" onchange="toggleSelectAll('mod-row-cb',this.checked);document.getElementById('select-all-mod').checked=this.checked;"> Select All
+            </label>
+            <button class="btn btn-success btn-sm" onclick="showToast('✅ Selected posts approved and published','success')">Approve Selected</button>
+            <button class="btn btn-danger btn-sm" onclick="showToast('❌ Selected posts rejected and users notified','danger')">Reject Selected</button>
+          </div>
+        </div>
+
+        <!-- Moderation Guidelines -->
+        <div class="alert alert-info" style="margin-top:1.25rem;">
+          <span>⚠️</span>
+          <span><strong>Auto-flag triggers:</strong> Personal phone/address shared · Price &gt; ₹1L without evidence · Keywords: arrest / jail / kill / suicide. Manual review required for all government office posts.</span>
+        </div>
+
+      </div><!-- /section-moderation -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Entities
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-entities">
+
+        <div class="page-header">
+          <div>
+            <h1>Entity Management</h1>
+            <p>Manage all platform entities, claims, and duplicates</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showToast('Opening create entity form…','info')">+ Create Entity</button>
+        </div>
+
+        <div data-tabs-container>
+          <!-- Tabs -->
+          <div class="tabs" style="margin-bottom:1.25rem;">
+            <div class="tab-item active" data-tab="tab-all-entities">All Entities</div>
+            <div class="tab-item" data-tab="tab-pending-claims">Pending Claims <span class="sidebar-badge" style="background:var(--warning);position:relative;top:0;right:0;margin-left:0.35rem;">18</span></div>
+            <div class="tab-item" data-tab="tab-duplicates">Duplicates <span class="sidebar-badge" style="background:var(--danger);position:relative;top:0;right:0;margin-left:0.35rem;">4</span></div>
+          </div>
+
+          <!-- Tab: All Entities -->
+          <div class="tab-content active" id="tab-all-entities">
+            <div class="card">
+              <div class="card-header" style="flex-wrap:wrap;gap:0.75rem;">
+                <input type="text" class="form-control" placeholder="🔍 Search entities…" style="max-width:240px;" oninput="showToast('Search results updating…','info')">
+                <select class="form-control" style="max-width:180px;" onchange="showToast('Filter applied','info')">
+                  <option value="">All Categories</option>
+                  <option>Telecom</option>
+                  <option>Banking &amp; Finance</option>
+                  <option>E-Commerce</option>
+                  <option>Food &amp; Delivery</option>
+                  <option>Transport &amp; Logistics</option>
+                  <option>Real Estate</option>
+                  <option>Education</option>
+                </select>
+              </div>
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Entity Name</th>
+                      <th>Category</th>
+                      <th>Bhadaas</th>
+                      <th>Claimed</th>
+                      <th>Resolution Rate</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="entities-table-body">
+                    <!-- Injected by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: Pending Claims -->
+          <div class="tab-content" id="tab-pending-claims">
+            <div class="card">
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Entity</th>
+                      <th>Claimant Email</th>
+                      <th>Submitted</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>📡 Airtel India</strong></td>
+                      <td class="text-sm">airtel.support@airtel.in</td>
+                      <td class="text-sm text-muted">2 days ago</td>
+                      <td><span class="badge badge-warning">Pending</span></td>
+                      <td style="white-space:nowrap;">
+                        <button class="btn btn-success btn-sm" onclick="showToast('✅ Claim approved','success')">Approve</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('❌ Claim rejected','danger')">Reject</button>
+                        <button class="btn btn-outline btn-sm" onclick="showToast('📩 Info request sent','info')">Request More Info</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>🏦 HDFC Bank</strong></td>
+                      <td class="text-sm">digital@hdfcbank.com</td>
+                      <td class="text-sm text-muted">3 days ago</td>
+                      <td><span class="badge badge-secondary">Under Review</span></td>
+                      <td style="white-space:nowrap;">
+                        <button class="btn btn-success btn-sm" onclick="showToast('✅ Claim approved','success')">Approve</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('❌ Claim rejected','danger')">Reject</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>🏠 Delhi Plumbers Assoc.</strong> <span class="badge badge-primary" style="font-size:0.65rem;">New Entity</span></td>
+                      <td class="text-sm">contact@dpa.org</td>
+                      <td class="text-sm text-muted">1 day ago</td>
+                      <td><span class="badge badge-warning">Pending</span></td>
+                      <td style="white-space:nowrap;">
+                        <button class="btn btn-success btn-sm" onclick="showToast('✅ Claim approved','success')">Approve</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('❌ Claim rejected','danger')">Reject</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>🍕 Zomato</strong></td>
+                      <td class="text-sm">zomato-support@zomato.com</td>
+                      <td class="text-sm text-muted">5 days ago</td>
+                      <td><span class="badge badge-warning">Pending</span></td>
+                      <td style="white-space:nowrap;">
+                        <button class="btn btn-success btn-sm" onclick="showToast('✅ Claim approved','success')">Approve</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('❌ Claim rejected','danger')">Reject</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>🏢 Generic Entity</strong></td>
+                      <td class="text-sm">unknown@mail.com</td>
+                      <td class="text-sm text-muted">1 hour ago</td>
+                      <td><span class="badge badge-danger">Suspicious ⚠️</span></td>
+                      <td style="white-space:nowrap;">
+                        <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ Claim flagged for review','warning')">Flag</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('❌ Claim rejected','danger')">Reject</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: Duplicates -->
+          <div class="tab-content" id="tab-duplicates">
+            <div class="card">
+              <div class="card-header">
+                <span style="font-weight:700;font-size:1rem;">Potential Duplicate Entities</span>
+                <span class="badge badge-danger">4 pairs</span>
+              </div>
+              <div class="card-body">
+                <div class="dupe-pair">
+                  <span class="dupe-name">🏦 HDFC Bank</span>
+                  <span class="dupe-sep">≈</span>
+                  <span class="dupe-name">🏦 HDFC Bank Ltd</span>
+                  <span class="badge badge-secondary">97% match</span>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Opening merge tool for HDFC Bank…','info')">Merge</button>
+                </div>
+                <div class="dupe-pair">
+                  <span class="dupe-name">📡 Airtel</span>
+                  <span class="dupe-sep">≈</span>
+                  <span class="dupe-name">📡 Airtel India Ltd.</span>
+                  <span class="badge badge-secondary">94% match</span>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Opening merge tool for Airtel…','info')">Merge</button>
+                </div>
+                <div class="dupe-pair">
+                  <span class="dupe-name">🚖 Ola</span>
+                  <span class="dupe-sep">≈</span>
+                  <span class="dupe-name">🚖 Ola Cabs</span>
+                  <span class="badge badge-secondary">91% match</span>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Opening merge tool for Ola…','info')">Merge</button>
+                </div>
+                <div class="dupe-pair">
+                  <span class="dupe-name">🏠 XYZ Builders</span>
+                  <span class="dupe-sep">≈</span>
+                  <span class="dupe-name">🏠 XYZ Builders &amp; Developers</span>
+                  <span class="badge badge-secondary">88% match</span>
+                  <button class="btn btn-primary btn-sm" onclick="showToast('Opening merge tool for XYZ Builders…','info')">Merge</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /data-tabs-container -->
+      </div><!-- /section-entities -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Users
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-users">
+
+        <div class="page-header">
+          <div>
+            <h1>User Management</h1>
+            <p>Monitor, moderate, and manage platform users</p>
+          </div>
+          <input type="text" class="form-control" placeholder="🔍 Search by user ID or phone…" style="max-width:260px;" oninput="showToast('Searching users…','info')">
+        </div>
+
+        <!-- 3 stat cards -->
+        <div class="grid-3" style="margin-bottom:1.25rem;">
+          <div class="stat-card" style="padding:1rem 1.25rem;">
+            <div class="stat-icon blue">👥</div>
+            <div>
+              <div class="stat-value" style="font-size:1.4rem;">1.2L</div>
+              <div class="stat-label">Total Users</div>
+            </div>
+          </div>
+          <div class="stat-card" style="padding:1rem 1.25rem;">
+            <div class="stat-icon green">✅</div>
+            <div>
+              <div class="stat-value" style="font-size:1.4rem;">89,453</div>
+              <div class="stat-label">Verified</div>
+            </div>
+          </div>
+          <div class="stat-card" style="padding:1rem 1.25rem;">
+            <div class="stat-icon red">🚫</div>
+            <div>
+              <div class="stat-value" style="font-size:1.4rem;">234</div>
+              <div class="stat-label">Suspended</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Table -->
+        <div class="card">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Phone (masked)</th>
+                  <th>Trust Score</th>
+                  <th>Posts</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>U#10012</strong></td>
+                  <td class="text-sm text-muted">+91-98xx-1234</td>
+                  <td><span class="score-pill high">94</span></td>
+                  <td>12</td>
+                  <td class="text-sm text-muted">3 months ago</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening user profile…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ User suspended','warning')">Suspend</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10045</strong></td>
+                  <td class="text-sm text-muted">+91-87xx-5678</td>
+                  <td><span class="score-pill medium">71</span></td>
+                  <td>5</td>
+                  <td class="text-sm text-muted">1 month ago</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening user profile…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ User suspended','warning')">Suspend</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10078</strong></td>
+                  <td class="text-sm text-muted">+91-99xx-9012</td>
+                  <td><span class="score-pill low">32</span></td>
+                  <td>23</td>
+                  <td class="text-sm text-muted">6 months ago</td>
+                  <td><span class="badge badge-warning">⚠️ Warned</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening user profile…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ User suspended','warning')">Suspend</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('🚫 User banned','danger')">Ban</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10089</strong></td>
+                  <td class="text-sm text-muted">+91-77xx-3456</td>
+                  <td><span class="score-pill low">8</span></td>
+                  <td>47</td>
+                  <td class="text-sm text-muted">2 years ago</td>
+                  <td><span class="badge badge-danger">🚫 Suspended</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-success btn-sm" onclick="showToast('✅ User reinstated','success')">Reinstate</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('🚫 User permanently banned','danger')">Ban</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10102</strong></td>
+                  <td class="text-sm text-muted">+91-88xx-7890</td>
+                  <td><span class="score-pill high">96</span></td>
+                  <td>7</td>
+                  <td class="text-sm text-muted">2 months ago</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening user profile…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ User suspended','warning')">Suspend</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10134</strong></td>
+                  <td class="text-sm text-muted">+91-91xx-2345</td>
+                  <td><span class="score-pill medium">45</span></td>
+                  <td>3</td>
+                  <td class="text-sm text-muted">2 weeks ago</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening user profile…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ User suspended','warning')">Suspend</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10156</strong></td>
+                  <td class="text-sm text-muted">+91-93xx-6789</td>
+                  <td><span class="score-pill medium">88</span></td>
+                  <td>9</td>
+                  <td class="text-sm text-muted">4 months ago</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening user profile…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ User suspended','warning')">Suspend</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>U#10178</strong></td>
+                  <td class="text-sm text-muted">+91-82xx-0123</td>
+                  <td><span class="score-pill low">15</span></td>
+                  <td>89</td>
+                  <td class="text-sm text-muted">1 year ago</td>
+                  <td><span class="badge badge-danger">🚫 Banned</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening review for banned user…','info')">Review</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /section-users -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Revenue
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-revenue">
+
+        <div class="page-header">
+          <div>
+            <h1>Revenue Dashboard</h1>
+            <p>Subscription, per-response, and data license revenue</p>
+          </div>
+          <span class="badge badge-success" style="font-size:0.8rem;padding:0.4rem 1rem;align-self:flex-start;">₹8.47L this month</span>
+        </div>
+
+        <!-- 4 stat cards -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div class="stat-icon green">💰</div>
+            <div>
+              <div class="stat-value">₹8.47L</div>
+              <div class="stat-label">MRR</div>
+              <div class="stat-change up">+12% ↑</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">🏢</div>
+            <div>
+              <div class="stat-value">89</div>
+              <div class="stat-label">Active Subscriptions</div>
+              <div class="stat-change up">+7 new ↑</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">💬</div>
+            <div>
+              <div class="stat-value">₹23,456</div>
+              <div class="stat-label">Per-Response Revenue</div>
+              <div class="stat-change up">147 responses billed</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple">📊</div>
+            <div>
+              <div class="stat-value">₹1.2L</div>
+              <div class="stat-label">Data License Revenue</div>
+              <div class="stat-change up">3 active licenses</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Chart -->
+        <div class="card" style="margin-top:1.25rem;">
+          <div class="card-header">
+            <span style="font-weight:700;font-size:1rem;">Monthly Revenue (Last 12 Months)</span>
+            <span class="badge badge-success">↑ Trending</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <div id="revenue-chart"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscription Table -->
+        <div class="card" style="margin-top:1.25rem;">
+          <div class="card-header">
+            <span style="font-weight:700;font-size:1rem;">Active Subscriptions</span>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Plan</th>
+                  <th>MRR</th>
+                  <th>Start Date</th>
+                  <th>Status</th>
+                  <th>Next Renewal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>📡 Airtel India</strong></td>
+                  <td><span class="badge badge-secondary">Professional</span></td>
+                  <td class="font-bold text-success">₹29,999</td>
+                  <td class="text-sm text-muted">Jan 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>🏦 HDFC Bank</strong></td>
+                  <td><span class="badge badge-secondary">Professional</span></td>
+                  <td class="font-bold text-success">₹29,999</td>
+                  <td class="text-sm text-muted">Feb 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>📦 Amazon India</strong></td>
+                  <td><span class="badge badge-primary">Enterprise</span></td>
+                  <td class="font-bold text-success">₹99,999</td>
+                  <td class="text-sm text-muted">Mar 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>🍔 Swiggy</strong></td>
+                  <td><span class="badge badge-secondary">Basic</span></td>
+                  <td class="font-bold text-success">₹9,999</td>
+                  <td class="text-sm text-muted">Feb 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>🍕 Zomato</strong></td>
+                  <td><span class="badge badge-secondary">Professional</span></td>
+                  <td class="font-bold text-success">₹29,999</td>
+                  <td class="text-sm text-muted">Apr 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>💳 Paytm</strong></td>
+                  <td><span class="badge badge-secondary">Basic</span></td>
+                  <td class="font-bold text-success">₹9,999</td>
+                  <td class="text-sm text-muted">Mar 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>🛍️ Flipkart</strong></td>
+                  <td><span class="badge badge-primary">Enterprise</span></td>
+                  <td class="font-bold text-success">₹99,999</td>
+                  <td class="text-sm text-muted">Jan 2026</td>
+                  <td><span class="badge badge-success">✅ Active</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>🚖 Ola Cabs</strong></td>
+                  <td><span class="badge badge-secondary">Basic</span></td>
+                  <td class="font-bold text-success">₹9,999</td>
+                  <td class="text-sm text-muted">May 2026</td>
+                  <td><span class="badge badge-warning">🆕 New</span></td>
+                  <td class="text-sm">Jun 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /section-revenue -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Companies
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-companies">
+
+        <div class="page-header">
+          <div>
+            <h1>Company Accounts</h1>
+            <p>Manage all subscribed companies on the platform</p>
+          </div>
+        </div>
+
+        <div class="grid-2" id="companies-grid">
+          <!-- Injected by JS -->
+        </div>
+
+      </div><!-- /section-companies -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Legal
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-legal">
+
+        <div class="page-header">
+          <div>
+            <h1>Legal Requests Queue</h1>
+            <p>Court orders, takedowns, grievances, and DPDPA requests</p>
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert alert-warning" style="margin-bottom:1.25rem;">
+          <span>⚠️</span>
+          <span><strong>3 active legal requests</strong> require response. You have <strong>36 hours</strong> to comply per IT Rules 2021, Section 79.</span>
+        </div>
+
+        <!-- Legal Table -->
+        <div class="card" style="margin-bottom:1.25rem;">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Type</th>
+                  <th>Entity / Subject</th>
+                  <th>Received</th>
+                  <th>Deadline</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="urgent-row">
+                  <td><strong>LR#001</strong></td>
+                  <td><span class="badge badge-danger">Court Order — Removal</span></td>
+                  <td class="text-sm">Post about Byju's</td>
+                  <td class="text-sm text-muted">25 May</td>
+                  <td><span class="text-danger font-bold">26 May ⚠️ URGENT</span></td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening court order document…','info')">View Order</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('🔴 Post removed per court order','danger')">Remove Post</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ Escalated to legal team','warning')">Escalate</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LR#002</strong></td>
+                  <td><span class="badge badge-warning">Company Defamation Claim</span></td>
+                  <td class="text-sm">Post about XYZ Builder</td>
+                  <td class="text-sm text-muted">24 May</td>
+                  <td class="text-sm text-muted">30 May</td>
+                  <td><span class="badge badge-secondary">Under Review</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening defamation claim…','info')">View Claim</button>
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Starting investigation…','info')">Investigate</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LR#003</strong></td>
+                  <td><span class="badge badge-secondary">Grievance Officer Request</span></td>
+                  <td class="text-sm">User Data Request</td>
+                  <td class="text-sm text-muted">20 May</td>
+                  <td class="text-sm text-muted">20 Jun</td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-primary btn-sm" onclick="showToast('Opening response form…','info')">Respond</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LR#004</strong></td>
+                  <td><span class="badge badge-secondary">Police Non-Cognizable</span></td>
+                  <td class="text-sm">User identity request</td>
+                  <td class="text-sm text-muted">22 May</td>
+                  <td class="text-sm text-muted">1 Jun</td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening NC request details…','info')">View</button>
+                    <button class="btn btn-warning btn-sm" onclick="showToast('⚠️ Flagged: legal counsel required','warning')">Legal Counsel Required</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LR#005</strong></td>
+                  <td><span class="badge badge-secondary">DPDPA Data Deletion</span></td>
+                  <td class="text-sm">User #10089</td>
+                  <td class="text-sm text-muted">15 May</td>
+                  <td class="text-sm text-muted">15 Jun</td>
+                  <td><span class="badge badge-success">✅ Completed</span></td>
+                  <td style="white-space:nowrap;">
+                    <button class="btn btn-outline btn-sm" onclick="showToast('Opening completion record…','info')">View Record</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Legal FAQ -->
+        <div class="card">
+          <div class="card-header">
+            <span style="font-weight:700;font-size:1rem;">⚖️ Key Legal Compliance Reference</span>
+          </div>
+          <div class="card-body">
+            <div class="grid-2" style="gap:0.75rem;">
+              <div class="mini-stat-row"><span class="key">Court order compliance</span><span class="val">36 hours</span></div>
+              <div class="mini-stat-row"><span class="key">Valid takedown response</span><span class="val">72 hours</span></div>
+              <div class="mini-stat-row"><span class="key">Transparency report</span><span class="val">Quarterly</span></div>
+              <div class="mini-stat-row"><span class="key">DPDPA deletion window</span><span class="val">30 days</span></div>
+              <div class="mini-stat-row"><span class="key">Data Protection Officer</span><span class="val"><a href="mailto:dpo@bhadaas.in" class="text-primary">dpo@bhadaas.in</a></span></div>
+              <div class="mini-stat-row"><span class="key">Grievance Officer</span><span class="val"><a href="mailto:grievance@bhadaas.in" class="text-primary">grievance@bhadaas.in</a></span></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /section-legal -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Reports
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-reports">
+
+        <div class="page-header">
+          <div>
+            <h1>Reports &amp; Exports</h1>
+            <p>Generate compliance, growth, and revenue reports</p>
+          </div>
+        </div>
+
+        <!-- 4 report cards -->
+        <div class="grid-2" style="margin-bottom:1.5rem;">
+
+          <div class="report-card">
+            <div class="report-card-icon">📊</div>
+            <div class="report-card-title">Monthly Compliance Report</div>
+            <div class="report-card-meta">May 2026 — Due: Jun 5</div>
+            <div class="report-card-actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('⏳ Generating compliance report…','info')">Generate</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('📥 Downloading PDF…','success')">Download PDF</button>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-card-icon">📈</div>
+            <div class="report-card-title">User Growth Report</div>
+            <div class="report-card-meta">Platform-wide user acquisition and retention</div>
+            <div class="report-card-actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('⏳ Generating user growth report…','info')">Generate</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('📥 Downloading CSV…','success')">Download CSV</button>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-card-icon">💰</div>
+            <div class="report-card-title">Revenue Report</div>
+            <div class="report-card-meta">Apr 2026 report ready</div>
+            <div class="report-card-actions">
+              <button class="btn btn-outline btn-sm" onclick="showToast('📥 Downloading Apr 2026 revenue PDF…','success')">Download PDF</button>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <div class="report-card-icon">⚖️</div>
+            <div class="report-card-title">Transparency Report</div>
+            <div class="report-card-meta">Required under IT Rules 2021 — quarterly</div>
+            <div class="report-card-actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('⏳ Generating transparency report…','info')">Generate</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Automated report settings -->
+        <div class="card">
+          <div class="card-header">
+            <span style="font-weight:700;font-size:1rem;">⚙️ Automated Report Settings</span>
+          </div>
+          <div class="card-body">
+            <div class="toggle-row">
+              <span class="toggle-label">Monthly compliance report (auto-send to legal@bhadaas.in)</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting updated','info')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Weekly user growth digest</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting updated','info')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Daily moderation summary email</span>
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="showToast('Setting updated','info')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Revenue report on 1st of each month</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting updated','info')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Quarterly transparency report reminder</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting updated','info')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /section-reports -->
+
+
+    </main><!-- /main-content -->
+  </div><!-- /app-layout -->
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // ── Helpers ──────────────────────────────────────────────
+
+    function setChipActive(el) {
+      el.closest('div').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function toggleSelectAll(cls, checked) {
+      document.querySelectorAll('.' + cls).forEach(cb => cb.checked = checked);
+    }
+
+    // ── Overview: today's date ────────────────────────────────
+    (function() {
+      const el = document.getElementById('overview-date');
+      if (el) {
+        const d = new Date();
+        el.textContent = d.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+      }
+    })();
+
+    // ── Revenue Chart ─────────────────────────────────────────
+    const REVENUE_MONTHS = [
+      { label: 'Jun', value: 50000  },
+      { label: 'Jul', value: 85000  },
+      { label: 'Aug', value: 120000 },
+      { label: 'Sep', value: 175000 },
+      { label: 'Oct', value: 230000 },
+      { label: 'Nov', value: 310000 },
+      { label: 'Dec', value: 390000 },
+      { label: 'Jan', value: 480000 },
+      { label: 'Feb', value: 580000 },
+      { label: 'Mar', value: 670000 },
+      { label: 'Apr', value: 760000 },
+      { label: 'May', value: 847000, color: '#28C76F' },
+    ];
+
+    // ── Entities table ────────────────────────────────────────
+    function buildEntitiesTable() {
+      const tbody = document.getElementById('entities-table-body');
+      if (!tbody || typeof ENTITIES === 'undefined') return;
+      tbody.innerHTML = ENTITIES.slice(0, 8).map(e => {
+        const cat = typeof getCategoryInfo === 'function' ? getCategoryInfo(e.category) : { label: e.category, icon: '📌' };
+        const rate = e.resolutionRate;
+        const barColor = rate >= 60 ? 'var(--success)' : rate >= 30 ? 'var(--warning)' : 'var(--danger)';
+        return `<tr>
+          <td><strong>${e.icon} ${e.name}</strong></td>
+          <td><span class="badge badge-secondary">${cat.icon} ${cat.label}</span></td>
+          <td class="font-bold" style="color:var(--danger);">${e.bhadaasCount.toLocaleString('en-IN')}</td>
+          <td>${e.claimed ? '<span class="badge badge-success">✓ Claimed</span>' : '<span class="badge badge-secondary">Unclaimed</span>'}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <div class="progress" style="flex:1;margin:0;">
+                <div class="progress-bar" style="width:${rate}%;background:${barColor};"></div>
+              </div>
+              <span class="text-sm font-bold">${rate}%</span>
+            </div>
+          </td>
+          <td style="white-space:nowrap;">
+            <button class="btn btn-outline btn-sm" onclick="showToast('Opening entity: ${e.name}','info')">View</button>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Opening edit form for ${e.name}','info')">Edit</button>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Opening merge tool for ${e.name}','info')">Merge</button>
+            <button class="btn btn-danger btn-sm" onclick="showToast('Are you sure? This cannot be undone.','warning')">Delete</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ── Companies grid ────────────────────────────────────────
+    const SUBSCRIBED_COMPANIES = [
+      { name: 'Airtel India',  icon: '📡', plan: 'Professional', mrr: '₹29,999', bhadaas: 1247, responseRate: 67 },
+      { name: 'HDFC Bank',     icon: '🏦', plan: 'Professional', mrr: '₹29,999', bhadaas: 934,  responseRate: 72 },
+      { name: 'Amazon India',  icon: '📦', plan: 'Enterprise',   mrr: '₹99,999', bhadaas: 2103, responseRate: 88 },
+      { name: 'Swiggy',        icon: '🍔', plan: 'Basic',        mrr: '₹9,999',  bhadaas: 1892, responseRate: 79 },
+      { name: 'Zomato',        icon: '🍕', plan: 'Professional', mrr: '₹29,999', bhadaas: 1654, responseRate: 82 },
+      { name: 'Paytm',         icon: '💳', plan: 'Basic',        mrr: '₹9,999',  bhadaas: 789,  responseRate: 64 },
+      { name: 'Flipkart',      icon: '🛍️', plan: 'Enterprise',   mrr: '₹99,999', bhadaas: 1876, responseRate: 77 },
+      { name: 'Ola Cabs',      icon: '🚖', plan: 'Basic',        mrr: '₹9,999',  bhadaas: 1102, responseRate: 55 },
+    ];
+
+    function buildCompaniesGrid() {
+      const grid = document.getElementById('companies-grid');
+      if (!grid) return;
+      const planBadge = p => p === 'Enterprise' ? 'badge-primary' : p === 'Professional' ? 'badge-warning' : 'badge-secondary';
+      grid.innerHTML = SUBSCRIBED_COMPANIES.map(c => `
+        <div class="company-card">
+          <div class="company-card-header">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span style="font-size:1.8rem;">${c.icon}</span>
+              <div>
+                <div class="company-card-name">${c.name}</div>
+                <span class="badge ${planBadge(c.plan)}" style="font-size:0.65rem;padding:2px 8px;">${c.plan}</span>
+              </div>
+            </div>
+            <div class="font-bold text-success">${c.mrr}<div class="text-xs text-muted" style="font-weight:400;">/ month</div></div>
+          </div>
+          <div class="company-stat-row"><span class="key">Total Bhadaas</span><span class="font-bold" style="color:var(--danger);">${c.bhadaas.toLocaleString('en-IN')}</span></div>
+          <div class="company-stat-row" style="margin-bottom:0.35rem;"><span class="key">Response Rate</span><span class="font-bold">${c.responseRate}%</span></div>
+          <div class="progress" style="margin-bottom:0.875rem;">
+            <div class="progress-bar ${c.responseRate >= 75 ? 'success' : c.responseRate >= 50 ? 'warning' : 'danger'}" style="width:${c.responseRate}%;"></div>
+          </div>
+          <button class="btn btn-outline btn-sm w-full" onclick="showToast('Opening dashboard for ${c.name}…','info')">View Dashboard</button>
+        </div>
+      `).join('');
+    }
+
+    // ── Live activity feed (rotating fake items every 8s) ─────
+    const LIVE_TEMPLATES = [
+      { text: 'New post: <strong>"Jio network outage in Bengaluru…"</strong>', color: 'var(--primary)',
+        actions: `<button class="btn btn-success btn-sm" onclick="showToast('✅ Post approved and published','success')">Approve</button><button class="btn btn-danger btn-sm" onclick="showToast('❌ Post rejected and user notified','danger')">Reject</button>` },
+      { text: 'User U#10234 registered: <strong>+91-76xx-xxxx</strong>', color: 'var(--accent)',
+        actions: `<button class="btn btn-outline btn-sm" onclick="showToast('Opening new user profile…','info')">View</button>` },
+      { text: 'Post #5127 flagged as potentially viral: <strong>800+ Me Toos</strong>', color: 'var(--warning)',
+        actions: `<button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=moderation]').click()">Review</button>` },
+      { text: 'Company claim submitted: <strong>BSNL</strong>', color: 'var(--success)',
+        actions: `<button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-section=entities]').click()">Review</button>` },
+      { text: 'Subscription renewed: <strong>Zomato — ₹29,999</strong>', color: 'var(--success)',
+        actions: '' },
+    ];
+    let _liveIdx = 0;
+    setInterval(() => {
+      const feed = document.getElementById('activity-feed');
+      if (!feed) return;
+      const tpl = LIVE_TEMPLATES[_liveIdx % LIVE_TEMPLATES.length];
+      _liveIdx++;
+      const li = document.createElement('li');
+      li.className = 'activity-item';
+      li.style.animation = 'none';
+      li.innerHTML = `
+        <span class="activity-time">just now</span>
+        <span class="activity-dot" style="background:${tpl.color};"></span>
+        <span class="activity-text">${tpl.text}</span>
+        ${tpl.actions ? `<span class="activity-actions">${tpl.actions}</span>` : ''}
+      `;
+      feed.insertBefore(li, feed.firstChild);
+      // Keep list manageable
+      while (feed.children.length > 14) feed.removeChild(feed.lastChild);
+    }, 8000);
+
+    // ── DOMContentLoaded: inject charts and tables ────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // Revenue chart
+      const chartEl = document.getElementById('revenue-chart');
+      if (chartEl && typeof renderBarChart === 'function') {
+        chartEl.innerHTML = renderBarChart(REVENUE_MONTHS);
+      }
+
+      // Entities table
+      buildEntitiesTable();
+
+      // Companies grid
+      buildCompaniesGrid();
+
+      // Init tabs for entities section
+      if (typeof initTabs === 'function') initTabs('#section-entities');
+    });
+  </script>
+</body>
+</html>

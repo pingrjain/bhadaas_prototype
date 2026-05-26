@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Dashboard — Bhadaas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ── Page-specific additions ── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .page-header h1 { font-size: 1.55rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .page-header p  { color: var(--text-muted); font-size: 0.875rem; }
+
+    /* Stat grid */
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    @media (max-width: 1100px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .grid-4 { grid-template-columns: 1fr; } }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 900px)  { .grid-2 { grid-template-columns: 1fr; } }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px)  { .grid-3 { grid-template-columns: 1fr; } }
+
+    /* Two-col layout: 2/3 + 1/3 */
+    .layout-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-top: 1.5rem; }
+    @media (max-width: 1000px) { .layout-2-1 { grid-template-columns: 1fr; } }
+
+    /* Respond queue row */
+    .queue-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .queue-row:last-child { border-bottom: none; }
+
+    .sev-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .queue-title { font-size: 0.875rem; font-weight: 600; flex: 1; min-width: 140px; }
+    .queue-meta  { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+    /* Score ring */
+    .score-ring {
+      width: 100px; height: 100px; border-radius: 50%;
+      border: 6px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 900;
+    }
+    .score-ring.high   { border-color: var(--danger);  color: var(--danger);  }
+    .score-ring.medium { border-color: var(--warning); color: var(--warning); }
+    .score-ring.good   { border-color: var(--success); color: var(--success); }
+
+    /* Response rate circle */
+    .rate-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: conic-gradient(var(--primary) calc(67 * 1%), var(--border) 0);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.05rem; color: var(--primary);
+      position: relative;
+      margin: 0 auto 0.5rem;
+    }
+    .rate-circle::after {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      background: var(--card-bg);
+      border-radius: 50%;
+    }
+    .rate-circle span { position: relative; z-index: 1; }
+
+    /* Alert item */
+    .alert-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .alert-item:last-child { border-bottom: none; }
+    .alert-item-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .alert-item-body { flex: 1; }
+    .alert-item-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .alert-item-meta  { font-size: 0.78rem; color: var(--text-muted); }
+    .alert-item-actions { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 0.875rem; font-weight: 500; }
+    .toggle-switch { position: relative; width: 40px; height: 22px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: 20px;
+      background: var(--border); cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-track::after {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; left: 3px; top: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(18px); }
+
+    /* Plan cards */
+    .plan-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .plan-card.popular { border-color: var(--primary); }
+    .plan-card.current-plan { border-color: var(--success); }
+    .plan-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--primary); color: #fff;
+      font-size: 0.68rem; font-weight: 700; padding: 3px 12px;
+      border-radius: 20px; letter-spacing: 0.06em;
+    }
+    .plan-badge.current { background: var(--success); }
+    .plan-name  { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .plan-price { font-size: 2rem; font-weight: 900; color: var(--primary); }
+    .plan-period { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.25rem; }
+    .plan-features { list-style: none; margin-bottom: 1.5rem; }
+    .plan-features li {
+      font-size: 0.84rem; padding: 0.35rem 0;
+      display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .plan-features li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+
+    /* Dark profile preview */
+    .profile-preview-card {
+      background: var(--sidebar-bg);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      color: rgba(255,255,255,0.8);
+    }
+    .profile-preview-card .preview-name { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .profile-preview-card .preview-cat  { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-bottom: 0.875rem; }
+
+    /* Danger zone */
+    .danger-zone {
+      border: 1.5px solid var(--danger);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+    }
+    .danger-zone h4 { color: var(--danger); font-size: 0.9rem; margin-bottom: 0.35rem; }
+    .danger-zone p  { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.875rem; }
+
+    /* Filter chips */
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 0.35rem 0.9rem; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--card-bg); color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+    /* Chart container */
+    .chart-container { overflow-x: auto; padding-bottom: 0.5rem; }
+    .chart-bars {
+      display: flex; align-items: flex-end; gap: 8px;
+      min-height: 180px; padding: 0 4px;
+    }
+    .chart-bar-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      flex: 1; gap: 0.4rem; min-width: 32px;
+    }
+    .chart-bar {
+      width: 100%; border-radius: 4px 4px 0 0;
+      background: linear-gradient(to top, var(--primary), var(--primary)99);
+      min-height: 8px; transition: opacity 0.2s;
+      cursor: pointer;
+    }
+    .chart-bar:hover { opacity: 0.8; }
+    .chart-label { font-size: 0.65rem; color: var(--text-muted); text-align: center; white-space: nowrap; }
+
+    /* Sidebar link items (non-section external links) */
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.7rem 1.25rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.875rem; font-weight: 500;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .sidebar-link:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+
+    /* Sentiment label legend */
+    .sev-legend { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; }
+
+    /* Current billing card */
+    .billing-detail-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem;
+    }
+    .billing-detail-row:last-child { border-bottom: none; }
+    .billing-detail-row .key { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder" data-active="company"></div>
+
+  <!-- ═══════════════════════════════════════════
+       APP LAYOUT: Sidebar + Main Content
+  ═══════════════════════════════════════════ -->
+  <div class="app-layout">
+
+    <!-- ──────────── SIDEBAR ──────────── -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Logo / Company Identity -->
+      <div class="sidebar-logo">
+        <div style="font-size:2rem;margin-bottom:0.4rem;">📡</div>
+        <div style="font-weight:800;font-size:1rem;color:#fff;line-height:1.2;">Airtel India</div>
+        <span class="badge badge-warning" style="font-size:0.65rem;padding:2px 8px;margin-top:0.4rem;display:inline-block;">Professional Plan</span>
+      </div>
+
+      <!-- MAIN Section -->
+      <span class="sidebar-label">Main</span>
+      <div class="sidebar-item active" data-section="overview">
+        <span class="icon">📊</span>
+        <span class="label">Overview</span>
+      </div>
+      <div class="sidebar-item" data-section="analytics">
+        <span class="icon">📈</span>
+        <span class="label">Analytics</span>
+      </div>
+      <div class="sidebar-item" data-section="respond">
+        <span class="icon">💬</span>
+        <span class="label">Respond</span>
+        <span class="sidebar-badge">28</span>
+      </div>
+      <div class="sidebar-item" data-section="alerts">
+        <span class="icon">🔔</span>
+        <span class="label">Alerts</span>
+        <span class="sidebar-badge">5</span>
+      </div>
+
+      <!-- ACCOUNT Section -->
+      <span class="sidebar-label">Account</span>
+      <div class="sidebar-item" data-section="settings">
+        <span class="icon">⚙️</span>
+        <span class="label">Settings</span>
+      </div>
+      <div class="sidebar-item" data-section="plans">
+        <span class="icon">💳</span>
+        <span class="label">Billing / Plans</span>
+      </div>
+
+      <!-- External Links -->
+      <span class="sidebar-label">Links</span>
+      <a class="sidebar-link" href="entity.html?id=airtel" target="_blank">
+        <span class="icon">👁️</span>
+        <span>Public Profile</span>
+      </a>
+      <a class="sidebar-link" href="#" onclick="showToast('Support: support@bhadaas.in','info');return false;">
+        <span class="icon">📞</span>
+        <span>Support</span>
+      </a>
+    </aside>
+
+    <!-- ──────────── MAIN CONTENT ──────────── -->
+    <main class="main-content" id="main-content">
+
+      <!-- ══════════════════════════════════════
+           SECTION: Overview (DEFAULT)
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section" id="section-overview">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h1>Good morning, Airtel India 👋</h1>
+            <p>Here's what's happening with your Bhadaas today</p>
+          </div>
+          <button class="btn btn-outline-primary btn-sm" onclick="showToast('Contact sales@bhadaas.in to upgrade to Enterprise','info')">
+            Upgrade to Enterprise
+          </button>
+        </div>
+
+        <!-- 4 Stat Cards -->
+        <div class="grid-4">
+
+          <div class="stat-card">
+            <div class="stat-icon orange">📊</div>
+            <div>
+              <div class="stat-value">1,247</div>
+              <div class="stat-label">Total Bhadaas</div>
+              <div class="stat-change up">+43 this week ↑</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon red">🔔</div>
+            <div>
+              <div class="stat-value">28</div>
+              <div class="stat-label">Pending Response</div>
+              <div class="stat-change down">Act within 24h</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">✅</div>
+            <div>
+              <div class="stat-value">42%</div>
+              <div class="stat-label">Resolution Rate</div>
+              <div class="stat-change up">+3% vs last month ↑</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon yellow">😐</div>
+            <div>
+              <div class="stat-value">2.8/5</div>
+              <div class="stat-label">Avg Sentiment</div>
+              <div class="stat-change down">Below industry avg ↓</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Two-column: Queue + Sentiment -->
+        <div class="layout-2-1">
+
+          <!-- LEFT: Recent Bhadaas Requiring Response -->
+          <div class="card">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <span style="font-weight:700;font-size:1rem;">Recent Bhadaas Requiring Response</span>
+                <span class="badge badge-danger">28</span>
+              </div>
+              <a href="#" class="text-primary text-sm" style="font-weight:600;" onclick="event.preventDefault();document.querySelector('[data-section=respond]').click();">View All →</a>
+            </div>
+            <div class="card-body" style="padding:0 1.5rem;">
+              <!-- Post row 1 -->
+              <div class="queue-row">
+                <div class="sev-dot" style="background:#FF6B35;"></div>
+                <div class="queue-title">Airtel charged me for a plan I never subscribed to</div>
+                <div class="queue-meta">
+                  <span class="entity-tag">📡 Airtel India</span>
+                  <span class="text-sm text-muted">✊ 342</span>
+                  <span class="text-xs text-muted">2 hours ago</span>
+                  <button class="btn btn-primary btn-sm" onclick="openModal('modal-respond');setRespondTarget('Airtel charged me for a plan I never subscribed to')">Respond</button>
+                </div>
+              </div>
+              <!-- Post row 2 -->
+              <div class="queue-row">
+                <div class="sev-dot" style="background:#EA5455;"></div>
+                <div class="queue-title">Network outage for 3 days — no compensation offered</div>
+                <div class="queue-meta">
+                  <span class="entity-tag">📡 Airtel India</span>
+                  <span class="text-sm text-muted">✊ 215</span>
+                  <span class="text-xs text-muted">5 hours ago</span>
+                  <button class="btn btn-primary btn-sm" onclick="openModal('modal-respond');setRespondTarget('Network outage for 3 days — no compensation offered')">Respond</button>
+                </div>
+              </div>
+              <!-- Post row 3 -->
+              <div class="queue-row">
+                <div class="sev-dot" style="background:#FF9F43;"></div>
+                <div class="queue-title">Sim card not activated after 5 days of applying</div>
+                <div class="queue-meta">
+                  <span class="entity-tag">📡 Airtel India</span>
+                  <span class="text-sm text-muted">✊ 89</span>
+                  <span class="text-xs text-muted">1 day ago</span>
+                  <button class="btn btn-primary btn-sm" onclick="openModal('modal-respond');setRespondTarget('Sim card not activated after 5 days of applying')">Respond</button>
+                </div>
+              </div>
+              <!-- Post row 4 -->
+              <div class="queue-row">
+                <div class="sev-dot" style="background:#FF6B35;"></div>
+                <div class="queue-title">Customer care disconnecting calls instead of resolving</div>
+                <div class="queue-meta">
+                  <span class="entity-tag">📡 Airtel India</span>
+                  <span class="text-sm text-muted">✊ 156</span>
+                  <span class="text-xs text-muted">2 days ago</span>
+                  <button class="btn btn-primary btn-sm" onclick="openModal('modal-respond');setRespondTarget('Customer care disconnecting calls instead of resolving')">Respond</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Sentiment Overview -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Sentiment Overview</span>
+            </div>
+            <div class="card-body">
+
+              <!-- Bar chart: sentiment score distribution -->
+              <div style="margin-bottom:1.25rem;">
+                <div class="text-xs text-muted font-bold" style="margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.07em;">Score Distribution</div>
+                <div class="chart-container">
+                  <div class="chart-bars" id="chart-sentiment-dist" style="min-height:100px;"></div>
+                </div>
+              </div>
+
+              <!-- Response rate big number -->
+              <div style="text-align:center;margin-bottom:1.25rem;">
+                <div class="rate-circle"><span>67%</span></div>
+                <div class="text-sm font-bold">Response Rate</div>
+                <div class="text-xs text-muted">Industry average: 71%</div>
+              </div>
+
+              <!-- Comparison bars -->
+              <div style="margin-bottom:1rem;">
+                <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:0.25rem;">
+                  <span>Your Rate</span><span class="font-bold">67%</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar primary" style="width:67%"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin:0.5rem 0 0.25rem;">
+                  <span>Industry Avg</span><span class="font-bold text-muted">71%</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar" style="width:71%;background:var(--border);"></div>
+                </div>
+              </div>
+
+              <!-- Tip -->
+              <div class="alert alert-info" style="font-size:0.78rem;padding:0.65rem 0.875rem;">
+                💡 Responding within 24h improves your score by 40%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom row: Score + Top Issues -->
+        <div class="grid-2 mt-3">
+
+          <!-- Bhadaas Score -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Your Bhadaas Score</span>
+              <span class="badge badge-danger">High Risk</span>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.25rem;">
+                <div class="score-ring high">38</div>
+                <div>
+                  <div class="font-bold" style="font-size:1.05rem;">38 / 100</div>
+                  <div class="text-sm text-muted" style="margin-top:0.25rem;line-height:1.5;">Score reflects response rate,<br>resolution rate &amp; sentiment.</div>
+                </div>
+              </div>
+              <div class="alert alert-success" style="font-size:0.78rem;padding:0.65rem 0.875rem;margin-bottom:1rem;">
+                📈 Your score has improved 4 points this month
+              </div>
+              <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">Progress to "Average" (50)</div>
+              <div class="progress">
+                <div class="progress-bar warning" style="width:38%"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">
+                <span>0</span><span>50 (Avg)</span><span>100</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Issues This Month -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Top Issues This Month</span>
+              <span class="text-xs text-muted">May 2026</span>
+            </div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.25rem;">
+                    <span class="font-bold">💰 Billing</span><span class="text-muted">234</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar danger" style="width:100%"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.25rem;">
+                    <span class="font-bold">📞 Customer Care</span><span class="text-muted">178</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar warning" style="width:76%"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.25rem;">
+                    <span class="font-bold">💸 Refund</span><span class="text-muted">134</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar warning" style="width:57%"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.25rem;">
+                    <span class="font-bold">🚨 Fraud</span><span class="text-muted">89</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar danger" style="width:38%"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.25rem;">
+                    <span class="font-bold">🚚 Delivery</span><span class="text-muted">67</span>
+                  </div>
+                  <div class="progress"><div class="progress-bar primary" style="width:29%"></div></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /section-overview -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Analytics
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-analytics">
+
+        <div class="page-header">
+          <div>
+            <h1>Analytics Dashboard</h1>
+            <p>Deep dive into your Bhadaas data</p>
+          </div>
+          <select class="form-control" style="width:auto;" id="date-range-select" onchange="showToast('Updating analytics...','info')">
+            <option>Last 7 days</option>
+            <option selected>Last 30 days</option>
+            <option>Last 90 days</option>
+          </select>
+        </div>
+
+        <!-- Charts row -->
+        <div class="grid-3 mb-3">
+
+          <!-- Monthly Volume -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Monthly Bhadaas Volume</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <div id="chart-monthly-volume" class="chart-bars"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Severity Distribution -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Severity Distribution</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <div id="chart-severity" class="chart-bars"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Breakdown -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Category Breakdown</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <div id="chart-category" class="chart-bars"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Geographic Distribution -->
+        <div class="card mb-3">
+          <div class="card-header">
+            <span style="font-weight:700;">Geographic Distribution</span>
+            <span class="badge badge-secondary">8 States</span>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>State</th>
+                  <th>Bhadaas Count</th>
+                  <th>% of Total</th>
+                  <th>Avg Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Maharashtra</td><td>312</td><td>25%</td><td><span style="color:#FF9F43;font-weight:700;">3.4</span></td></tr>
+                <tr><td>Delhi</td><td>287</td><td>23%</td><td><span style="color:#FF6B35;font-weight:700;">4.1</span></td></tr>
+                <tr><td>Karnataka</td><td>198</td><td>16%</td><td><span style="color:#28C76F;font-weight:700;">2.9</span></td></tr>
+                <tr><td>Uttar Pradesh</td><td>156</td><td>12.5%</td><td><span style="color:#FF6B35;font-weight:700;">3.8</span></td></tr>
+                <tr><td>Tamil Nadu</td><td>134</td><td>10.7%</td><td><span style="color:#FF9F43;font-weight:700;">3.1</span></td></tr>
+                <tr><td>Gujarat</td><td>89</td><td>7.1%</td><td><span style="color:#28C76F;font-weight:700;">2.7</span></td></tr>
+                <tr><td>Rajasthan</td><td>45</td><td>3.6%</td><td><span style="color:#FF9F43;font-weight:700;">3.5</span></td></tr>
+                <tr><td>Others</td><td>26</td><td>2.1%</td><td><span style="color:#FF9F43;font-weight:700;">3.2</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Resolution Performance -->
+        <div class="card">
+          <div class="card-header">
+            <span style="font-weight:700;">Resolution Performance by Category</span>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Count</th>
+                  <th>Resolved</th>
+                  <th>Response Rate</th>
+                  <th>Avg Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Billing</strong></td><td>456</td>
+                  <td><span class="badge badge-warning">45%</span></td>
+                  <td>
+                    <div class="progress" style="width:100px;display:inline-flex;">
+                      <div class="progress-bar success" style="width:72%"></div>
+                    </div>
+                    <span class="text-sm" style="margin-left:0.4rem;">72%</span>
+                  </td>
+                  <td><span style="color:#FF6B35;font-weight:700;">4.1</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Customer Care</strong></td><td>312</td>
+                  <td><span class="badge badge-warning">38%</span></td>
+                  <td>
+                    <div class="progress" style="width:100px;display:inline-flex;">
+                      <div class="progress-bar warning" style="width:61%"></div>
+                    </div>
+                    <span class="text-sm" style="margin-left:0.4rem;">61%</span>
+                  </td>
+                  <td><span style="color:#FF6B35;font-weight:700;">3.8</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Technical</strong></td><td>234</td>
+                  <td><span class="badge badge-success">67%</span></td>
+                  <td>
+                    <div class="progress" style="width:100px;display:inline-flex;">
+                      <div class="progress-bar success" style="width:81%"></div>
+                    </div>
+                    <span class="text-sm" style="margin-left:0.4rem;">81%</span>
+                  </td>
+                  <td><span style="color:#FF9F43;font-weight:700;">2.9</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Refund</strong></td><td>145</td>
+                  <td><span class="badge badge-warning">41%</span></td>
+                  <td>
+                    <div class="progress" style="width:100px;display:inline-flex;">
+                      <div class="progress-bar warning" style="width:58%"></div>
+                    </div>
+                    <span class="text-sm" style="margin-left:0.4rem;">58%</span>
+                  </td>
+                  <td><span style="color:#EA5455;font-weight:700;">4.3</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Other</strong></td><td>100</td>
+                  <td><span class="badge badge-success">52%</span></td>
+                  <td>
+                    <div class="progress" style="width:100px;display:inline-flex;">
+                      <div class="progress-bar primary" style="width:69%"></div>
+                    </div>
+                    <span class="text-sm" style="margin-left:0.4rem;">69%</span>
+                  </td>
+                  <td><span style="color:#FF9F43;font-weight:700;">3.1</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div><!-- /section-analytics -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Respond
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-respond">
+
+        <div class="page-header">
+          <div>
+            <h1>Respond to Bhadaas</h1>
+            <p>Your official responses reach the poster and every Me Too user</p>
+          </div>
+        </div>
+
+        <!-- Filter chips -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.25rem;" id="respond-chips">
+          <span class="chip active" data-filter="all" onclick="filterRespondQueue(this,'all')">All</span>
+          <span class="chip" data-filter="open" onclick="filterRespondQueue(this,'open')">Open</span>
+          <span class="chip" data-filter="trending" onclick="filterRespondQueue(this,'trending')">🔥 Trending</span>
+          <span class="chip" data-filter="high" onclick="filterRespondQueue(this,'high')">🚨 High Severity</span>
+        </div>
+
+        <!-- Response Queue Table -->
+        <div class="card mb-3">
+          <div class="table-container">
+            <table class="table" id="respond-table">
+              <thead>
+                <tr>
+                  <th>Bhadaas</th>
+                  <th>Entity</th>
+                  <th>Severity</th>
+                  <th>Me Too</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="respond-tbody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer" style="text-align:center;">
+            <button class="btn btn-outline" onclick="showToast('Loading more...','info')">Load More</button>
+          </div>
+        </div>
+
+        <!-- Pro tip -->
+        <div class="alert alert-info">
+          💡 <strong>Pro Tip:</strong> Responses sent via Bhadaas go directly to the original poster AND all users who clicked Me Too — currently <strong>1,247 users total</strong> across your posts.
+        </div>
+      </div><!-- /section-respond -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Alerts
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-alerts">
+
+        <div class="page-header">
+          <div>
+            <h1>Alerts &amp; Notifications</h1>
+            <p>Stay on top of critical activity around Airtel India</p>
+          </div>
+          <span class="badge badge-danger" style="font-size:0.8rem;padding:0.4rem 0.875rem;">5 New</span>
+        </div>
+
+        <!-- Alert items list -->
+        <div class="card mb-3">
+          <div class="alert-item">
+            <div class="alert-item-icon">🔴</div>
+            <div class="alert-item-body">
+              <div class="alert-item-title">URGENT: Byju's fraud post going viral — 2,341 Me Toos in 24h</div>
+              <div class="alert-item-meta">Similar Telecom pattern detected · 2 hours ago</div>
+            </div>
+            <div class="alert-item-actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('Opening post...','info')">View</button>
+              <button class="btn btn-outline btn-sm" onclick="this.closest('.alert-item').style.opacity='0.4'">Dismiss</button>
+            </div>
+          </div>
+
+          <div class="alert-item">
+            <div class="alert-item-icon">🟠</div>
+            <div class="alert-item-body">
+              <div class="alert-item-title">HIGH: New critical Bhadaas posted — fraud category</div>
+              <div class="alert-item-meta">Severity 5 · Airtel India · 4 hours ago</div>
+            </div>
+            <div class="alert-item-actions">
+              <button class="btn btn-outline btn-sm" onclick="openModal('modal-respond');setRespondTarget('New critical Bhadaas — fraud category')">View</button>
+            </div>
+          </div>
+
+          <div class="alert-item">
+            <div class="alert-item-icon">💬</div>
+            <div class="alert-item-body">
+              <div class="alert-item-title">Amazon India just responded to a trending post</div>
+              <div class="alert-item-meta">Competitor activity · 6 hours ago</div>
+            </div>
+            <div class="alert-item-actions">
+              <button class="btn btn-outline btn-sm" onclick="showToast('Opening competitor activity...','info')">View</button>
+            </div>
+          </div>
+
+          <div class="alert-item">
+            <div class="alert-item-icon">📊</div>
+            <div class="alert-item-body">
+              <div class="alert-item-title">Your weekly analytics report is ready</div>
+              <div class="alert-item-meta">Week of May 19–25, 2026 · Ready to download</div>
+            </div>
+            <div class="alert-item-actions">
+              <button class="btn btn-success btn-sm" onclick="showToast('Downloading report...','success')">Download</button>
+            </div>
+          </div>
+
+          <div class="alert-item">
+            <div class="alert-item-icon">✅</div>
+            <div class="alert-item-body">
+              <div class="alert-item-title">A post you responded to was marked resolved by user</div>
+              <div class="alert-item-meta">"Sim card not activated after 5 days" · Yesterday</div>
+            </div>
+            <div class="alert-item-actions">
+              <span class="badge badge-success">Great!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert Settings -->
+        <div class="card">
+          <div class="card-header">
+            <span style="font-weight:700;">Alert Settings</span>
+          </div>
+          <div class="card-body">
+            <div class="toggle-row">
+              <span class="toggle-label">New Bhadaas posted</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting saved','success')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Trending (100+ Me Toos)</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting saved','success')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Critical severity posts</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting saved','success')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Weekly report</span>
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="showToast('Setting saved','success')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">Email notifications</span>
+              <label class="toggle-switch">
+                <input type="checkbox" checked onchange="showToast('Setting saved','success')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">SMS notifications</span>
+              <label class="toggle-switch">
+                <input type="checkbox" onchange="showToast('Setting saved','success')">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div><!-- /section-alerts -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Settings
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-settings">
+
+        <div class="page-header">
+          <div>
+            <h1>Company Settings</h1>
+            <p>Manage your company profile and preferences</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+
+          <!-- LEFT: Edit Form -->
+          <div class="card">
+            <div class="card-header">
+              <span style="font-weight:700;">Company Profile</span>
+            </div>
+            <div class="card-body">
+              <form onsubmit="event.preventDefault();showToast('✅ Changes saved successfully!','success')">
+
+                <div class="form-group">
+                  <label class="form-label">Company Name</label>
+                  <input type="text" class="form-control" value="Airtel India">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Category</label>
+                  <select class="form-control">
+                    <option value="telecom" selected>📡 Telecom</option>
+                    <option value="banking">🏦 Banking &amp; Finance</option>
+                    <option value="ecommerce">🛒 E-Commerce</option>
+                    <option value="healthcare">🏥 Healthcare</option>
+                    <option value="food">🍔 Food &amp; Delivery</option>
+                    <option value="transport">🚗 Transport &amp; Logistics</option>
+                    <option value="utilities">⚡ Utilities</option>
+                    <option value="education">🎓 Education</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Official Website</label>
+                  <input type="url" class="form-control" placeholder="https://www.airtel.in" value="https://www.airtel.in">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Registered Address</label>
+                  <textarea class="form-control" rows="3">Bharti Crescent, 1 Nelson Mandela Road, Vasant Kunj, Phase II, New Delhi – 110070</textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Grievance Officer Name</label>
+                  <input type="text" class="form-control" placeholder="Full name" value="Rahul Mehta">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Grievance Officer Email</label>
+                  <input type="email" class="form-control" placeholder="grievance@company.com" value="grievance@airtel.com">
+                  <span class="form-hint">This email will be shown publicly on your profile</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Upload Logo</label>
+                  <input type="file" class="form-control" accept="image/*">
+                  <span class="form-hint">PNG or SVG recommended, max 2MB</span>
+                </div>
+
+                <div style="display:flex;gap:0.75rem;margin-top:1.25rem;">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <button type="button" class="btn btn-outline" onclick="showToast('Changes discarded','info')">Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- RIGHT: Preview + Danger Zone -->
+          <div>
+            <div class="profile-preview-card mb-3">
+              <div style="font-size:2.5rem;margin-bottom:0.5rem;">📡</div>
+              <div class="preview-name">Airtel India</div>
+              <div class="preview-cat">📡 Telecom &nbsp;·&nbsp; <span class="badge badge-claimed" style="font-size:0.7rem;">✓ Claimed</span></div>
+              <div style="display:flex;gap:1.5rem;margin-top:1rem;">
+                <div style="text-align:center;">
+                  <div style="font-size:1.3rem;font-weight:800;color:#FF6B35;">1,247</div>
+                  <div class="text-xs" style="color:rgba(255,255,255,0.4);">Bhadaas</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:1.3rem;font-weight:800;color:#28C76F;">42%</div>
+                  <div class="text-xs" style="color:rgba(255,255,255,0.4);">Resolved</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:1.3rem;font-weight:800;color:#FF9F43;">67%</div>
+                  <div class="text-xs" style="color:rgba(255,255,255,0.4);">Response</div>
+                </div>
+              </div>
+              <div style="margin-top:1rem;padding-top:0.875rem;border-top:1px solid rgba(255,255,255,0.1);">
+                <div class="text-xs" style="color:rgba(255,255,255,0.4);">This is how users see your public profile</div>
+              </div>
+            </div>
+
+            <div class="danger-zone">
+              <h4>⚠️ Danger Zone</h4>
+              <p>Deleting your account will remove all your responses and subscription. This action cannot be undone.</p>
+              <button class="btn btn-danger w-full" onclick="showToast('⚠️ Account deletion requires confirmation — contact support@bhadaas.in','warning')">
+                🗑️ Delete Account
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /section-settings -->
+
+
+      <!-- ══════════════════════════════════════
+           SECTION: Plans & Billing
+      ══════════════════════════════════════ -->
+      <div class="dashboard-section hidden" id="section-plans">
+
+        <div class="page-header">
+          <div>
+            <h1>Plans &amp; Billing</h1>
+            <p>Manage your subscription and invoices</p>
+          </div>
+        </div>
+
+        <!-- Current plan summary -->
+        <div class="card mb-3">
+          <div class="card-header">
+            <div>
+              <span style="font-weight:700;">Current Plan</span>
+              <span class="badge badge-success" style="margin-left:0.5rem;">Active</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Redirecting to billing portal...','info')">Manage Billing</button>
+          </div>
+          <div class="card-body">
+            <div class="billing-detail-row">
+              <span class="key">Plan</span>
+              <span class="font-bold">Professional</span>
+            </div>
+            <div class="billing-detail-row">
+              <span class="key">Amount</span>
+              <span class="font-bold text-primary">₹29,999 / month</span>
+            </div>
+            <div class="billing-detail-row">
+              <span class="key">Next Billing Date</span>
+              <span>June 1, 2026</span>
+            </div>
+            <div class="billing-detail-row">
+              <span class="key">Invoice History</span>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button class="btn btn-outline btn-sm" onclick="showToast('Downloading May 2026 invoice...','success')">May 2026</button>
+                <button class="btn btn-outline btn-sm" onclick="showToast('Downloading Apr 2026 invoice...','success')">Apr 2026</button>
+                <button class="btn btn-outline btn-sm" onclick="showToast('Downloading Mar 2026 invoice...','success')">Mar 2026</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan cards -->
+        <div class="grid-3 mb-3">
+
+          <!-- Basic -->
+          <div class="plan-card">
+            <div class="plan-name">Basic</div>
+            <div class="plan-price">₹9,999</div>
+            <div class="plan-period">per month + GST</div>
+            <ul class="plan-features">
+              <li>View aggregated sentiment</li>
+              <li>Claim profile</li>
+              <li>5 responses / month</li>
+              <li>Priority alerts</li>
+              <li>Basic analytics</li>
+            </ul>
+            <button class="btn btn-outline btn-block" onclick="showToast('Downgrade? Contact support@bhadaas.in','info')">Downgrade</button>
+          </div>
+
+          <!-- Professional (current) -->
+          <div class="plan-card popular current-plan">
+            <div class="plan-badge current">✓ Current Plan</div>
+            <div class="plan-name">Professional</div>
+            <div class="plan-price">₹29,999</div>
+            <div class="plan-period">per month + GST</div>
+            <ul class="plan-features">
+              <li>Everything in Basic</li>
+              <li>Unlimited responses</li>
+              <li>Advanced analytics</li>
+              <li>Geographic distribution</li>
+              <li>API access (limited)</li>
+              <li>Dedicated support</li>
+            </ul>
+            <button class="btn btn-success btn-block" disabled>Current Plan</button>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="plan-card">
+            <div class="plan-badge">Most Powerful</div>
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-price">₹99,999+</div>
+            <div class="plan-period">per month + GST</div>
+            <ul class="plan-features">
+              <li>Everything in Professional</li>
+              <li>Full API access</li>
+              <li>Bulk data export</li>
+              <li>Competitor benchmarking</li>
+              <li>Custom integrations</li>
+              <li>Dedicated account manager</li>
+              <li>SLA guarantee</li>
+            </ul>
+            <button class="btn btn-primary btn-block" onclick="showToast('Upgrading... Contact sales@bhadaas.in','success')">Upgrade to Enterprise</button>
+          </div>
+
+        </div>
+
+        <div class="alert alert-info" style="text-align:center;">
+          Questions? Contact <strong>sales@bhadaas.in</strong> or call <strong>1800-BHADAAS</strong>
+        </div>
+      </div><!-- /section-plans -->
+
+    </main>
+  </div><!-- /app-layout -->
+
+
+  <!-- ══════════════════════════════════════
+       MODAL: Official Respond
+  ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-respond">
+    <div class="modal" style="max-width:640px;width:100%;">
+      <div class="modal-header">
+        <h3>Official Response — Airtel India 📡</h3>
+        <button class="modal-close" onclick="closeModal('modal-respond')">✕</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Responding to -->
+        <div class="form-group">
+          <div class="text-sm text-muted" style="margin-bottom:0.4rem;">You are responding to:</div>
+          <div id="respond-post-title" class="alert alert-warning" style="font-weight:600;font-size:0.9rem;padding:0.75rem 1rem;">
+            — Select a post to respond to —
+          </div>
+        </div>
+
+        <!-- Response textarea -->
+        <div class="form-group">
+          <label class="form-label">Your Official Response</label>
+          <textarea class="form-control" id="respond-textarea" rows="6"
+            minlength="100"
+            placeholder="Address the customer's concern professionally. This response will be sent to the poster and all Me Too users."
+            oninput="updateCharCount()"></textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:0.35rem;">
+            <span class="form-hint" id="char-count">0 characters (min 100)</span>
+            <span class="form-hint text-muted">Be clear, empathetic, and solution-focused</span>
+          </div>
+        </div>
+
+        <!-- Offer resolution -->
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;font-weight:500;">
+            <input type="checkbox" id="offer-resolution-toggle" onchange="toggleResolutionFields()">
+            Offer Resolution
+          </label>
+        </div>
+
+        <!-- Resolution fields (hidden by default) -->
+        <div id="resolution-fields" style="display:none;">
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Resolution Type</label>
+              <select class="form-control" id="resolution-type">
+                <option>Refund</option>
+                <option>Replacement</option>
+                <option>Callback</option>
+                <option>Credit</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expected By</label>
+              <input type="date" class="form-control" id="resolution-date">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+        <div class="text-sm text-muted">
+          💳 This response will cost <strong>₹1,999</strong> <span style="color:var(--success);">(included in your plan)</span>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <button class="btn btn-outline" onclick="closeModal('modal-respond')">Cancel</button>
+          <button class="btn btn-primary" onclick="sendResponse()">Send Response ✉️</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Scripts -->
+  <script src="../js/shared.js"></script>
+  <script>
+    // ─────────────────────────────────────────────
+    //  RESPOND TABLE — build rows from POSTS[]
+    // ─────────────────────────────────────────────
+    function buildRespondTable(filter) {
+      const tbody = document.getElementById('respond-tbody');
+      if (!tbody) return;
+
+      const statusConfig = {
+        open:      { cls: 'badge-danger',   label: '🔴 Open'      },
+        responded: { cls: 'badge-warning',  label: '💬 Responded' },
+        resolved:  { cls: 'badge-success',  label: '✅ Resolved'  },
+      };
+
+      const rows = POSTS.slice(0, 5).filter(p => {
+        if (filter === 'open')     return p.status === 'open';
+        if (filter === 'trending') return p.upvotes >= 500;
+        if (filter === 'high')     return p.severity >= 4;
+        return true; // all
+      });
+
+      tbody.innerHTML = rows.map(p => {
+        const sc  = statusConfig[p.status] || statusConfig.open;
+        const col = getSeverityColor(p.severity);
+        const lbl = getSeverityLabel(p.severity);
+        const truncTitle = p.title.length > 55 ? p.title.slice(0, 55) + '…' : p.title;
+        return `
+        <tr data-status="${p.status}" data-upvotes="${p.upvotes}" data-severity="${p.severity}">
+          <td style="max-width:240px;font-weight:600;font-size:0.85rem;">${truncTitle}</td>
+          <td><span class="entity-tag">${p.entity.icon} ${p.entity.name}</span></td>
+          <td><span style="font-weight:700;color:${col};">${p.severity} — ${lbl}</span></td>
+          <td><strong>${formatNumber(p.upvotes)}</strong></td>
+          <td><span class="badge ${sc.cls}">${sc.label}</span></td>
+          <td class="text-sm text-muted">${p.timeAgo}</td>
+          <td>
+            <button class="btn btn-primary btn-sm"
+              onclick="openModal('modal-respond');setRespondTarget('${p.title.replace(/'/g,"\\'")}')">
+              Respond
+            </button>
+          </td>
+        </tr>`;
+      }).join('') || `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">No posts match this filter</td></tr>`;
+    }
+
+    // ─────────────────────────────────────────────
+    //  FILTER CHIPS (Respond section)
+    // ─────────────────────────────────────────────
+    function filterRespondQueue(chipEl, filter) {
+      document.querySelectorAll('#respond-chips .chip').forEach(c => c.classList.remove('active'));
+      chipEl.classList.add('active');
+      buildRespondTable(filter);
+    }
+
+    // ─────────────────────────────────────────────
+    //  RESPOND MODAL helpers
+    // ─────────────────────────────────────────────
+    function setRespondTarget(title) {
+      const el = document.getElementById('respond-post-title');
+      if (el) el.textContent = title;
+    }
+
+    function updateCharCount() {
+      const ta  = document.getElementById('respond-textarea');
+      const el  = document.getElementById('char-count');
+      if (!ta || !el) return;
+      const len = ta.value.length;
+      el.textContent = `${len} character${len !== 1 ? 's' : ''} (min 100)`;
+      el.style.color = len >= 100 ? 'var(--success)' : 'var(--danger)';
+    }
+
+    function toggleResolutionFields() {
+      const cb = document.getElementById('offer-resolution-toggle');
+      const fields = document.getElementById('resolution-fields');
+      if (fields) fields.style.display = cb && cb.checked ? 'block' : 'none';
+    }
+
+    function sendResponse() {
+      const ta = document.getElementById('respond-textarea');
+      if (!ta || ta.value.trim().length < 100) {
+        showToast('Response must be at least 100 characters', 'warning');
+        return;
+      }
+      showToast('✅ Response sent to 342 users!', 'success');
+      ta.value = '';
+      updateCharCount();
+      document.getElementById('offer-resolution-toggle').checked = false;
+      toggleResolutionFields();
+      closeModal('modal-respond');
+    }
+
+    // ─────────────────────────────────────────────
+    //  INJECT CHARTS
+    // ─────────────────────────────────────────────
+    function initCharts() {
+      // Overview: sentiment distribution (1–5)
+      const sentDist = document.getElementById('chart-sentiment-dist');
+      if (sentDist) {
+        sentDist.innerHTML = renderBarChart([
+          { label: '1 ★', value: 78,  color: '#28C76F' },
+          { label: '2 ★', value: 134, color: '#7BC67E' },
+          { label: '3 ★', value: 412, color: '#FF9F43' },
+          { label: '4 ★', value: 389, color: '#FF6B35' },
+          { label: '5 ★', value: 234, color: '#EA5455' },
+        ]);
+      }
+
+      // Analytics: monthly volume
+      const monthly = document.getElementById('chart-monthly-volume');
+      if (monthly) {
+        monthly.innerHTML = renderBarChart([
+          { label: 'Jun',  value: 87  },
+          { label: 'Jul',  value: 103 },
+          { label: 'Aug',  value: 94  },
+          { label: 'Sep',  value: 118 },
+          { label: 'Oct',  value: 134 },
+          { label: 'Nov',  value: 109 },
+          { label: 'Dec',  value: 97  },
+          { label: 'Jan',  value: 122 },
+          { label: 'Feb',  value: 98  },
+          { label: 'Mar',  value: 115 },
+          { label: 'Apr',  value: 127 },
+          { label: 'May',  value: 143, color: '#FF6B35' },
+        ]);
+      }
+
+      // Analytics: severity distribution
+      const sevChart = document.getElementById('chart-severity');
+      if (sevChart) {
+        sevChart.innerHTML = renderBarChart([
+          { label: 'Sev 1', value: 89,  color: '#28C76F' },
+          { label: 'Sev 2', value: 178, color: '#7BC67E' },
+          { label: 'Sev 3', value: 312, color: '#FF9F43' },
+          { label: 'Sev 4', value: 456, color: '#FF6B35' },
+          { label: 'Sev 5', value: 212, color: '#EA5455' },
+        ]);
+      }
+
+      // Analytics: category breakdown
+      const catChart = document.getElementById('chart-category');
+      if (catChart) {
+        catChart.innerHTML = renderBarChart([
+          { label: 'Billing',  value: 456, color: '#EA5455' },
+          { label: 'C.Care',   value: 312, color: '#FF6B35' },
+          { label: 'Tech',     value: 234, color: '#FF9F43' },
+          { label: 'Refund',   value: 145, color: '#7950F2' },
+          { label: 'Network',  value: 134, color: '#4ECDC4' },
+          { label: 'Other',    value: 100, color: '#748CAB' },
+        ]);
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    //  DOMContentLoaded bootstrap
+    // ─────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      buildRespondTable('all');
+      initCharts();
+    });
+  </script>
+</body>
+</html>

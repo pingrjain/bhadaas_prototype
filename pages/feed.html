@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Bhadaas — Speak Up India</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ---- Feed-page-specific styles ---- */
+    .feed-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: var(--nav-height);
+      z-index: 90;
+      padding: 0.875rem 0;
+    }
+    .feed-header .container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .feed-title-block {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .feed-title-block h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+    .feed-header .search-bar {
+      flex: 1;
+      min-width: 220px;
+    }
+    .feed-header .sort-control {
+      flex-shrink: 0;
+    }
+
+    /* Live dot */
+    .live-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+    .live-dot::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: livePulse 1.6s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(40,199,111,0.5); }
+      50%       { opacity: 0.85; transform: scale(1.15); box-shadow: 0 0 0 4px rgba(40,199,111,0); }
+    }
+
+    /* Feed layout */
+    .feed-page { padding: 1.5rem 0; }
+    .feed-layout { display: flex; gap: 1.5rem; align-items: flex-start; }
+
+    /* Filter sidebar */
+    .filter-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(var(--nav-height) + 57px);
+      max-height: calc(100vh - var(--nav-height) - 57px - 1.5rem);
+      overflow-y: auto;
+    }
+    .filter-sidebar-inner {
+      background: #fff;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .filter-sidebar-header {
+      padding: 1rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-sidebar-header h3 { font-size: 0.9rem; font-weight: 700; }
+    .clear-all-link {
+      font-size: 0.78rem;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .filter-section { padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--border); }
+    .filter-section:last-of-type { border-bottom: none; }
+    .filter-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .filter-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.375rem 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: var(--transition);
+      color: var(--text);
+    }
+    .filter-option:hover { background: var(--primary-light); color: var(--primary); }
+    .filter-option.selected { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+    .filter-count {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: #EEF0F6;
+      padding: 1px 6px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .filter-option.selected .filter-count { background: rgba(255,107,53,0.15); color: var(--primary); }
+    .filter-sev-dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px;
+    }
+    .filter-sidebar-footer { padding: 1rem 1.25rem; }
+    .active-filter-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--primary);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 0.4rem;
+    }
+
+    /* Sort chips row */
+    .sort-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.4rem 0.875rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: #fff;
+      color: var(--text-muted);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary); }
+    .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Posts column */
+    .posts-column { flex: 1; min-width: 0; }
+    .posts-list { display: flex; flex-direction: column; gap: 0.875rem; }
+
+    /* Right sidebar */
+    .right-sidebar { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1rem; }
+    .right-sidebar .card-header { padding: 0.875rem 1rem; }
+    .right-sidebar .card-body { padding: 1rem; }
+
+    /* Entity row in right sidebar */
+    .entity-row {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      transition: var(--transition);
+    }
+    .entity-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .entity-row:hover { color: var(--primary); }
+    .entity-row-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .entity-row-info { flex: 1; min-width: 0; }
+    .entity-row-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Inline stats */
+    .inline-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
+    .inline-stat { background: #F8F9FC; border-radius: var(--radius-sm); padding: 0.625rem 0.75rem; text-align: center; }
+    .inline-stat-value { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+    .inline-stat-label { font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* CTA card gradient */
+    .cta-card {
+      background: linear-gradient(135deg, var(--primary) 0%, #FF9A6C 100%);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      color: #fff;
+      text-align: center;
+    }
+    .cta-card h4 { font-size: 1rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .cta-card p { font-size: 0.8rem; opacity: 0.9; margin-bottom: 0.875rem; }
+    .cta-card .btn { background: #fff; color: var(--primary); border-color: #fff; width: 100%; }
+    .cta-card .btn:hover { background: rgba(255,255,255,0.9); }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* Tab content entity grid */
+    .entity-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+
+    @media (max-width: 1100px) {
+      .right-sidebar { display: none; }
+    }
+    @media (max-width: 768px) {
+      .filter-sidebar { display: none; }
+      .feed-header .container { flex-direction: column; align-items: stretch; }
+      .feed-title-block { justify-content: space-between; }
+      .entity-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV (auto-injected) -->
+  <div id="nav-placeholder" data-active="feed"></div>
+
+  <!-- ===== STICKY FEED HEADER ===== -->
+  <div class="feed-header">
+    <div class="container">
+      <!-- Left: title -->
+      <div class="feed-title-block">
+        <h1>All Bhadaas</h1>
+        <span class="badge badge-danger" style="font-size:0.78rem;">48,291</span>
+        <span class="live-dot">LIVE</span>
+      </div>
+
+      <!-- Center: search -->
+      <div class="search-bar" style="flex:1;min-width:200px;">
+        <input id="search-input" type="text" placeholder="Search complaints, companies, keywords…" autocomplete="off">
+        <button onclick="applySearch()">Search</button>
+      </div>
+
+      <!-- Right: sort -->
+      <div class="sort-control">
+        <select id="global-sort" class="form-control" style="padding:0.5rem 0.75rem;font-size:0.82rem;width:auto;">
+          <option value="recent">Most Recent</option>
+          <option value="metoo">Most Me Too'd</option>
+          <option value="severity">Highest Severity</option>
+          <option value="comments">Most Comments</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN FEED AREA ===== -->
+  <div class="feed-page">
+    <div class="container">
+
+      <!-- Feed layout: sidebar + content + right sidebar -->
+      <div class="feed-layout">
+
+        <!-- ============================
+             LEFT: FILTER SIDEBAR
+             ============================ -->
+        <div class="filter-sidebar">
+          <div class="filter-sidebar-inner">
+
+            <div class="filter-sidebar-header">
+              <h3>Filters <span id="active-filter-count" class="active-filter-badge" style="display:none;"></span></h3>
+              <span class="clear-all-link" onclick="clearAllFilters()">Clear All</span>
+            </div>
+
+            <!-- Category -->
+            <div class="filter-section">
+              <div class="filter-section-title">Category</div>
+              <div id="category-filters">
+                <div class="filter-option selected" data-category="all" onclick="selectCategory(this,'all')">
+                  <span>📌 All Categories</span>
+                  <span class="filter-count">7</span>
+                </div>
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Severity -->
+            <div class="filter-section">
+              <div class="filter-section-title">Severity</div>
+              <div id="severity-filters">
+                <div class="filter-option selected" data-severity="all" onclick="selectSeverity(this,'all')">
+                  <span>All Levels</span>
+                  <span class="filter-count">7</span>
+                </div>
+                <div class="filter-option" data-severity="5" onclick="selectSeverity(this,'5')">
+                  <span><span class="filter-sev-dot" style="background:#EA5455;"></span>Critical (5)</span>
+                  <span class="filter-count">2</span>
+                </div>
+                <div class="filter-option" data-severity="4" onclick="selectSeverity(this,'4')">
+                  <span><span class="filter-sev-dot" style="background:#FF6B35;"></span>Serious (4)</span>
+                  <span class="filter-count">3</span>
+                </div>
+                <div class="filter-option" data-severity="3" onclick="selectSeverity(this,'3')">
+                  <span><span class="filter-sev-dot" style="background:#FF9F43;"></span>Significant (3)</span>
+                  <span class="filter-count">2</span>
+                </div>
+                <div class="filter-option" data-severity="2" onclick="selectSeverity(this,'2')">
+                  <span><span class="filter-sev-dot" style="background:#7BC67E;"></span>Noteworthy (2)</span>
+                  <span class="filter-count">0</span>
+                </div>
+                <div class="filter-option" data-severity="1" onclick="selectSeverity(this,'1')">
+                  <span><span class="filter-sev-dot" style="background:#28C76F;"></span>Minor (1)</span>
+                  <span class="filter-count">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status -->
+            <div class="filter-section">
+              <div class="filter-section-title">Status</div>
+              <div id="status-filters">
+                <div class="filter-option selected" data-status="all" onclick="selectStatus(this,'all')">
+                  <span>All Statuses</span>
+                  <span class="filter-count">7</span>
+                </div>
+                <div class="filter-option" data-status="open" onclick="selectStatus(this,'open')">
+                  <span>🔴 Open</span>
+                  <span class="filter-count">5</span>
+                </div>
+                <div class="filter-option" data-status="responded" onclick="selectStatus(this,'responded')">
+                  <span>💬 Responded</span>
+                  <span class="filter-count">1</span>
+                </div>
+                <div class="filter-option" data-status="resolved" onclick="selectStatus(this,'resolved')">
+                  <span>✅ Resolved</span>
+                  <span class="filter-count">1</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sort by (sidebar) -->
+            <div class="filter-section">
+              <div class="filter-section-title">Sort By</div>
+              <div id="sidebar-sort-filters">
+                <div class="filter-option selected" data-sort="recent" onclick="selectSidebarSort(this,'recent')">Most Recent</div>
+                <div class="filter-option" data-sort="upvotes" onclick="selectSidebarSort(this,'upvotes')">Most Upvoted</div>
+                <div class="filter-option" data-sort="severity" onclick="selectSidebarSort(this,'severity')">Most Severe</div>
+                <div class="filter-option" data-sort="comments" onclick="selectSidebarSort(this,'comments')">Most Discussed</div>
+              </div>
+            </div>
+
+            <div class="filter-sidebar-footer">
+              <button class="btn btn-primary btn-block" onclick="applyFilters()">Apply Filters</button>
+            </div>
+
+          </div>
+        </div>
+        <!-- END filter sidebar -->
+
+        <!-- ============================
+             CENTER: POST FEED
+             ============================ -->
+        <div class="posts-column">
+
+          <!-- Sort chips -->
+          <div class="sort-chips">
+            <span class="chip active" data-chip="trending" onclick="activateChip(this,'trending')">🔥 Trending</span>
+            <span class="chip" data-chip="latest" onclick="activateChip(this,'latest')">🆕 Latest</span>
+            <span class="chip" data-chip="critical" onclick="activateChip(this,'critical')">⚠️ Critical Only</span>
+            <span class="chip" data-chip="resolved" onclick="activateChip(this,'resolved')">✅ Resolved</span>
+            <span class="chip" data-chip="has-response" onclick="activateChip(this,'has-response')">💬 Has Response</span>
+          </div>
+
+          <!-- Tabs -->
+          <div data-tabs-container>
+            <div class="tabs">
+              <div class="tab-item active" data-tab="tab-all">All Posts</div>
+              <div class="tab-item" data-tab="tab-week">This Week</div>
+              <div class="tab-item" data-tab="tab-month">This Month</div>
+              <div class="tab-item" data-tab="tab-entities">Top Entities</div>
+            </div>
+
+            <!-- ALL POSTS tab -->
+            <div class="tab-content active" id="tab-all">
+              <div id="posts-all" class="posts-list">
+                <!-- rendered by JS -->
+              </div>
+              <div id="empty-all" class="empty-state hidden">
+                <div class="empty-icon">🔍</div>
+                <p>No Bhadaas match your current filters.</p>
+                <button class="btn btn-outline mt-2" onclick="clearAllFilters()">Clear Filters</button>
+              </div>
+            </div>
+
+            <!-- THIS WEEK tab -->
+            <div class="tab-content" id="tab-week">
+              <div id="posts-week" class="posts-list">
+                <!-- rendered by JS -->
+              </div>
+            </div>
+
+            <!-- THIS MONTH tab -->
+            <div class="tab-content" id="tab-month">
+              <div class="section-header mb-2">
+                <h3 class="section-title" style="font-size:1rem;">Top Bhadaas This Month</h3>
+                <p class="section-subtitle text-muted text-sm">The most impactful complaints from the past 30 days</p>
+              </div>
+              <div id="posts-month" class="posts-list">
+                <!-- rendered by JS -->
+              </div>
+            </div>
+
+            <!-- TOP ENTITIES tab -->
+            <div class="tab-content" id="tab-entities">
+              <div class="section-header mb-2">
+                <h3 class="section-title" style="font-size:1rem;">Most Complained-About Entities</h3>
+                <p class="section-subtitle text-muted text-sm">Top entities by total Bhadaas received</p>
+              </div>
+              <div id="entities-grid" class="entity-grid-2">
+                <!-- rendered by JS -->
+              </div>
+            </div>
+
+          </div>
+          <!-- END tabs -->
+
+          <!-- Load More -->
+          <div style="margin-top:1.5rem;">
+            <button class="btn btn-outline btn-block" onclick="showToast('Loading more Bhadaas...','info')">
+              Load More Bhadaas
+            </button>
+          </div>
+
+        </div>
+        <!-- END posts column -->
+
+        <!-- ============================
+             RIGHT SIDEBAR
+             ============================ -->
+        <div class="right-sidebar" style="width:280px;flex-shrink:0;">
+
+          <!-- Top Entities This Week -->
+          <div class="card">
+            <div class="card-header">
+              <h5 style="font-size:0.875rem;">🏆 Top Entities This Week</h5>
+            </div>
+            <div class="card-body">
+              <div id="sidebar-top-entities"><!-- rendered by JS --></div>
+            </div>
+          </div>
+
+          <!-- Platform Stats -->
+          <div class="card">
+            <div class="card-header">
+              <h5 style="font-size:0.875rem;">📊 Platform Stats</h5>
+            </div>
+            <div class="card-body" style="padding:0.875rem;">
+              <div class="inline-stats">
+                <div class="inline-stat">
+                  <div class="inline-stat-value text-danger" id="stat-posts">—</div>
+                  <div class="inline-stat-label">Total Posts</div>
+                </div>
+                <div class="inline-stat">
+                  <div class="inline-stat-value text-primary" id="stat-users">—</div>
+                  <div class="inline-stat-label">Users</div>
+                </div>
+                <div class="inline-stat">
+                  <div class="inline-stat-value" id="stat-entities" style="color:var(--warning);">—</div>
+                  <div class="inline-stat-label">Entities Tagged</div>
+                </div>
+                <div class="inline-stat">
+                  <div class="inline-stat-value text-success" id="stat-resolved">—</div>
+                  <div class="inline-stat-label">Resolved / Month</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recently Tagged -->
+          <div class="card">
+            <div class="card-header">
+              <h5 style="font-size:0.875rem;">🆕 Recently Tagged</h5>
+            </div>
+            <div class="card-body">
+              <div id="sidebar-recently-tagged"><!-- rendered by JS --></div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="cta-card">
+            <h4>Have an Issue?</h4>
+            <p>Join thousands of Indians speaking up against corporate negligence.</p>
+            <a href="post.html" class="btn btn-sm">+ Post Your Bhadaas</a>
+          </div>
+
+        </div>
+        <!-- END right sidebar -->
+
+      </div>
+      <!-- END feed-layout -->
+
+    </div>
+  </div>
+  <!-- END feed-page -->
+
+  <!-- Shared data + utilities -->
+  <script src="../js/shared.js"></script>
+
+  <!-- ===== PAGE JS ===== -->
+  <script>
+    // ---- State ----
+    let activeCategory = 'all';
+    let activeSeverity = 'all';
+    let activeStatus   = 'all';
+    let activeSort     = 'recent';
+    let activeChip     = 'trending';
+    let searchQuery    = '';
+
+    // ---- Helpers ----
+    function getFilteredPosts(posts) {
+      let list = [...posts];
+
+      // Category
+      if (activeCategory !== 'all') {
+        list = list.filter(p => p.category === activeCategory);
+      }
+      // Severity
+      if (activeSeverity !== 'all') {
+        list = list.filter(p => String(p.severity) === String(activeSeverity));
+      }
+      // Status
+      if (activeStatus !== 'all') {
+        list = list.filter(p => p.status === activeStatus);
+      }
+      // Chip overrides
+      if (activeChip === 'critical') {
+        list = list.filter(p => p.severity >= 4);
+      } else if (activeChip === 'resolved') {
+        list = list.filter(p => p.status === 'resolved');
+      } else if (activeChip === 'has-response') {
+        list = list.filter(p => p.hasCompanyResponse);
+      }
+      // Search
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        list = list.filter(p =>
+          p.title.toLowerCase().includes(q) ||
+          p.excerpt.toLowerCase().includes(q) ||
+          p.entity.name.toLowerCase().includes(q) ||
+          (p.tags || []).some(t => t.toLowerCase().includes(q))
+        );
+      }
+      // Sort
+      let sortKey = activeSort;
+      // Chip sorts
+      if (activeChip === 'trending') sortKey = 'upvotes';
+      if (activeChip === 'latest')   sortKey = 'recent';
+
+      if (sortKey === 'recent')   list.sort((a, b) => a.id - b.id).reverse();
+      if (sortKey === 'upvotes')  list.sort((a, b) => b.upvotes - a.upvotes);
+      if (sortKey === 'severity') list.sort((a, b) => b.severity - a.severity);
+      if (sortKey === 'comments') list.sort((a, b) => b.comments - a.comments);
+
+      return list;
+    }
+
+    function renderPostList(containerId, posts) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      if (!posts.length) {
+        el.innerHTML = '';
+        return;
+      }
+      el.innerHTML = posts.map(p => renderPostCard(p)).join('');
+    }
+
+    function countActiveFilters() {
+      let n = 0;
+      if (activeCategory !== 'all') n++;
+      if (activeSeverity !== 'all') n++;
+      if (activeStatus   !== 'all') n++;
+      if (searchQuery.trim())       n++;
+      return n;
+    }
+
+    function updateActiveFilterBadge() {
+      const badge = document.getElementById('active-filter-count');
+      const n = countActiveFilters();
+      if (n > 0) {
+        badge.textContent = n + ' active';
+        badge.style.display = '';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    // ---- Filter handlers ----
+    function selectCategory(el, val) {
+      document.querySelectorAll('#category-filters .filter-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      activeCategory = val;
+      updateActiveFilterBadge();
+      renderAllPosts();
+    }
+
+    function selectSeverity(el, val) {
+      document.querySelectorAll('#severity-filters .filter-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      activeSeverity = val;
+      updateActiveFilterBadge();
+      renderAllPosts();
+    }
+
+    function selectStatus(el, val) {
+      document.querySelectorAll('#status-filters .filter-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      activeStatus = val;
+      updateActiveFilterBadge();
+      renderAllPosts();
+    }
+
+    function selectSidebarSort(el, val) {
+      document.querySelectorAll('#sidebar-sort-filters .filter-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      activeSort = val;
+      // Also sync the header dropdown
+      document.getElementById('global-sort').value =
+        val === 'upvotes'   ? 'metoo' :
+        val === 'severity'  ? 'severity' :
+        val === 'comments'  ? 'comments' : 'recent';
+      renderAllPosts();
+    }
+
+    function applyFilters() {
+      renderAllPosts();
+      showToast('Filters applied!', 'success');
+    }
+
+    function clearAllFilters() {
+      activeCategory = 'all';
+      activeSeverity = 'all';
+      activeStatus   = 'all';
+      activeSort     = 'recent';
+      activeChip     = 'trending';
+      searchQuery    = '';
+
+      // Reset UI
+      document.getElementById('search-input').value = '';
+      document.getElementById('global-sort').value = 'recent';
+
+      document.querySelectorAll('#category-filters .filter-option').forEach((o, i) => {
+        o.classList.toggle('selected', i === 0);
+      });
+      document.querySelectorAll('#severity-filters .filter-option').forEach((o, i) => {
+        o.classList.toggle('selected', i === 0);
+      });
+      document.querySelectorAll('#status-filters .filter-option').forEach((o, i) => {
+        o.classList.toggle('selected', i === 0);
+      });
+      document.querySelectorAll('#sidebar-sort-filters .filter-option').forEach((o, i) => {
+        o.classList.toggle('selected', i === 0);
+      });
+      document.querySelectorAll('.sort-chips .chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.chip === 'trending');
+      });
+
+      updateActiveFilterBadge();
+      renderAllPosts();
+      showToast('All filters cleared.', 'info');
+    }
+
+    // ---- Chip handler ----
+    function activateChip(el, chipId) {
+      document.querySelectorAll('.sort-chips .chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      activeChip = chipId;
+      renderAllPosts();
+    }
+
+    // ---- Search ----
+    function applySearch() {
+      searchQuery = document.getElementById('search-input').value.trim();
+      updateActiveFilterBadge();
+      renderAllPosts();
+    }
+
+    // Real-time search
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('search-input').addEventListener('input', function() {
+        searchQuery = this.value.trim();
+        updateActiveFilterBadge();
+        renderAllPosts();
+      });
+
+      // Global sort dropdown
+      document.getElementById('global-sort').addEventListener('change', function() {
+        const map = { recent: 'recent', metoo: 'upvotes', severity: 'severity', comments: 'comments' };
+        activeSort = map[this.value] || 'recent';
+        // Sync sidebar
+        document.querySelectorAll('#sidebar-sort-filters .filter-option').forEach(o => {
+          o.classList.toggle('selected', o.dataset.sort === activeSort);
+        });
+        renderAllPosts();
+      });
+
+      // Build category filters from CATEGORIES data
+      buildCategoryFilters();
+      // Render all content
+      renderAllPosts();
+      renderWeekPosts();
+      renderMonthPosts();
+      renderTopEntitiesTab();
+      renderRightSidebar();
+    });
+
+    // ---- Category filter builder ----
+    const CATEGORY_COUNTS = {
+      telecom: 1, banking: 2, ecommerce: 1, government: 0, healthcare: 0,
+      food: 1, transport: 1, realestate: 0, insurance: 0, education: 1,
+      utilities: 0, retail: 0
+    };
+    function buildCategoryFilters() {
+      const container = document.getElementById('category-filters');
+      // Keep the "All" option, append rest
+      const allOption = container.querySelector('[data-category="all"]');
+      container.innerHTML = '';
+      container.appendChild(allOption);
+
+      CATEGORIES.forEach(cat => {
+        const count = CATEGORY_COUNTS[cat.id] || 0;
+        const div = document.createElement('div');
+        div.className = 'filter-option';
+        div.dataset.category = cat.id;
+        div.onclick = function() { selectCategory(this, cat.id); };
+        div.innerHTML = `<span>${cat.icon} ${cat.label}</span><span class="filter-count">${count}</span>`;
+        container.appendChild(div);
+      });
+    }
+
+    // ---- Render functions ----
+    function renderAllPosts() {
+      const filtered = getFilteredPosts(POSTS);
+      const container = document.getElementById('posts-all');
+      const emptyState = document.getElementById('empty-all');
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        container.innerHTML = filtered.map(p => renderPostCard(p)).join('');
+      }
+    }
+
+    function renderWeekPosts() {
+      // Posts IDs 1, 3, 5 (index 0, 2, 4)
+      const weekPosts = [POSTS[0], POSTS[2], POSTS[4]];
+      document.getElementById('posts-week').innerHTML = weekPosts.map(p => renderPostCard(p)).join('');
+    }
+
+    function renderMonthPosts() {
+      // All posts for "This Month"
+      const sorted = [...POSTS].sort((a, b) => b.upvotes - a.upvotes);
+      document.getElementById('posts-month').innerHTML = sorted.map(p => renderPostCard(p)).join('');
+    }
+
+    function renderTopEntitiesTab() {
+      const grid = document.getElementById('entities-grid');
+      grid.innerHTML = ENTITIES.slice(0, 6).map(e => renderEntityCard(e)).join('');
+    }
+
+    function renderRightSidebar() {
+      // Top 5 entities
+      const topEntitiesEl = document.getElementById('sidebar-top-entities');
+      const top5 = [...ENTITIES].sort((a, b) => b.bhadaasCount - a.bhadaasCount).slice(0, 5);
+      topEntitiesEl.innerHTML = top5.map(e => `
+        <a href="entity.html?id=${e.id}" class="entity-row">
+          <span class="entity-row-icon">${e.icon}</span>
+          <div class="entity-row-info">
+            <div class="entity-row-name">${e.name}</div>
+            <div class="text-xs text-muted">${getCategoryInfo(e.category).label}</div>
+          </div>
+          <span class="badge badge-danger">${formatNumber(e.bhadaasCount)}</span>
+        </a>
+      `).join('');
+
+      // Stats
+      document.getElementById('stat-posts').textContent    = formatNumber(ADMIN_STATS.totalPosts);
+      document.getElementById('stat-users').textContent    = formatNumber(ADMIN_STATS.totalUsers);
+      document.getElementById('stat-entities').textContent = formatNumber(ADMIN_STATS.totalEntities);
+      document.getElementById('stat-resolved').textContent = formatNumber(ADMIN_STATS.resolvedThisMonth);
+
+      // Recently tagged (last 4 entities)
+      const recentEl = document.getElementById('sidebar-recently-tagged');
+      const recent4 = ENTITIES.slice(-4).reverse();
+      recentEl.innerHTML = recent4.map(e => `
+        <div class="entity-row" style="cursor:default;">
+          <span class="entity-row-icon">${e.icon}</span>
+          <div class="entity-row-info">
+            <div class="entity-row-name">${e.name}</div>
+          </div>
+          <span class="badge badge-primary" style="font-size:0.65rem;">New</span>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Architecture Guide — Bhadaas Dev Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ── Hero ─────────────────────────────────────────────────────── */
+    .tech-hero {
+      background: linear-gradient(135deg, #0a0f1f 0%, #1A1A2E 60%);
+      color: #fff;
+      padding: 3.5rem 0 2.5rem;
+    }
+    .tech-hero .breadcrumb {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .tech-hero .breadcrumb a { color: rgba(255,107,53,0.8); }
+    .tech-hero .breadcrumb a:hover { color: var(--primary); }
+    .tech-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .tech-hero p.subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 720px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .hero-stat-badges { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .hero-badge {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.02em;
+    }
+    .hero-badge.badge-accent { border-color: rgba(74,144,217,0.5); color: #9CC8FF; }
+    .hero-badge.badge-success { border-color: rgba(40,199,111,0.5); color: #7EFBB3; }
+    .hero-badge.badge-warn { border-color: rgba(255,159,67,0.5); color: #FFCF80; }
+    .hero-badge.badge-primary { border-color: rgba(255,107,53,0.5); color: #FFB38A; }
+
+    /* ── Layout ───────────────────────────────────────────────────── */
+    .tech-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 2.5rem 0 4rem;
+    }
+    .tech-main { flex: 1; min-width: 0; }
+
+    /* ── TOC Sidebar ──────────────────────────────────────────────── */
+    .toc-sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      align-self: flex-start;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .toc-sidebar h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .toc-sidebar a {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-sidebar a:hover, .toc-sidebar a.active {
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ── Sections ─────────────────────────────────────────────────── */
+    .tech-section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .tech-section.visible { opacity: 1; transform: translateY(0); }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-number {
+      width: 32px; height: 32px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.5rem; font-weight: 800; margin: 0; }
+    .section-subtitle { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+    /* ── Alerts ───────────────────────────────────────────────────── */
+    .alert {
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid transparent;
+      line-height: 1.6;
+    }
+    .alert-info { background: #EFF6FF; border-color: rgba(74,144,217,0.3); color: #1e4f8a; }
+    .alert-warning {
+      background: var(--warning-light);
+      border-color: rgba(255,159,67,0.4);
+      color: #7a4800;
+      font-weight: 600;
+    }
+
+    /* ── Tech Stack Cards ─────────────────────────────────────────── */
+    .tech-stack-card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      transition: all 0.25s;
+    }
+    .tech-stack-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 32px rgba(74,144,217,0.1);
+      transform: translateY(-4px);
+    }
+    .tech-icon { font-size: 2rem; margin-bottom: 0.875rem; }
+    .tech-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .tech-lang { font-size: 0.75rem; color: var(--accent); font-weight: 700; margin-bottom: 0.75rem; }
+    .tech-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 0.875rem; }
+    .tech-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      background: #EEF0F6;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin: 2px;
+      font-weight: 600;
+    }
+    .tech-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .tech-meta strong { color: var(--text); }
+    .tech-phase { display: inline-block; font-size: 0.7rem; background: var(--warning-light); color: #7a4800; padding: 2px 8px; border-radius: 20px; font-weight: 700; margin-top: 0.5rem; }
+
+    /* ── Secondary Tech Row ───────────────────────────────────────── */
+    .secondary-tech-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .secondary-tech-item {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.8rem;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .secondary-tech-item strong { color: var(--text); font-weight: 700; }
+    .secondary-tech-item span { color: var(--text-muted); }
+
+    /* ── Architecture Diagram ─────────────────────────────────────── */
+    .arch-diagram {
+      background: #F8F9FC;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+    }
+    .arch-layer { margin-bottom: 1.25rem; }
+    .arch-layer-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+    .arch-boxes {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .arch-box {
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .arch-box.client { background: #EBF5FF; color: #1A6CBD; border-color: #B3D4F5; }
+    .arch-box.gateway { background: #F0EBFF; color: #6B46C1; border-color: #C4B5FD; }
+    .arch-box.api { background: #FFF5E6; color: #AD6800; border-color: #FFD78C; }
+    .arch-box.data { background: var(--success-light); color: #0D8A46; border-color: #A3E4C0; }
+    .arch-box.service { background: var(--primary-light); color: var(--primary); border-color: #FFCBB8; }
+    .arch-box.external { background: #F8F9FC; color: var(--text-muted); border-color: var(--border); }
+    .arch-arrow { text-align: center; color: var(--text-muted); font-size: 1.25rem; margin: 0.25rem 0; }
+
+    .arch-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .arch-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .arch-legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── Data Model Cards ─────────────────────────────────────────── */
+    .data-model-card {
+      background: #1E2128;
+      border-radius: 12px;
+      padding: 1.25rem;
+      font-family: 'Courier New', monospace;
+      transition: box-shadow 0.2s;
+    }
+    .data-model-card:hover { box-shadow: 0 0 0 2px rgba(97,175,239,0.35); }
+    .data-model-card .table-name {
+      color: #FF9F43;
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 0.5rem;
+    }
+    .data-model-card .field { font-size: 0.78rem; color: rgba(255,255,255,0.75); padding: 0.2rem 0; }
+    .data-model-card .field .fname { color: #61AFEF; }
+    .data-model-card .field .ftype { color: #98C379; margin-left: 0.5rem; }
+    .data-model-card .field .fnote { color: rgba(255,255,255,0.3); margin-left: 0.5rem; font-size: 0.72rem; }
+    .data-model-card .model-note {
+      margin-top: 0.875rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.72rem;
+      color: rgba(255,199,67,0.7);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+    }
+
+    /* ── API Design Tabs ──────────────────────────────────────────── */
+    .api-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 1.25rem; }
+    .api-tab-btn {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .api-tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .api-tab-btn:hover { color: var(--text); }
+    .api-tab-panel { display: none; }
+    .api-tab-panel.active { display: block; }
+    .api-table { width: 100%; border-collapse: collapse; }
+    .api-table th {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0.6rem 1rem;
+      text-align: left;
+      background: #F4F5FA;
+      border-bottom: 2px solid var(--border);
+    }
+    .api-table td {
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .api-table tr { cursor: pointer; transition: background 0.15s; }
+    .api-table tr:hover td { background: var(--primary-light); }
+    .method-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+    }
+    .method-get { background: #E6F4EA; color: #1a7a36; }
+    .method-post { background: #EFF6FF; color: #1A6CBD; }
+    .method-patch { background: #FFF5E6; color: #AD6800; }
+    .method-delete { background: #FFEAEA; color: #a81c1c; }
+    .auth-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .auth-required { background: var(--primary-light); color: var(--primary); }
+    .auth-optional { background: #F4F5FA; color: var(--text-muted); }
+    .auth-company { background: #F0EBFF; color: #6B46C1; }
+    .auth-no { background: #F4F5FA; color: var(--text-muted); }
+
+    /* ── Security Cards ───────────────────────────────────────────── */
+    .security-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+    .security-card:hover {
+      border-color: var(--danger);
+      box-shadow: 0 4px 16px rgba(234,84,85,0.08);
+    }
+    .security-card .sec-num {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--danger);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .security-card h4 { font-size: 0.95rem; font-weight: 700; margin: 0.25rem 0; }
+    .security-card p { font-size: 0.82rem; color: var(--text-muted); margin: 0; line-height: 1.6; }
+
+    /* ── Infra Stack ──────────────────────────────────────────────── */
+    .infra-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .infra-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .infra-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #F4F5FA;
+      font-size: 0.875rem;
+    }
+    .infra-row:last-child { border-bottom: none; }
+    .infra-row .infra-label { color: var(--text-muted); font-weight: 500; }
+    .infra-row .infra-value { font-weight: 700; color: var(--text); text-align: right; }
+    .infra-total {
+      margin-top: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--primary-light);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+    .infra-total .total-label { color: var(--primary); }
+    .infra-total .total-value { color: var(--primary); }
+
+    /* ── Sprint / Roadmap ─────────────────────────────────────────── */
+    .roadmap-phase {
+      margin-bottom: 2rem;
+    }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--secondary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.3rem 0.875rem;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+    }
+    .phase-badge.phase-1 { background: var(--primary); }
+    .phase-badge.phase-2 { background: var(--accent); }
+    .phase-badge.phase-3 { background: #6B46C1; }
+    .sprint-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .sprint-card .sprint-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .sprint-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.875rem; }
+    .sprint-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      font-size: 0.875rem;
+      margin-bottom: 0.4rem;
+    }
+    .sprint-item::before {
+      content: '→';
+      color: var(--primary);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Cost Tables ──────────────────────────────────────────────── */
+    .cost-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .cost-table-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .cost-table-card h3 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 1rem 1.25rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .cost-table { width: 100%; border-collapse: collapse; }
+    .cost-table th {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0.6rem 1rem;
+      text-align: left;
+      background: #F9FAFB;
+      border-bottom: 1px solid var(--border);
+    }
+    .cost-table td {
+      padding: 0.65rem 1rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid #F4F5FA;
+    }
+    .cost-table td:last-child { font-weight: 600; color: var(--primary); text-align: right; }
+    .cost-highlight { background: var(--primary-light) !important; }
+    .cost-highlight td { font-weight: 800 !important; }
+    .cost-table tr:hover td { background: #F9FAFB; }
+    .funding-box {
+      background: linear-gradient(135deg, #0a0f1f 0%, #1A1A2E 60%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-top: 1.5rem;
+    }
+    .funding-box h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; color: #FFCF80; }
+    .funding-box p { font-size: 0.9rem; color: rgba(255,255,255,0.75); margin: 0; line-height: 1.7; }
+    .funding-box strong { color: #7EFBB3; }
+
+    /* ── Toast ────────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--secondary);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Responsive ───────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .toc-sidebar { display: none; }
+      .tech-layout { padding: 1.5rem 0 3rem; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .cost-tables { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .tech-hero h1 { font-size: 1.8rem; }
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="container">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-name">भड़ास</span>
+      <span class="brand-tagline">Speak Up India</span>
+    </a>
+    <div class="nav-links">
+      <a href="../pages/feed.html">Browse</a>
+      <a href="../pages/post.html">Post Bhadaas</a>
+      <a href="../pages/company-dashboard.html">For Companies</a>
+      <a href="../pages/admin-dashboard.html">Admin</a>
+      <a href="index.html" style="color:rgba(255,180,80,0.85);">⚠️ Dev Details</a>
+    </div>
+    <div class="nav-actions">
+      <a href="index.html" class="btn btn-outline btn-sm" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.2);">← Dev Hub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<section class="tech-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Dev Details</a>
+      <span> / </span>Technical Architecture
+    </div>
+    <h1>Technical Architecture Guide</h1>
+    <p class="subtitle">Recommended tech stack, database design, data models, security, scalability, and phased development roadmap for Bhadaas.</p>
+    <div class="hero-stat-badges">
+      <span class="hero-badge badge-accent">⚛️ Next.js + Go</span>
+      <span class="hero-badge badge-success">🗄️ PostgreSQL + Redis</span>
+      <span class="hero-badge badge-warn">☁️ AWS India Region</span>
+      <span class="hero-badge badge-primary">🗓️ Phase 1: 8 weeks</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN LAYOUT
+════════════════════════════════════════════════ -->
+<main>
+  <div class="container">
+    <div class="tech-layout">
+
+      <!-- MAIN CONTENT -->
+      <div class="tech-main">
+
+        <!-- ─────────────────────────────────────
+             SECTION 1: TECH STACK
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="tech-stack">
+          <div class="section-header">
+            <div class="section-number">1</div>
+            <h2>Recommended Technology Stack</h2>
+          </div>
+          <div class="alert alert-info">
+            💡 <strong>Stack chosen for:</strong> Indian developer availability, scalability to 10M+ users, cost-effectiveness, SEO performance (critical for entity pages ranking on Google).
+          </div>
+
+          <div class="grid grid-3 gap-3 mb-3">
+
+            <!-- Card 1: Frontend -->
+            <div class="tech-stack-card">
+              <div class="tech-icon">⚛️</div>
+              <div class="tech-name">Frontend (Web)</div>
+              <div class="tech-lang">Next.js 14 + React</div>
+              <div class="tech-desc">Server-side rendering = SEO. Each entity page (airtel.bhadaas.in) needs to rank on Google. React ecosystem. TypeScript for safety.</div>
+              <div>
+                <span class="tech-tag">Tailwind CSS</span>
+                <span class="tech-tag">React Query</span>
+                <span class="tech-tag">Zustand</span>
+                <span class="tech-tag">React Hook Form</span>
+              </div>
+              <div class="tech-meta"><strong>Team:</strong> 1 Senior Frontend Dev (₹1.2–2L/month)</div>
+            </div>
+
+            <!-- Card 2: Mobile -->
+            <div class="tech-stack-card">
+              <div class="tech-icon">📱</div>
+              <div class="tech-name">Mobile App</div>
+              <div class="tech-lang">React Native (or Flutter)</div>
+              <div class="tech-desc">React Native reuses web codebase. Critical for India market — 70%+ traffic is mobile. Push notifications for Me Too alerts.</div>
+              <div>
+                <span class="tech-tag">React Native</span>
+                <span class="tech-tag">Expo</span>
+                <span class="tech-tag">Firebase Push</span>
+              </div>
+              <div class="tech-meta"><strong>Team:</strong> 1 Mobile Dev (₹80K–1.5L/month)</div>
+              <div class="tech-phase">📅 v2 — Months 6–12</div>
+            </div>
+
+            <!-- Card 3: Backend -->
+            <div class="tech-stack-card">
+              <div class="tech-icon">⚙️</div>
+              <div class="tech-name">Backend API</div>
+              <div class="tech-lang">Node.js (Express/Fastify) OR Go</div>
+              <div class="tech-desc">Node.js for full-stack JS team. Go for high throughput (upvotes/notifications — hundreds per second). Start Node.js, migrate hot paths to Go at scale.</div>
+              <div>
+                <span class="tech-tag">Express / Fastify</span>
+                <span class="tech-tag">Prisma ORM</span>
+                <span class="tech-tag">Zod Validation</span>
+                <span class="tech-tag">JWT</span>
+              </div>
+              <div class="tech-meta"><strong>Team:</strong> 1–2 Backend Devs (₹1.5–2.5L/month)</div>
+            </div>
+
+            <!-- Card 4: Database -->
+            <div class="tech-stack-card">
+              <div class="tech-icon">🗄️</div>
+              <div class="tech-name">Database</div>
+              <div class="tech-lang">PostgreSQL (primary) + Redis (cache/queues)</div>
+              <div class="tech-desc">Relational data (users, posts, entities) needs ACID. Redis for: Me Too count caching, notification queues, rate limiting, session storage.</div>
+              <div>
+                <span class="tech-tag">PostgreSQL 16</span>
+                <span class="tech-tag">Redis 7</span>
+                <span class="tech-tag">BullMQ</span>
+                <span class="tech-tag">pg_dump</span>
+              </div>
+              <div class="tech-meta"><strong>Backup:</strong> pg_dump daily, WAL streaming, 30-day retention</div>
+            </div>
+
+            <!-- Card 5: Search -->
+            <div class="tech-stack-card">
+              <div class="tech-icon">🔍</div>
+              <div class="tech-name">Search</div>
+              <div class="tech-lang">Elasticsearch (or Meilisearch)</div>
+              <div class="tech-desc">Full-text search across 50K+ posts, entity name autocomplete, tag search. PostgreSQL full-text is not enough at scale. Meilisearch is simpler and cheaper for Phase 1.</div>
+              <div>
+                <span class="tech-tag">Meilisearch</span>
+                <span class="tech-tag">Elasticsearch</span>
+                <span class="tech-tag">Autocomplete</span>
+              </div>
+              <div class="tech-meta"><strong>Note:</strong> Meilisearch Phase 1 → Elasticsearch Phase 2</div>
+              <div class="tech-phase">⚡ Elasticsearch in Phase 2</div>
+            </div>
+
+            <!-- Card 6: Infrastructure -->
+            <div class="tech-stack-card">
+              <div class="tech-icon">☁️</div>
+              <div class="tech-name">Infrastructure</div>
+              <div class="tech-lang">AWS (Mumbai region ap-south-1)</div>
+              <div class="tech-desc">Data residency in India (DPDPA requirement). AWS has best India CDN. Free tier for MVP.</div>
+              <div>
+                <span class="tech-tag">EC2/ECS</span>
+                <span class="tech-tag">RDS PostgreSQL</span>
+                <span class="tech-tag">ElastiCache</span>
+                <span class="tech-tag">S3</span>
+                <span class="tech-tag">CloudFront</span>
+                <span class="tech-tag">SES</span>
+                <span class="tech-tag">Lambda</span>
+                <span class="tech-tag">Route53</span>
+              </div>
+              <div class="tech-meta"><strong>Region:</strong> ap-south-1 (Mumbai)</div>
+            </div>
+          </div>
+
+          <p class="section-subtitle" style="margin-top:1.5rem;margin-bottom:0.75rem;font-weight:700;color:var(--text);">Supporting Services</p>
+          <div class="secondary-tech-row">
+            <div class="secondary-tech-item"><strong>Auth:</strong> <span>Custom OTP via MSG91 / 2Factor.in</span></div>
+            <div class="secondary-tech-item"><strong>CDN:</strong> <span>Cloudflare (free tier for Phase 1)</span></div>
+            <div class="secondary-tech-item"><strong>Email:</strong> <span>AWS SES (₹0.10/1000 emails)</span></div>
+            <div class="secondary-tech-item"><strong>SMS:</strong> <span>MSG91 (₹0.15/SMS — OTP only)</span></div>
+            <div class="secondary-tech-item"><strong>Payments:</strong> <span>Razorpay (company subscriptions)</span></div>
+            <div class="secondary-tech-item"><strong>Monitoring:</strong> <span>Grafana + Prometheus</span></div>
+            <div class="secondary-tech-item"><strong>Errors:</strong> <span>Sentry</span></div>
+            <div class="secondary-tech-item"><strong>CI/CD:</strong> <span>GitHub Actions → AWS CodeDeploy</span></div>
+            <div class="secondary-tech-item"><strong>Container:</strong> <span>Docker + AWS ECS Fargate</span></div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 2: SYSTEM ARCHITECTURE
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="architecture">
+          <div class="section-header">
+            <div class="section-number">2</div>
+            <h2>High-Level Architecture Diagram</h2>
+          </div>
+
+          <div class="arch-diagram">
+            <!-- Layer: Clients -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">Client Layer</div>
+              <div class="arch-boxes">
+                <div class="arch-box client">📱 Mobile App (React Native)</div>
+                <div class="arch-box client">🌐 Web Browser (Next.js SSR)</div>
+              </div>
+            </div>
+            <div class="arch-arrow">↓</div>
+
+            <!-- Layer: CDN -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">Edge / CDN Layer</div>
+              <div class="arch-boxes">
+                <div class="arch-box gateway">🛡️ Cloudflare CDN / WAF</div>
+              </div>
+            </div>
+            <div class="arch-arrow">↓</div>
+
+            <!-- Layer: Gateway -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">Gateway Layer</div>
+              <div class="arch-boxes">
+                <div class="arch-box gateway">🔀 API Gateway (AWS ALB)</div>
+              </div>
+            </div>
+            <div class="arch-arrow">↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</div>
+
+            <!-- Layer: API -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">API Layer</div>
+              <div class="arch-boxes">
+                <div class="arch-box api">🔐 Auth Service (OTP/JWT)</div>
+                <div class="arch-box api">⚙️ Core API (Node.js / Go)</div>
+              </div>
+            </div>
+            <div class="arch-arrow">↓</div>
+
+            <!-- Layer: Data -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">Data Layer</div>
+              <div class="arch-boxes">
+                <div class="arch-box data">🐘 PostgreSQL (Primary DB)</div>
+                <div class="arch-box data">⚡ Redis (Cache + Queues)</div>
+                <div class="arch-box data">🔍 Elasticsearch (Search)</div>
+                <div class="arch-box data">🪣 S3 (File Storage)</div>
+              </div>
+            </div>
+            <div class="arch-arrow">↓</div>
+
+            <!-- Layer: Workers -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">Worker / Async Layer</div>
+              <div class="arch-boxes">
+                <div class="arch-box service">📬 Notification Service</div>
+                <div class="arch-box service">🤖 Moderation AI (Phase 2)</div>
+                <div class="arch-box service">📊 Analytics Worker</div>
+              </div>
+            </div>
+            <div class="arch-arrow">↓</div>
+
+            <!-- Layer: External -->
+            <div class="arch-layer">
+              <div class="arch-layer-label">External / Output</div>
+              <div class="arch-boxes">
+                <div class="arch-box external">📧 AWS SES (Email)</div>
+                <div class="arch-box external">📲 MSG91 (SMS)</div>
+                <div class="arch-box external">🔔 FCM/APNs (Push)</div>
+                <div class="arch-box external">💳 Razorpay (Payments)</div>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="arch-legend">
+              <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#1A6CBD;"></div> Client Layer</div>
+              <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#6B46C1;"></div> Gateway / CDN</div>
+              <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#AD6800;"></div> API Layer</div>
+              <div class="arch-legend-item"><div class="arch-legend-dot" style="background:#0D8A46;"></div> Data Layer</div>
+              <div class="arch-legend-item"><div class="arch-legend-dot" style="background:var(--primary);"></div> Service Layer</div>
+              <div class="arch-legend-item"><div class="arch-legend-dot" style="background:var(--text-muted);"></div> External Services</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 3: DATA MODELS
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="data-models">
+          <div class="section-header">
+            <div class="section-number">3</div>
+            <h2>Core Data Models</h2>
+          </div>
+          <p class="section-subtitle">PostgreSQL schema — all IDs are UUIDs, all timestamps in UTC.</p>
+
+          <div class="grid grid-3 gap-3">
+
+            <!-- users -->
+            <div class="data-model-card">
+              <div class="table-name">📋 users</div>
+              <div class="field"><span class="fname">id</span><span class="ftype">UUID</span><span class="fnote">(PK)</span></div>
+              <div class="field"><span class="fname">phone</span><span class="ftype">VARCHAR</span><span class="fnote">encrypted, unique</span></div>
+              <div class="field"><span class="fname">email</span><span class="ftype">VARCHAR</span><span class="fnote">encrypted, unique</span></div>
+              <div class="field"><span class="fname">phone_verified</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">email_verified</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">trust_score</span><span class="ftype">INTEGER</span><span class="fnote">0–100</span></div>
+              <div class="field"><span class="fname">post_count</span><span class="ftype">INTEGER</span></div>
+              <div class="field"><span class="fname">is_active</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">is_suspended</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">joined_at</span><span class="ftype">TIMESTAMP</span></div>
+              <div class="field"><span class="fname">last_active</span><span class="ftype">TIMESTAMP</span></div>
+              <div class="model-note">🔒 No name stored publicly. Phone/email encrypted at rest using AES-256.</div>
+            </div>
+
+            <!-- entities -->
+            <div class="data-model-card">
+              <div class="table-name">🏢 entities</div>
+              <div class="field"><span class="fname">id</span><span class="ftype">UUID</span><span class="fnote">(PK)</span></div>
+              <div class="field"><span class="fname">name</span><span class="ftype">VARCHAR(200)</span></div>
+              <div class="field"><span class="fname">slug</span><span class="ftype">VARCHAR(200)</span><span class="fnote">URL-friendly, unique</span></div>
+              <div class="field"><span class="fname">category</span><span class="ftype">ENUM</span><span class="fnote">telecom, banking…</span></div>
+              <div class="field"><span class="fname">claimed</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">claimed_by</span><span class="ftype">UUID</span><span class="fnote">→ companies.id</span></div>
+              <div class="field"><span class="fname">bhadaas_count</span><span class="ftype">INTEGER</span><span class="fnote">denormalized</span></div>
+              <div class="field"><span class="fname">avg_severity</span><span class="ftype">DECIMAL(3,2)</span></div>
+              <div class="field"><span class="fname">resolution_rate</span><span class="ftype">DECIMAL(5,2)</span></div>
+              <div class="field"><span class="fname">response_rate</span><span class="ftype">DECIMAL(5,2)</span></div>
+              <div class="field"><span class="fname">created_at</span><span class="ftype">TIMESTAMP</span></div>
+            </div>
+
+            <!-- posts -->
+            <div class="data-model-card">
+              <div class="table-name">📝 posts</div>
+              <div class="field"><span class="fname">id</span><span class="ftype">UUID</span><span class="fnote">(PK)</span></div>
+              <div class="field"><span class="fname">user_id</span><span class="ftype">UUID</span><span class="fnote">→ users.id</span></div>
+              <div class="field"><span class="fname">title</span><span class="ftype">VARCHAR(200)</span></div>
+              <div class="field"><span class="fname">content</span><span class="ftype">TEXT</span><span class="fnote">max 2000 chars</span></div>
+              <div class="field"><span class="fname">severity</span><span class="ftype">SMALLINT</span><span class="fnote">1–5</span></div>
+              <div class="field"><span class="fname">category</span><span class="ftype">ENUM</span></div>
+              <div class="field"><span class="fname">status</span><span class="ftype">ENUM</span><span class="fnote">draft→published</span></div>
+              <div class="field"><span class="fname">upvote_count</span><span class="ftype">INTEGER</span><span class="fnote">denormalized</span></div>
+              <div class="field"><span class="fname">comment_count</span><span class="ftype">INTEGER</span><span class="fnote">denormalized</span></div>
+              <div class="field"><span class="fname">has_company_response</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">created_at</span><span class="ftype">TIMESTAMP</span></div>
+              <div class="field"><span class="fname">published_at</span><span class="ftype">TIMESTAMP</span></div>
+            </div>
+
+            <!-- post_entities -->
+            <div class="data-model-card">
+              <div class="table-name">🔗 post_entities <span style="color:rgba(255,255,255,0.3);font-size:0.72rem;">(junction)</span></div>
+              <div class="field"><span class="fname">post_id</span><span class="ftype">UUID</span><span class="fnote">→ posts.id</span></div>
+              <div class="field"><span class="fname">entity_id</span><span class="ftype">UUID</span><span class="fnote">→ entities.id</span></div>
+              <div class="field" style="margin-top:0.5rem;"><span style="color:rgba(255,255,255,0.3);font-size:0.72rem;">PRIMARY KEY (post_id, entity_id)</span></div>
+              <div class="model-note">Links a grievance post to one or more companies/entities. One post can tag multiple entities.</div>
+            </div>
+
+            <!-- upvotes -->
+            <div class="data-model-card">
+              <div class="table-name">👍 upvotes</div>
+              <div class="field"><span class="fname">id</span><span class="ftype">UUID</span><span class="fnote">(PK)</span></div>
+              <div class="field"><span class="fname">post_id</span><span class="ftype">UUID</span><span class="fnote">→ posts.id</span></div>
+              <div class="field"><span class="fname">user_id</span><span class="ftype">UUID</span><span class="fnote">→ users.id</span></div>
+              <div class="field"><span class="fname">created_at</span><span class="ftype">TIMESTAMP</span></div>
+              <div class="field" style="margin-top:0.5rem;"><span style="color:rgba(255,255,255,0.3);font-size:0.72rem;">UNIQUE (post_id, user_id)</span></div>
+              <div class="model-note">Me Too = upvote. Stored here for notification fanout when a company posts an official response.</div>
+            </div>
+
+            <!-- company_responses -->
+            <div class="data-model-card">
+              <div class="table-name">💬 company_responses</div>
+              <div class="field"><span class="fname">id</span><span class="ftype">UUID</span><span class="fnote">(PK)</span></div>
+              <div class="field"><span class="fname">post_id</span><span class="ftype">UUID</span><span class="fnote">→ posts.id</span></div>
+              <div class="field"><span class="fname">company_id</span><span class="ftype">UUID</span><span class="fnote">→ companies.id</span></div>
+              <div class="field"><span class="fname">response_text</span><span class="ftype">TEXT</span></div>
+              <div class="field"><span class="fname">resolution_offered</span><span class="ftype">BOOLEAN</span></div>
+              <div class="field"><span class="fname">resolution_type</span><span class="ftype">VARCHAR</span><span class="fnote">nullable</span></div>
+              <div class="field"><span class="fname">resolution_date</span><span class="ftype">DATE</span><span class="fnote">nullable</span></div>
+              <div class="field"><span class="fname">notification_sent_count</span><span class="ftype">INTEGER</span></div>
+              <div class="field"><span class="fname">created_at</span><span class="ftype">TIMESTAMP</span></div>
+              <div class="field"><span class="fname">cost_charged</span><span class="ftype">DECIMAL(10,2)</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 4: API DESIGN
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="api-design">
+          <div class="section-header">
+            <div class="section-number">4</div>
+            <h2>Core API Endpoints</h2>
+          </div>
+          <p class="section-subtitle">RESTful API. All responses JSON. Auth via JWT in httpOnly cookie. Click any row to copy the endpoint.</p>
+
+          <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.25rem;">
+            <div class="api-tabs">
+              <button class="api-tab-btn active" data-tab="posts">Posts API</button>
+              <button class="api-tab-btn" data-tab="entities">Entities API</button>
+              <button class="api-tab-btn" data-tab="company">Company API</button>
+              <button class="api-tab-btn" data-tab="auth">Auth API</button>
+            </div>
+
+            <!-- Posts -->
+            <div class="api-tab-panel active" id="tab-posts">
+              <table class="api-table">
+                <thead>
+                  <tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-endpoint="/api/posts"><td><span class="method-badge method-get">GET</span></td><td><code>/api/posts</code></td><td><span class="auth-badge auth-optional">Optional</span></td><td>List posts (filterable)</td></tr>
+                  <tr data-endpoint="/api/posts/:id"><td><span class="method-badge method-get">GET</span></td><td><code>/api/posts/:id</code></td><td><span class="auth-badge auth-no">No</span></td><td>Get single post</td></tr>
+                  <tr data-endpoint="/api/posts"><td><span class="method-badge method-post">POST</span></td><td><code>/api/posts</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Create new post</td></tr>
+                  <tr data-endpoint="/api/posts/:id/upvote"><td><span class="method-badge method-patch">PATCH</span></td><td><code>/api/posts/:id/upvote</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Me Too (idempotent)</td></tr>
+                  <tr data-endpoint="/api/posts/:id/upvote"><td><span class="method-badge method-delete">DELETE</span></td><td><code>/api/posts/:id/upvote</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Remove Me Too</td></tr>
+                  <tr data-endpoint="/api/posts/:id/comments"><td><span class="method-badge method-get">GET</span></td><td><code>/api/posts/:id/comments</code></td><td><span class="auth-badge auth-no">No</span></td><td>Get comments</td></tr>
+                  <tr data-endpoint="/api/posts/:id/comments"><td><span class="method-badge method-post">POST</span></td><td><code>/api/posts/:id/comments</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Add comment</td></tr>
+                  <tr data-endpoint="/api/posts/:id/report"><td><span class="method-badge method-post">POST</span></td><td><code>/api/posts/:id/report</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Report a post</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Entities -->
+            <div class="api-tab-panel" id="tab-entities">
+              <table class="api-table">
+                <thead>
+                  <tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-endpoint="/api/entities"><td><span class="method-badge method-get">GET</span></td><td><code>/api/entities</code></td><td><span class="auth-badge auth-no">No</span></td><td>List / search entities</td></tr>
+                  <tr data-endpoint="/api/entities/:slug"><td><span class="method-badge method-get">GET</span></td><td><code>/api/entities/:slug</code></td><td><span class="auth-badge auth-no">No</span></td><td>Get entity profile</td></tr>
+                  <tr data-endpoint="/api/entities/:slug/posts"><td><span class="method-badge method-get">GET</span></td><td><code>/api/entities/:slug/posts</code></td><td><span class="auth-badge auth-no">No</span></td><td>Get posts for entity</td></tr>
+                  <tr data-endpoint="/api/entities/:slug/stats"><td><span class="method-badge method-get">GET</span></td><td><code>/api/entities/:slug/stats</code></td><td><span class="auth-badge auth-no">No</span></td><td>Get entity statistics</td></tr>
+                  <tr data-endpoint="/api/entities"><td><span class="method-badge method-post">POST</span></td><td><code>/api/entities</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Create new entity</td></tr>
+                  <tr data-endpoint="/api/entities/:id/claim"><td><span class="method-badge method-post">POST</span></td><td><code>/api/entities/:id/claim</code></td><td><span class="auth-badge auth-company">Company</span></td><td>Submit claim request</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Company -->
+            <div class="api-tab-panel" id="tab-company">
+              <table class="api-table">
+                <thead>
+                  <tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-endpoint="/api/company/dashboard"><td><span class="method-badge method-get">GET</span></td><td><code>/api/company/dashboard</code></td><td><span class="auth-badge auth-company">Company</span></td><td>Dashboard data</td></tr>
+                  <tr data-endpoint="/api/company/analytics"><td><span class="method-badge method-get">GET</span></td><td><code>/api/company/analytics</code></td><td><span class="auth-badge auth-company">Company</span></td><td>Analytics data</td></tr>
+                  <tr data-endpoint="/api/company/responses"><td><span class="method-badge method-post">POST</span></td><td><code>/api/company/responses</code></td><td><span class="auth-badge auth-company">Company</span></td><td>Post official response</td></tr>
+                  <tr data-endpoint="/api/company/alerts"><td><span class="method-badge method-get">GET</span></td><td><code>/api/company/alerts</code></td><td><span class="auth-badge auth-company">Company</span></td><td>Get alerts</td></tr>
+                  <tr data-endpoint="/api/company/settings"><td><span class="method-badge method-patch">PATCH</span></td><td><code>/api/company/settings</code></td><td><span class="auth-badge auth-company">Company</span></td><td>Update settings</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Auth -->
+            <div class="api-tab-panel" id="tab-auth">
+              <table class="api-table">
+                <thead>
+                  <tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                  <tr data-endpoint="/api/auth/otp/send"><td><span class="method-badge method-post">POST</span></td><td><code>/api/auth/otp/send</code></td><td><span class="auth-badge auth-no">No</span></td><td>Send OTP to phone</td></tr>
+                  <tr data-endpoint="/api/auth/otp/verify"><td><span class="method-badge method-post">POST</span></td><td><code>/api/auth/otp/verify</code></td><td><span class="auth-badge auth-no">No</span></td><td>Verify OTP, get JWT</td></tr>
+                  <tr data-endpoint="/api/auth/refresh"><td><span class="method-badge method-post">POST</span></td><td><code>/api/auth/refresh</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Refresh access token</td></tr>
+                  <tr data-endpoint="/api/auth/logout"><td><span class="method-badge method-delete">DELETE</span></td><td><code>/api/auth/logout</code></td><td><span class="auth-badge auth-required">Required</span></td><td>Logout (invalidate token)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 5: SECURITY
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="security">
+          <div class="section-header">
+            <div class="section-number">5</div>
+            <h2>Security: OWASP Top 10 Compliance</h2>
+          </div>
+          <div class="alert alert-warning">
+            ⚠️ A consumer grievance platform is a <strong>HIGH-VALUE target</strong> for: disgruntled companies trying to remove posts, fake review campaigns, doxxing attacks, and government data requests. <strong>Security is non-negotiable.</strong>
+          </div>
+
+          <div class="grid grid-2 gap-3">
+            <div class="security-card">
+              <div class="sec-num">A01 — Broken Access Control</div>
+              <h4>Access Control</h4>
+              <p>JWT auth with short expiry (15min access, 7d refresh). Role-based (user/company/admin). Posts always show without author identity. Admin actions require 2FA.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A02 — Cryptographic Failures</div>
+              <h4>Cryptographic Failures</h4>
+              <p>AES-256 for PII at rest (phone, email). bcrypt for passwords. TLS 1.3 only. No sensitive data in logs. No PII in URLs or error messages.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A03 — Injection</div>
+              <h4>Injection Prevention</h4>
+              <p>Parameterized queries only (never raw SQL). ORM (Prisma/TypeORM). Input sanitization. HTML entity encoding for post content display.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A04 — Insecure Design</div>
+              <h4>Secure Design</h4>
+              <p>Phone OTP mandatory (no password-only accounts). Rate limiting on OTP (3 attempts/hour). Poster identity NEVER included in API response. Separate stores for PII vs content.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A05 — Security Misconfiguration</div>
+              <h4>Hardened Config</h4>
+              <p>No default credentials. All S3 buckets private. Security headers (CSP, HSTS, X-Frame-Options). No debug mode in production. Secrets in AWS Secrets Manager — never in .env files.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A06 — Vulnerable Components</div>
+              <h4>Dependency Security</h4>
+              <p>Dependabot for dependency updates. Regular npm audit. Docker base images from official sources. Monthly security scan with Snyk.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A07 — Auth &amp; Session Failures</div>
+              <h4>Auth Hardening</h4>
+              <p>OTP-based auth only. JWT stored in httpOnly cookies (not localStorage). CSRF protection. Brute-force lockout: 5 OTP failures = 1h lockout.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A08 — Software &amp; Data Integrity</div>
+              <h4>Data Integrity</h4>
+              <p>Signed deploys (GitHub Actions with signing). Integrity checks on file uploads. Virus scan on uploaded documents (ClamAV). Content hash verification.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A09 — Security Logging &amp; Monitoring</div>
+              <h4>Security Monitoring</h4>
+              <p>All legal requests logged with timestamps. All moderation actions logged with admin ID. All auth events logged. CloudWatch alerts for anomalous patterns. Sentry for error tracking.</p>
+            </div>
+            <div class="security-card">
+              <div class="sec-num">A10 — SSRF</div>
+              <h4>SSRF Prevention</h4>
+              <p>URL validation for external links. No server-side URL fetching from user input. Whitelist for allowed external domains.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 6: INFRASTRUCTURE
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="infrastructure">
+          <div class="section-header">
+            <div class="section-number">6</div>
+            <h2>Infrastructure Setup Guide</h2>
+          </div>
+
+          <div class="grid grid-2 gap-3">
+            <!-- Phase 1 -->
+            <div class="infra-card">
+              <h3>⚡ Phase 1 Infrastructure (MVP)</h3>
+              <div class="infra-row"><span class="infra-label">Domain (bhadaas.in)</span><span class="infra-value">₹800/year</span></div>
+              <div class="infra-row"><span class="infra-label">SSL Certificate</span><span class="infra-value">Cloudflare (free)</span></div>
+              <div class="infra-row"><span class="infra-label">Frontend</span><span class="infra-value">Vercel (free → $20/mo)</span></div>
+              <div class="infra-row"><span class="infra-label">Backend (EC2 t3.medium)</span><span class="infra-value">₹4,000–6,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Database (RDS db.t3.small)</span><span class="infra-value">₹3,000–5,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Cache (ElastiCache t3.micro)</span><span class="infra-value">₹1,500–2,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Storage (AWS S3)</span><span class="infra-value">₹500–1,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Email (AWS SES)</span><span class="infra-value">₹0/mo (62K free)</span></div>
+              <div class="infra-row"><span class="infra-label">SMS (MSG91 OTPs ~500/day)</span><span class="infra-value">₹2,250/mo</span></div>
+              <div class="infra-total"><span class="total-label">Total Phase 1</span><span class="total-value">₹15,000–20,000/mo</span></div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="infra-card">
+              <h3>🚀 Phase 2 Infrastructure (Scale)</h3>
+              <div class="infra-row"><span class="infra-label">Load Balancer (AWS ALB)</span><span class="infra-value">₹2,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">App Servers (3× EC2 t3.large)</span><span class="infra-value">₹20,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">DB (RDS db.t3.large + Read Replica)</span><span class="infra-value">₹18,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Cache (ElastiCache m5.large)</span><span class="infra-value">₹8,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Elasticsearch (2-node cluster)</span><span class="infra-value">₹15,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">CloudFront CDN</span><span class="infra-value">~₹4,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Monitoring (Datadog/Grafana)</span><span class="infra-value">₹5,000–10,000/mo</span></div>
+              <div class="infra-row"><span class="infra-label">Backup &amp; DR</span><span class="infra-value">₹3,000/mo</span></div>
+              <div class="infra-total"><span class="total-label">Total Phase 2</span><span class="total-value">₹80,000–1,00,000/mo</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 7: ROADMAP
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="roadmap">
+          <div class="section-header">
+            <div class="section-number">7</div>
+            <h2>Sprint-by-Sprint Development Roadmap</h2>
+          </div>
+
+          <!-- Phase 1 -->
+          <div class="roadmap-phase">
+            <div class="phase-header">
+              <span class="phase-badge phase-1">Phase 1 — MVP</span>
+              <span style="font-size:0.85rem;color:var(--text-muted);font-weight:600;">8 Weeks</span>
+            </div>
+            <div class="grid grid-2 gap-3">
+              <div class="sprint-card">
+                <div class="sprint-label">Week 1–2</div>
+                <h4>🏗️ Foundation</h4>
+                <div class="sprint-item">Company registration &amp; legal setup</div>
+                <div class="sprint-item">Git repo setup, CI/CD pipeline</div>
+                <div class="sprint-item">Database schema (users, posts, entities, upvotes)</div>
+                <div class="sprint-item">Basic auth (phone OTP via MSG91)</div>
+                <div class="sprint-item">Next.js project setup with design system</div>
+              </div>
+              <div class="sprint-card">
+                <div class="sprint-label">Week 3–4</div>
+                <h4>📝 Core Features</h4>
+                <div class="sprint-item">Post creation flow (multi-step form)</div>
+                <div class="sprint-item">Entity tagging (search + create)</div>
+                <div class="sprint-item">Post feed (browse, filter, search)</div>
+                <div class="sprint-item">Entity profile pages (SEO-optimised)</div>
+              </div>
+              <div class="sprint-card">
+                <div class="sprint-label">Week 5–6</div>
+                <h4>🤝 Social Features</h4>
+                <div class="sprint-item">Me Too / upvote system</div>
+                <div class="sprint-item">Comments (nested, moderated)</div>
+                <div class="sprint-item">Notifications (email via SES)</div>
+                <div class="sprint-item">Basic admin moderation panel</div>
+              </div>
+              <div class="sprint-card">
+                <div class="sprint-label">Week 7–8</div>
+                <h4>🚀 Polish &amp; Launch</h4>
+                <div class="sprint-item">Content policy enforcement</div>
+                <div class="sprint-item">Grievance Officer contact page</div>
+                <div class="sprint-item">ToS &amp; Privacy Policy pages live</div>
+                <div class="sprint-item">Security audit (basic pen test)</div>
+                <div class="sprint-item">Soft launch to 50 beta users</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 2 -->
+          <div class="roadmap-phase">
+            <div class="phase-header">
+              <span class="phase-badge phase-2">Phase 2 — Monetisation</span>
+              <span style="font-size:0.85rem;color:var(--text-muted);font-weight:600;">Months 2–6</span>
+            </div>
+            <div class="sprint-card">
+              <h4>💼 Company Dashboard &amp; Revenue</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.25rem 2rem;">
+                <div class="sprint-item">Company dashboard (paid)</div>
+                <div class="sprint-item">Razorpay subscription billing</div>
+                <div class="sprint-item">Company response system</div>
+                <div class="sprint-item">Advanced analytics</div>
+                <div class="sprint-item">Mobile app (React Native)</div>
+                <div class="sprint-item">Elasticsearch integration</div>
+                <div class="sprint-item">AI moderation (keyword filter)</div>
+                <div class="sprint-item">Trust Score algorithm v1</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 3 -->
+          <div class="roadmap-phase">
+            <div class="phase-header">
+              <span class="phase-badge phase-3">Phase 3 — Scale</span>
+              <span style="font-size:0.85rem;color:var(--text-muted);font-weight:600;">Months 6–18</span>
+            </div>
+            <div class="sprint-card">
+              <h4>🌐 Platform Expansion</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.25rem 2rem;">
+                <div class="sprint-item">Full AI moderation (ML model)</div>
+                <div class="sprint-item">Data licensing API</div>
+                <div class="sprint-item">Resolution marketplace</div>
+                <div class="sprint-item">SSMI registration</div>
+                <div class="sprint-item">Series A fundraise prep</div>
+                <div class="sprint-item">Government data partnerships</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─────────────────────────────────────
+             SECTION 8: COST ESTIMATES
+        ────────────────────────────────────── -->
+        <section class="tech-section" id="costs">
+          <div class="section-header">
+            <div class="section-number">8</div>
+            <h2>Startup Cost Estimates</h2>
+          </div>
+
+          <div class="cost-tables">
+            <div class="cost-table-card">
+              <h3>🛠️ One-Time Setup Costs</h3>
+              <table class="cost-table">
+                <thead><tr><th>Item</th><th>Cost</th></tr></thead>
+                <tbody>
+                  <tr><td>Company registration</td><td>₹15,000</td></tr>
+                  <tr><td>Legal retainer (1 year)</td><td>₹3,00,000</td></tr>
+                  <tr><td>D&amp;O Insurance</td><td>₹50,000/year</td></tr>
+                  <tr><td>ToS + Privacy Policy drafting</td><td>₹50,000</td></tr>
+                  <tr><td>Security audit (basic pen test)</td><td>₹50,000</td></tr>
+                  <tr><td>Brand design (logo, design system)</td><td>₹30,000–80,000</td></tr>
+                  <tr><td>Domain (bhadaas.in + .com)</td><td>₹2,000</td></tr>
+                  <tr class="cost-highlight"><td><strong>Total Setup</strong></td><td><strong>₹5–5.5 Lakhs</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="cost-table-card">
+              <h3>📅 Monthly Running Costs (Phase 1)</h3>
+              <table class="cost-table">
+                <thead><tr><th>Item</th><th>Monthly Cost</th></tr></thead>
+                <tbody>
+                  <tr><td>Infrastructure (AWS + Cloudflare)</td><td>₹15,000–20,000</td></tr>
+                  <tr><td>SMS (MSG91 OTPs)</td><td>₹2,000–5,000</td></tr>
+                  <tr><td>Legal retainer (monthly)</td><td>₹25,000</td></tr>
+                  <tr><td>Content moderator (1 person)</td><td>₹25,000–40,000</td></tr>
+                  <tr><td>Marketing &amp; user acquisition</td><td>₹20,000–50,000</td></tr>
+                  <tr><td>Miscellaneous</td><td>₹10,000</td></tr>
+                  <tr class="cost-highlight"><td><strong>Total Monthly (Phase 1)</strong></td><td><strong>₹1–1.5 Lakhs</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="funding-box">
+            <h4>💰 Funding Required</h4>
+            <p>
+              To run 12 months of Phase 1: <strong>₹5L setup</strong> + <strong>₹15L runway</strong> = <strong>₹20 Lakhs minimum</strong>.<br>
+              Series A trigger: <strong>5L users</strong> + <strong>₹50L MRR</strong>.
+            </p>
+          </div>
+        </section>
+
+      </div><!-- /tech-main -->
+
+      <!-- TOC SIDEBAR -->
+      <aside class="toc-sidebar">
+        <h4>On this page</h4>
+        <a href="#tech-stack" class="toc-link">Tech Stack</a>
+        <a href="#architecture" class="toc-link">System Architecture</a>
+        <a href="#data-models" class="toc-link">Data Models</a>
+        <a href="#api-design" class="toc-link">API Design</a>
+        <a href="#security" class="toc-link">Security Requirements</a>
+        <a href="#infrastructure" class="toc-link">Infrastructure</a>
+        <a href="#roadmap" class="toc-link">Dev Roadmap</a>
+        <a href="#costs" class="toc-link">Cost Estimates</a>
+      </aside>
+
+    </div><!-- /tech-layout -->
+  </div><!-- /container -->
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ── Scroll-spy TOC ───────────────────────────────────────────── */
+  const tocLinks = document.querySelectorAll('.toc-link');
+  const sections = document.querySelectorAll('.tech-section[id]');
+
+  const activateToc = (id) => {
+    tocLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  };
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) activateToc(e.target.id); });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+  sections.forEach(s => spy.observe(s));
+
+  /* ── Section entry animations ─────────────────────────────────── */
+  const appear = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.06 });
+
+  sections.forEach(s => appear.observe(s));
+
+  /* ── API Tabs ─────────────────────────────────────────────────── */
+  const tabBtns = document.querySelectorAll('.api-tab-btn');
+  const tabPanels = document.querySelectorAll('.api-tab-panel');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById('tab-' + target);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  /* ── Copy endpoint on row click ───────────────────────────────── */
+  const showToast = (msg) => {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  };
+
+  document.querySelectorAll('.api-table tbody tr[data-endpoint]').forEach(row => {
+    row.addEventListener('click', () => {
+      const ep = row.dataset.endpoint;
+      if (!ep) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ep).then(() => showToast('Copied: ' + ep));
+      } else {
+        showToast('Endpoint: ' + ep);
+      }
+    });
+  });
+
+  /* ── Data model card glow on hover (CSS handles it, JS hook for enhanced UX) */
+  document.querySelectorAll('.data-model-card').forEach(card => {
+    card.addEventListener('mouseenter', () => card.style.boxShadow = '0 0 0 2px rgba(97,175,239,0.4), 0 8px 24px rgba(97,175,239,0.12)');
+    card.addEventListener('mouseleave', () => card.style.boxShadow = '');
+  });
+
+})();
+</script>
+</body>
+</html>

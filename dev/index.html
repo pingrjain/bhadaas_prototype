@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Details — Bhadaas Founder Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ── Warning Section ─────────────────────────────────────────── */
+    .warning-section {
+      background: linear-gradient(135deg, #1a0a0a, #2d0f0f);
+      border-top: 4px solid #EA5455;
+      padding: 3.5rem 0;
+    }
+    .warning-header { margin-bottom: 2.25rem; }
+    .warning-header .warn-shield { font-size: 3rem; display: block; margin-bottom: 0.75rem; }
+    .warning-header h1 {
+      font-size: 2.5rem; font-weight: 900; color: #fff; margin: 0 0 0.75rem;
+      line-height: 1.15;
+    }
+    .warning-header p {
+      font-size: 1.05rem; color: rgba(255,255,255,0.65);
+      max-width: 700px; margin: 0 0 1rem; line-height: 1.6;
+    }
+    .badge-updated {
+      display: inline-block; background: rgba(234,84,85,0.2);
+      border: 1px solid rgba(234,84,85,0.4);
+      color: #FF9F9F; font-size: 0.75rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px;
+    }
+    .warning-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(234,84,85,0.3);
+      border-left: 4px solid #EA5455;
+      border-radius: 12px; padding: 1.5rem;
+      color: rgba(255,255,255,0.9); transition: all 0.2s;
+    }
+    .warning-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+    .warning-card .warn-icon { font-size: 2rem; margin-bottom: 0.75rem; display: block; }
+    .warning-card h3 { color: #FF6B6B; font-size: 1rem; margin: 0 0 0.5rem; font-weight: 700; }
+    .warning-card p { font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.6; margin: 0; }
+    .checklist-strip {
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(234,84,85,0.2);
+      border-radius: 8px; padding: 1.25rem 1.5rem; margin-top: 2rem;
+      display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;
+    }
+    .checklist-strip-label {
+      font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing: 1px; margin-right: 0.5rem;
+    }
+    .checklist-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.06);
+      padding: 0.4rem 0.875rem; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer; user-select: none; transition: all 0.2s;
+    }
+    .checklist-item:hover { background: rgba(255,255,255,0.1); }
+    .checklist-item.done {
+      background: rgba(46,213,115,0.1); border-color: rgba(46,213,115,0.3);
+      color: #2ed573; text-decoration: line-through;
+    }
+    .checklist-item .ci-box { font-size: 0.95rem; }
+
+    /* ── Executive Summary ───────────────────────────────────────── */
+    .summary-section { background: #F8F9FC; padding: 4rem 0; }
+    .summary-section .section-title {
+      font-size: 2rem; font-weight: 800; color: var(--text, #1a1a2e); margin-bottom: 1.5rem;
+    }
+    .summary-desc {
+      font-size: 1.05rem; color: var(--text-muted, #6b7280);
+      line-height: 1.75; margin-bottom: 0;
+    }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .stat-card {
+      background: #fff; border: 1px solid var(--border, #e5e7eb);
+      border-radius: 12px; padding: 1.25rem 1.5rem;
+      display: flex; align-items: flex-start; gap: 0.875rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .stat-card .stat-icon { font-size: 1.75rem; flex-shrink: 0; }
+    .stat-card .stat-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted, #6b7280); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .stat-card .stat-value { font-size: 0.95rem; font-weight: 700; color: var(--text, #1a1a2e); line-height: 1.3; }
+
+    /* ── Nav Cards ───────────────────────────────────────────────── */
+    .nav-cards-section { padding: 4rem 0; background: #fff; }
+    .nav-card {
+      background: #fff; border: 1px solid var(--border, #e5e7eb);
+      border-radius: 16px; padding: 2rem; transition: all 0.25s;
+      display: flex; flex-direction: column;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06); height: 100%;
+    }
+    .nav-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+    .nav-card-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .nav-card h3 { font-size: 1.35rem; font-weight: 800; margin: 0 0 0.75rem; color: var(--text, #1a1a2e); }
+    .nav-card > p { font-size: 0.9rem; color: var(--text-muted, #6b7280); line-height: 1.65; flex: 1; margin: 0; }
+    .nav-card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.875rem 0 1.25rem; }
+    .nav-card-tags span {
+      font-size: 0.7rem; padding: 2px 8px;
+      background: #EEF0F6; color: var(--text-muted, #6b7280);
+      border-radius: 4px; font-weight: 600;
+    }
+    .nav-card .btn { margin-top: auto; align-self: flex-start; }
+    .btn-success {
+      background: #28a745; color: #fff; border: none;
+      padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;
+      font-size: 0.9rem; cursor: pointer; transition: background 0.2s; text-decoration: none;
+      display: inline-block;
+    }
+    .btn-success:hover { background: #218838; }
+
+    /* ── Risk Matrix ─────────────────────────────────────────────── */
+    .risk-section { background: #F8F9FC; padding: 4rem 0; }
+    .risk-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; display: inline-block; }
+    .risk-critical { background: #FFEAEA; color: #C0392B; }
+    .risk-high { background: #FFF5E6; color: #AD6800; }
+    .risk-medium { background: #FFF5E6; color: #AD6800; }
+    .risk-low { background: #E8FAF0; color: #0D8A46; }
+    .likelihood-badge {
+      font-size: 0.72rem; font-weight: 600; color: var(--text-muted, #6b7280);
+      background: #EEF0F6; padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+    }
+
+    /* ── Action Steps ────────────────────────────────────────────── */
+    .action-section { padding: 4rem 0; background: #fff; }
+    .action-step {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+      padding: 1.25rem; background: #fff;
+      border-radius: 12px; border: 1px solid var(--border, #e5e7eb);
+      margin-bottom: 0.875rem; transition: all 0.2s;
+      opacity: 0; transform: translateX(-24px);
+    }
+    .action-step.visible { opacity: 1; transform: translateX(0); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .action-step:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); border-color: var(--primary, #FF6B35); }
+    .action-step-num {
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: var(--primary, #FF6B35); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 800;
+    }
+    .action-step-content h4 { font-size: 1rem; font-weight: 700; margin: 0 0 0.25rem; color: var(--text, #1a1a2e); }
+    .action-step-content p { font-size: 0.875rem; color: var(--text-muted, #6b7280); margin: 0; line-height: 1.55; }
+    .action-step-icon { font-size: 1.35rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Prototype Links ─────────────────────────────────────────── */
+    .proto-section { background: #F8F9FC; padding: 4rem 0; }
+    .proto-link-card {
+      background: #fff; border: 1px solid var(--border, #e5e7eb);
+      border-radius: 12px; padding: 1.25rem; text-align: center;
+      transition: all 0.2s; display: block; text-decoration: none;
+    }
+    .proto-link-card:hover {
+      border-color: var(--primary, #FF6B35);
+      box-shadow: 0 4px 16px rgba(255,107,53,0.12);
+      transform: translateY(-3px);
+    }
+    .proto-link-card .icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+    .proto-link-card .label { font-size: 0.875rem; font-weight: 600; color: var(--text, #1a1a2e); display: block; }
+    .proto-link-card .sublabel { font-size: 0.75rem; color: var(--text-muted, #6b7280); margin-top: 0.2rem; display: block; }
+
+    /* ── Grid helpers ────────────────────────────────────────────── */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+
+    /* ── Section helpers ─────────────────────────────────────────── */
+    .section-eyebrow {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--primary, #FF6B35); margin-bottom: 0.5rem;
+    }
+    .section-subtitle {
+      font-size: 1rem; color: var(--text-muted, #6b7280); margin-top: 0.5rem;
+    }
+    .section-title-lg {
+      font-size: 2rem; font-weight: 800; color: var(--text, #1a1a2e); margin: 0;
+    }
+
+    /* ── Dev-page nav overrides ──────────────────────────────────── */
+    .navbar { background: var(--dark, #1a1a2e); }
+
+    /* ── Table ───────────────────────────────────────────────────── */
+    .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border, #e5e7eb); }
+    .risk-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .risk-table thead th {
+      background: #1a1a2e; color: #fff; padding: 0.875rem 1.25rem;
+      text-align: left; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .risk-table tbody tr { border-bottom: 1px solid var(--border, #e5e7eb); }
+    .risk-table tbody tr:last-child { border-bottom: none; }
+    .risk-table tbody tr:hover { background: #F8F9FC; }
+    .risk-table tbody td { padding: 1rem 1.25rem; color: var(--text, #1a1a2e); vertical-align: top; }
+    .risk-table tbody td:first-child { font-weight: 600; }
+    .risk-table tbody td .mitigation { font-size: 0.8rem; color: var(--text-muted, #6b7280); margin-top: 2px; }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-6 { grid-template-columns: repeat(2, 1fr); }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .warning-header h1 { font-size: 1.75rem; }
+    }
+    @media (max-width: 600px) {
+      .grid-6 { grid-template-columns: 1fr 1fr; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .nav-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR (inline, dev-specific) ────────────────────────────── -->
+  <nav class="navbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding-top:1rem;padding-bottom:1rem;">
+      <a href="../index.html" class="nav-brand" style="display:flex;flex-direction:column;line-height:1;text-decoration:none;">
+        <span class="brand-name" style="font-size:1.6rem;font-weight:900;color:#FF6B35;">भड़ास</span>
+        <span class="brand-tagline" style="font-size:0.65rem;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;">Speak Up India</span>
+      </a>
+      <div class="nav-links" style="display:flex;gap:1.5rem;align-items:center;">
+        <a href="../pages/feed.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.875rem;font-weight:500;">Browse</a>
+        <a href="../pages/post.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.875rem;font-weight:500;">Post Bhadaas</a>
+        <a href="../pages/entity.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.875rem;font-weight:500;">Entities</a>
+        <a href="../pages/company-dashboard.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.875rem;font-weight:500;">For Companies</a>
+        <a href="../pages/admin-dashboard.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.875rem;font-weight:500;">Admin</a>
+        <a href="index.html" style="color:rgba(255,180,80,0.9);text-decoration:none;font-size:0.875rem;font-weight:700;border-bottom:2px solid rgba(255,180,80,0.5);padding-bottom:2px;">⚠️ Dev Details</a>
+      </div>
+      <div class="nav-actions">
+        <a href="../index.html" style="color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2);padding:0.4rem 1rem;border-radius:6px;font-size:0.8rem;text-decoration:none;font-weight:500;">← Back to Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 1 — CRITICAL WARNINGS
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="warning-section">
+    <div class="container">
+
+      <div class="warning-header">
+        <span class="warn-shield">⚠️</span>
+        <h1>STOP. Read This Before You Build.</h1>
+        <p>This page outlines critical legal, financial, and operational risks you must understand before developing, hosting, or operating Bhadaas in India.</p>
+        <span class="badge-updated">Last Updated: May 2026</span>
+      </div>
+
+      <!-- Row 1 -->
+      <div class="grid-3" style="margin-bottom:1.25rem;">
+        <div class="warning-card">
+          <span class="warn-icon">🏛️</span>
+          <h3>LEGAL ENTITY REQUIRED</h3>
+          <p>You <strong style="color:#FF9F9F;">CANNOT</strong> operate this as a freelancer or individual. Must register as Private Limited Company (or LLP). Reason: IT Rules 2021 require a registered entity with appointed officers. Timeline: 2–4 weeks. Cost: ₹8,000–₹15,000.</p>
+        </div>
+        <div class="warning-card">
+          <span class="warn-icon">⚖️</span>
+          <h3>DEFAMATION RISK IS REAL</h3>
+          <p>Companies <strong style="color:#FF9F9F;">WILL</strong> send legal notices. Budget ₹5–10 lakhs/year for legal retainer from Day 1. Some notices will demand post removal. You have 36 hours to comply with valid court orders. Not complying = you lose safe harbor immunity under IT Act Section 79.</p>
+        </div>
+        <div class="warning-card">
+          <span class="warn-icon">🚫</span>
+          <h3>NEVER ALLOW INDIVIDUAL TAGGING</h3>
+          <p>Tagging private individuals (not public figures) is the <strong style="color:#FF9F9F;">SINGLE highest risk</strong> action. Can result in harassment, stalking facilitation, criminal defamation charges. Version 1 must restrict to Companies, Orgs, and Government Bodies ONLY.</p>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="grid-3">
+        <div class="warning-card">
+          <span class="warn-icon">🔐</span>
+          <h3>DATA PRIVACY = NON-NEGOTIABLE</h3>
+          <p>DPDPA 2023 (India's new data law) is now in force. You MUST: Get explicit consent, appoint a DPO (Data Protection Officer), honor deletion requests within 30 days, store data only in India (data localization may apply). Fines: up to <strong style="color:#FF9F9F;">₹250 Crore</strong>.</p>
+        </div>
+        <div class="warning-card">
+          <span class="warn-icon">🏛️</span>
+          <h3>THREE MANDATORY OFFICERS</h3>
+          <p>IT Rules 2021 require you to publicly name and provide contact for: (1) <strong style="color:#FFD89B;">Grievance Officer</strong> — must be India-resident, respond within 15 days; (2) <strong style="color:#FFD89B;">Nodal Contact Officer</strong> — for law enforcement requests; (3) <strong style="color:#FFD89B;">Chief Compliance Officer</strong> — for legal compliance. These must be on your website.</p>
+        </div>
+        <div class="warning-card">
+          <span class="warn-icon">🚫</span>
+          <h3>NO POLITICS. EVER.</h3>
+          <p>Tagging politicians, political parties, or government officials personally is a fast track to: Section 66A revival risk, defamation by powerful entities, shutdown orders. Focus <strong style="color:#FF9F9F;">ONLY</strong> on consumer services, not political opinions. Have a ZERO tolerance content policy for political content.</p>
+        </div>
+      </div>
+
+      <!-- Quick Compliance Checklist -->
+      <div class="checklist-strip">
+        <span class="checklist-strip-label">Quick Checklist</span>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Register Pvt Ltd Company</div>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Get Legal Retainer</div>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Draft ToS &amp; Privacy Policy</div>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Appoint Grievance Officer</div>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Setup DPDPA Compliance</div>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Buy D&amp;O Insurance</div>
+        <div class="checklist-item" onclick="toggleChecklist(this)"><span class="ci-box">☐</span> Block Individual Tagging in v1</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 2 — EXECUTIVE SUMMARY
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="summary-section">
+    <div class="container">
+      <div class="grid-2" style="align-items:center;">
+        <div>
+          <p class="section-eyebrow">Platform Overview</p>
+          <h2 class="section-title-lg" style="margin-bottom:1.25rem;">Bhadaas — What It Is</h2>
+          <p class="summary-desc">
+            <strong>Bhadaas (भड़ास)</strong> is a verified consumer grievance &amp; experience-sharing platform exclusively for India. Unlike buried forums, Bhadaas is loud, visible, and action-oriented. Users post verified complaints tagging companies. Companies pay to respond and access data. Everyone wins — except bad actors.
+          </p>
+          <p class="summary-desc" style="margin-top:1rem;">
+            The platform fills a massive gap: India's 1.4 billion consumers have almost no effective, public-facing tool to escalate and share service failures. Bhadaas makes accountability visible and searchable.
+          </p>
+        </div>
+        <div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-icon">💰</div>
+              <div>
+                <div class="stat-label">Revenue Potential</div>
+                <div class="stat-value">₹4–6 Cr/year by Year 3</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⚖️</div>
+              <div>
+                <div class="stat-label">Legal Risk</div>
+                <div class="stat-value">Medium — manageable with prep</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🏗️</div>
+              <div>
+                <div class="stat-label">Dev Complexity</div>
+                <div class="stat-value">Moderate — 6–12 month MVP</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📈</div>
+              <div>
+                <div class="stat-label">Market</div>
+                <div class="stat-value">Massive unmet consumer need</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 3 — NAVIGATION CARDS TO SUB-PAGES
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="nav-cards-section">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <p class="section-eyebrow">In-Depth Reference</p>
+        <h2 class="section-title-lg">Developer Reference Guide</h2>
+        <p class="section-subtitle">Click a section to explore in detail</p>
+      </div>
+
+      <div class="grid-3">
+
+        <!-- Legal -->
+        <div class="nav-card">
+          <div class="nav-card-icon">⚖️</div>
+          <h3>Legal &amp; Compliance</h3>
+          <p>Complete legal analysis — IT Act Section 79, DPDPA 2023, defamation risks, mandatory officer requirements, state-wise considerations, content policies, and compliance checklist.</p>
+          <div class="nav-card-tags">
+            <span>IT Act</span><span>DPDPA</span><span>Safe Harbor</span><span>Defamation</span>
+          </div>
+          <a href="legal.html" class="btn btn-primary" style="text-decoration:none;display:inline-block;padding:0.625rem 1.25rem;border-radius:8px;font-weight:600;font-size:0.9rem;">Read Legal Guide →</a>
+        </div>
+
+        <!-- Business -->
+        <div class="nav-card">
+          <div class="nav-card-icon">💰</div>
+          <h3>Business Model &amp; Features</h3>
+          <p>Revenue streams beyond ads — B2B subscription plans, pay-per-response, data licensing, resolution marketplace. Full feature matrix for Users, Companies, and Admins.</p>
+          <div class="nav-card-tags">
+            <span>Revenue</span><span>B2B</span><span>Subscriptions</span><span>Features</span>
+          </div>
+          <a href="business.html" class="btn-success" style="text-decoration:none;display:inline-block;padding:0.625rem 1.25rem;border-radius:8px;font-weight:600;font-size:0.9rem;">Read Business Guide →</a>
+        </div>
+
+        <!-- Technical -->
+        <div class="nav-card">
+          <div class="nav-card-icon">🏗️</div>
+          <h3>Technical Architecture</h3>
+          <p>Recommended tech stack, database design, data models, scalability plan, security requirements, API design, infrastructure setup, and phased development roadmap.</p>
+          <div class="nav-card-tags">
+            <span>Next.js</span><span>PostgreSQL</span><span>Redis</span><span>AWS</span><span>Security</span>
+          </div>
+          <a href="technical.html" style="text-decoration:none;display:inline-block;padding:0.625rem 1.25rem;border-radius:8px;font-weight:600;font-size:0.9rem;background:#4A90E2;color:#fff;">Read Tech Guide →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 4 — RISK MATRIX
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="risk-section">
+    <div class="container">
+      <div style="margin-bottom:2rem;">
+        <p class="section-eyebrow">Due Diligence</p>
+        <h2 class="section-title-lg">Risk Assessment Matrix</h2>
+        <p class="section-subtitle">10 key risk areas evaluated for likelihood, impact, and mitigation</p>
+      </div>
+
+      <div class="table-container">
+        <table class="risk-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Risk Area</th>
+              <th>Likelihood</th>
+              <th>Impact</th>
+              <th>Risk Level</th>
+              <th>Mitigation Strategy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">01</td>
+              <td>Defamation suits from companies</td>
+              <td><span class="likelihood-badge">High</span></td>
+              <td><span class="likelihood-badge">Medium</span></td>
+              <td><span class="risk-badge risk-medium">🟠 Medium</span></td>
+              <td><div class="mitigation">Legal retainer, D&amp;O insurance, quick takedown compliance</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">02</td>
+              <td>Individual tagging causing harassment</td>
+              <td><span class="likelihood-badge">Very High</span></td>
+              <td><span class="likelihood-badge">Very High</span></td>
+              <td><span class="risk-badge risk-critical">🔴 Critical</span></td>
+              <td><div class="mitigation">Block individual tagging in v1 — zero exceptions</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">03</td>
+              <td>Fake reviews / competitor sabotage</td>
+              <td><span class="likelihood-badge">High</span></td>
+              <td><span class="likelihood-badge">High</span></td>
+              <td><span class="risk-badge risk-high">🔴 High</span></td>
+              <td><div class="mitigation">Phone verification, AI fraud detection, rate limiting per account</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">04</td>
+              <td>Government / political content misuse</td>
+              <td><span class="likelihood-badge">Medium</span></td>
+              <td><span class="likelihood-badge">Very High</span></td>
+              <td><span class="risk-badge risk-high">🔴 High</span></td>
+              <td><div class="mitigation">Zero-tolerance policy, proactive ML moderation on political keywords</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">05</td>
+              <td>DPDPA 2023 non-compliance</td>
+              <td><span class="likelihood-badge">Medium</span></td>
+              <td><span class="likelihood-badge">Very High</span></td>
+              <td><span class="risk-badge risk-high">🔴 High</span></td>
+              <td><div class="mitigation">Appoint DPO, build consent flows, data minimization by design</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">06</td>
+              <td>IT Rules 2021 non-compliance</td>
+              <td><span class="likelihood-badge">Medium</span></td>
+              <td><span class="likelihood-badge">High</span></td>
+              <td><span class="risk-badge risk-medium">🟠 Medium</span></td>
+              <td><div class="mitigation">Register company, appoint officers, publish quarterly compliance reports</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">07</td>
+              <td>Content moderation failure at scale</td>
+              <td><span class="likelihood-badge">Medium</span></td>
+              <td><span class="likelihood-badge">High</span></td>
+              <td><span class="risk-badge risk-medium">🟠 Medium</span></td>
+              <td><div class="mitigation">AI moderation pipeline + human review queue, tiered escalation</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">08</td>
+              <td>Database breach / user PII leak</td>
+              <td><span class="likelihood-badge">Low</span></td>
+              <td><span class="likelihood-badge">Very High</span></td>
+              <td><span class="risk-badge risk-medium">🟠 Medium</span></td>
+              <td><div class="mitigation">End-to-end encryption, no PII in public endpoints, regular security audits</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">09</td>
+              <td>User base not growing (cold start)</td>
+              <td><span class="likelihood-badge">Medium</span></td>
+              <td><span class="likelihood-badge">High</span></td>
+              <td><span class="risk-badge risk-medium">🟠 Medium</span></td>
+              <td><div class="mitigation">Seed content strategy, influencer partnerships, city-first rollout</div></td>
+            </tr>
+            <tr>
+              <td style="color:var(--text-muted,#6b7280);font-weight:400;">10</td>
+              <td>Companies refuse to pay / monetization fails</td>
+              <td><span class="likelihood-badge">Low</span></td>
+              <td><span class="likelihood-badge">Low</span></td>
+              <td><span class="risk-badge risk-low">🟢 Low</span></td>
+              <td><div class="mitigation">Free tier exists for brand discovery; demonstrate ROI before upsell</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 5 — ACTION CHECKLIST
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="action-section">
+    <div class="container">
+      <div style="margin-bottom:2.25rem;">
+        <p class="section-eyebrow">Founding Sequence</p>
+        <h2 class="section-title-lg">Before You Write a Single Line of Code</h2>
+        <p class="section-subtitle">This is the correct sequence of actions for founding Bhadaas</p>
+      </div>
+
+      <div id="action-steps">
+
+        <div class="action-step">
+          <div class="action-step-num">1</div>
+          <div class="action-step-icon">🏢</div>
+          <div class="action-step-content">
+            <h4>Register the Company</h4>
+            <p>Bhadaas Technologies Private Limited. Get a CA, takes 2–4 weeks, costs ₹8,000–₹15,000. Get Pvt Ltd, not proprietorship. This is the legal foundation everything else depends on.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">2</div>
+          <div class="action-step-icon">⚖️</div>
+          <div class="action-step-content">
+            <h4>Hire Legal Counsel</h4>
+            <p>Engage a tech/media law firm (Nishith Desai Associates, Khaitan &amp; Co, or similar). Budget ₹3–5 lakhs for the first year for retainer. Do not compromise on this — legal exposure is your #1 risk.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">3</div>
+          <div class="action-step-icon">📋</div>
+          <div class="action-step-content">
+            <h4>Draft Legal Documents</h4>
+            <p>Terms of Service, Privacy Policy (DPDPA-compliant), Content Policy. Do <strong>NOT</strong> copy from another site. Must be custom drafted by your lawyer. These documents are your legal shield.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">4</div>
+          <div class="action-step-icon">👤</div>
+          <div class="action-step-content">
+            <h4>Appoint Mandatory Officers</h4>
+            <p>Grievance Officer (India-resident, must respond within 15 days), Nodal Contact Officer (for law enforcement), DPO (Data Protection Officer). These can be the same person initially — just name them publicly.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">5</div>
+          <div class="action-step-icon">🛡️</div>
+          <div class="action-step-content">
+            <h4>Get D&amp;O Insurance</h4>
+            <p>Directors &amp; Officers liability insurance. Covers personal liability if the company is sued. This protects you personally — if a company sues and wins judgment against the company, D&amp;O covers the directors. Required from Day 1 of operations.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">6</div>
+          <div class="action-step-icon">🔐</div>
+          <div class="action-step-content">
+            <h4>Setup DPDPA Compliance Infrastructure</h4>
+            <p>Consent management system, data retention policy, deletion workflow (honor within 30 days), data localization plan. This is non-negotiable — fines can reach ₹250 Crore for serious violations.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">7</div>
+          <div class="action-step-icon">💻</div>
+          <div class="action-step-content">
+            <h4>Then Start Building</h4>
+            <p>MVP scope: phone verification, post creation, entity tagging (companies only), Me Too upvotes, basic AI moderation. Absolutely no individual tagging in v1. Keep it focused and shippable.</p>
+          </div>
+        </div>
+
+        <div class="action-step">
+          <div class="action-step-num">8</div>
+          <div class="action-step-icon">🚀</div>
+          <div class="action-step-content">
+            <h4>Pilot in One City First</h4>
+            <p>Delhi or Mumbai. 2–3 categories only — Telecom, Banking, E-commerce. Control the content volume so moderation is manageable. Gather data, learn fast, refine before scaling nationally.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 6 — PROTOTYPE LINKS
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="proto-section">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <p class="section-eyebrow">Prototype</p>
+        <h2 class="section-title-lg">Explore the Prototype</h2>
+        <p class="section-subtitle">Click any page to preview the current UI prototype</p>
+      </div>
+
+      <div class="grid-6">
+        <a href="../index.html" class="proto-link-card">
+          <span class="icon">🏠</span>
+          <span class="label">Home</span>
+          <span class="sublabel">Landing Page</span>
+        </a>
+        <a href="../pages/feed.html" class="proto-link-card">
+          <span class="icon">📋</span>
+          <span class="label">Browse Feed</span>
+          <span class="sublabel">All Complaints</span>
+        </a>
+        <a href="../pages/post.html" class="proto-link-card">
+          <span class="icon">✍️</span>
+          <span class="label">Post Bhadaas</span>
+          <span class="sublabel">Submit Complaint</span>
+        </a>
+        <a href="../pages/entity.html" class="proto-link-card">
+          <span class="icon">🏷️</span>
+          <span class="label">Entity Profile</span>
+          <span class="sublabel">Company Page</span>
+        </a>
+        <a href="../pages/company-dashboard.html" class="proto-link-card">
+          <span class="icon">💼</span>
+          <span class="label">Company Dash</span>
+          <span class="sublabel">B2B Portal</span>
+        </a>
+        <a href="../pages/admin-dashboard.html" class="proto-link-card">
+          <span class="icon">🔐</span>
+          <span class="label">Admin Dashboard</span>
+          <span class="sublabel">Moderation</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════════════ -->
+  <footer style="background:#1a1a2e;color:rgba(255,255,255,0.4);text-align:center;padding:2rem 1rem;font-size:0.8rem;line-height:1.8;">
+    <div class="container">
+      <div style="font-size:1.4rem;font-weight:900;color:#FF6B35;margin-bottom:0.5rem;">भड़ास</div>
+      <div>Bhadaas Technologies Pvt. Ltd. (Proposed)</div>
+      <div style="margin-top:0.25rem;color:rgba(255,255,255,0.25);">
+        This is a prototype/planning document &middot; Not for public distribution
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // ── Checklist toggle ─────────────────────────────────────────────
+    function toggleChecklist(el) {
+      const isDone = el.classList.toggle('done');
+      const box = el.querySelector('.ci-box');
+      box.textContent = isDone ? '✅' : '☐';
+    }
+
+    // ── Action step stagger animation ────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+      const steps = document.querySelectorAll('.action-step');
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const idx = Array.from(steps).indexOf(el);
+            setTimeout(function () {
+              el.classList.add('visible');
+            }, idx * 100);
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      steps.forEach(function (step) {
+        observer.observe(step);
+      });
+
+      // ── Smooth scroll ──────────────────────────────────────────────
+      document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
