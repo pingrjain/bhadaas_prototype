@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <!-- role-based banner (unverified user example) -->
+  <div class="role-banner verify">
+    ⚠️ please verify your email within 30 days to keep full access.
+    <a href="#" style="color:var(--primary);font-weight:700;margin-left:0.5rem;" onclick="showToast('verification email resent!','success');return false;">resend verification</a>
+  </div>
+
+  <!-- profile header -->
+  <div class="profile-header">
+    <div class="container">
+      <div class="profile-avatar">fc</div>
+      <h2 style="margin-bottom:0.25rem;">@fed_up_customer</h2>
+      <div class="text-muted" style="display:flex;align-items:center;gap:0.5rem;justify-content:center;">
+        <span class="badge badge-warning">⏳ unverified</span>
+        <span>· joined may 2025</span>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-value" style="color:var(--primary);">12</div>
+          <div class="profile-stat-label">bhadaas posted</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-value" style="color:var(--success);">847</div>
+          <div class="profile-stat-label">reactions received</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-value" style="color:var(--accent);">3</div>
+          <div class="profile-stat-label">resolved</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="max-width:800px;padding-top:2rem;padding-bottom:4rem;">
+
+    <!-- tabs -->
+    <div class="tabs" data-tabs-container>
+      <div class="tab-item active" data-tab="tab-posts">my bhadaas</div>
+      <div class="tab-item" data-tab="tab-reactions">my reactions</div>
+      <div class="tab-item" data-tab="tab-settings">settings</div>
+    </div>
+
+    <!-- tab: my posts -->
+    <div class="tab-content active" id="tab-posts">
+      <div id="user-posts" style="display:flex;flex-direction:column;gap:1rem;"></div>
+    </div>
+
+    <!-- tab: my reactions -->
+    <div class="tab-content" id="tab-reactions">
+      <div class="empty-state">
+        <div class="empty-icon">🔥</div>
+        <h3>your reactions</h3>
+        <p>posts you've reacted to will appear here</p>
+      </div>
+    </div>
+
+    <!-- tab: settings -->
+    <div class="tab-content" id="tab-settings">
+      <div class="card">
+        <div class="card-header"><h4>account settings</h4></div>
+        <div class="card-body">
+          <div class="alert alert-warning" style="font-size:0.85rem;">
+            <span>🔒</span>
+            <span>profile editing is locked for unverified accounts. <a href="#" style="color:var(--primary);" onclick="showToast('verification email resent!','success');return false;">verify your email</a> to unlock.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">username</label>
+            <input type="text" class="form-control" value="fed_up_customer" disabled />
+          </div>
+          <div class="form-group">
+            <label class="form-label">email</label>
+            <input type="email" class="form-control" value="user@example.com" disabled />
+          </div>
+          <div class="form-group">
+            <label class="form-label">password</label>
+            <input type="password" class="form-control" value="********" disabled />
+          </div>
+          <button class="btn btn-outline" disabled>save changes (locked)</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-header"><h4>membership</h4></div>
+        <div class="card-body">
+          <p class="text-muted" style="font-size:0.9rem;">upgrade to bhadaas pro for highlighted badges, faster approval, and private group access.</p>
+          <a href="membership.html" class="btn btn-primary" style="margin-top:0.75rem;">🔥 upgrade to pro</a>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.5rem;border-color:var(--danger);">
+        <div class="card-header" style="border-color:var(--danger);"><h4 style="color:var(--danger);">danger zone</h4></div>
+        <div class="card-body">
+          <p class="text-muted" style="font-size:0.85rem;">once you delete your account, there is no going back. please be certain.</p>
+          <button class="btn btn-danger btn-sm" style="margin-top:0.75rem;" onclick="showToast('account deletion is disabled in prototype','info')">delete my account</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../js/shared.js"></script>
+  <script>
+    const postsEl = document.getElementById('user-posts');
+    if (postsEl) {
+      postsEl.innerHTML = POSTS.slice(0, 3).map(p => renderPostCard(p)).join('');
+    }
+  </script>
+</body>
+</html>

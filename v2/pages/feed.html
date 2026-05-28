@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — browse feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <div id="nav-placeholder" data-active="feed"></div>
+
+  <!-- page header -->
+  <div style="background:var(--bg-card);border-bottom:1px solid var(--border);padding:1.25rem 0;">
+    <div class="container">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h2 style="font-size:1.25rem;font-weight:800;">browse bhadaas</h2>
+          <p class="text-sm text-muted" style="margin:0;">real stories from real people — unfiltered</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <div class="search-bar" style="width:300px;">
+            <input type="text" placeholder="search posts, entities..." />
+            <button>🔍</button>
+          </div>
+          <div class="view-toggle">
+            <button class="view-toggle-btn active" data-view="cards" onclick="toggleView('cards')">☰ cards</button>
+            <button class="view-toggle-btn" data-view="compact" onclick="toggleView('compact')">≡ compact</button>
+          </div>
+        </div>
+      </div>
+      <!-- sort chips -->
+      <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;">
+        <span class="chip active">🔥 trending</span>
+        <span class="chip">🕐 latest</span>
+        <span class="chip">💯 most reacted</span>
+        <span class="chip">😂 funniest</span>
+        <span class="chip">🚩 red flags</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- main feed layout -->
+  <div class="container" style="padding-top:1.5rem;padding-bottom:3rem;">
+    <div class="feed-layout">
+
+      <!-- filter sidebar -->
+      <div class="filter-sidebar">
+        <div class="filter-section">
+          <div class="filter-section-title">categories</div>
+          <div id="category-filters"></div>
+        </div>
+        <div class="filter-section">
+          <div class="filter-section-title">severity</div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>🟢 minor (1)</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>🟡 noteworthy (2)</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>🟠 significant (3)</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>🔶 serious (4)</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>🔴 critical (5)</span>
+          </div>
+        </div>
+        <div class="filter-section">
+          <div class="filter-section-title">status</div>
+          <div class="filter-option selected" onclick="this.classList.toggle('selected')">
+            <span>all posts</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>⏳ under review</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>✅ approved</span>
+          </div>
+          <div class="filter-option" onclick="this.classList.toggle('selected')">
+            <span>💬 responded</span>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm btn-block" style="margin-top:0.5rem;" onclick="showToast('filters cleared','info')">clear filters</button>
+      </div>
+
+      <!-- posts feed -->
+      <div style="flex:1;min-width:0;">
+        <div id="posts-feed" style="display:flex;flex-direction:column;gap:1rem;"></div>
+        <!-- load more -->
+        <div style="text-align:center;margin-top:2rem;">
+          <button class="btn btn-outline" onclick="showToast('loading more posts...','info')">load more bhadaas ↓</button>
+        </div>
+      </div>
+
+      <!-- right sidebar -->
+      <div style="width:260px;flex-shrink:0;" class="filter-sidebar" style="position:sticky;top:calc(var(--nav-height) + 1rem);">
+        <div style="margin-bottom:1.5rem;">
+          <div class="filter-section-title">platform stats</div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span class="text-muted">total posts</span>
+              <span style="font-weight:700;color:var(--primary);">48.3k</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span class="text-muted">active users</span>
+              <span style="font-weight:700;color:var(--success);">124.5k</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span class="text-muted">entities tracked</span>
+              <span style="font-weight:700;color:var(--accent);">8.7k</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span class="text-muted">resolved this month</span>
+              <span style="font-weight:700;color:var(--success);">2.8k</span>
+            </div>
+          </div>
+        </div>
+        <hr class="divider" />
+        <div>
+          <div class="filter-section-title">trending entities</div>
+          <div id="trending-entities" style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // render category filters
+    const catContainer = document.getElementById('category-filters');
+    if (catContainer) {
+      catContainer.innerHTML = CATEGORIES.map(c =>
+        `<div class="filter-option" onclick="this.classList.toggle('selected')">
+          <span>${c.icon} ${c.label}</span>
+        </div>`
+      ).join('');
+    }
+
+    // render posts
+    const feedEl = document.getElementById('posts-feed');
+    if (feedEl) {
+      feedEl.innerHTML = POSTS.map(p => renderPostCard(p)).join('');
+    }
+
+    // render trending entities
+    const trendingEl = document.getElementById('trending-entities');
+    if (trendingEl) {
+      trendingEl.innerHTML = ENTITIES.slice(0, 6).map(e => {
+        const cat = getCategoryInfo(e.category);
+        return `
+        <a href="entity.html?id=${e.id}" style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0;font-size:0.85rem;transition:all 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color=''">
+          <span>${e.icon}</span>
+          <span style="flex:1;">${e.name}</span>
+          <span class="text-xs" style="color:var(--danger);font-weight:700;">${formatNumber(e.bhadaasCount)}</span>
+        </a>`;
+      }).join('');
+    }
+
+    // chip toggle
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

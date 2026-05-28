@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — post your bhadaas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <div id="nav-placeholder" data-active="post"></div>
+
+  <div class="container" style="max-width:720px;padding-top:2rem;padding-bottom:4rem;">
+
+    <!-- page header -->
+    <div class="page-header" style="text-align:center;">
+      <h1 style="font-size:1.75rem;">🔥 post your bhadaas</h1>
+      <p class="text-muted">let it all out — your experience matters</p>
+    </div>
+
+    <!-- step wizard -->
+    <div class="steps">
+      <div class="step active" id="step-1-indicator">
+        <div class="step-num">1</div>
+        <div class="step-label">write</div>
+      </div>
+      <div class="step" id="step-2-indicator">
+        <div class="step-num">2</div>
+        <div class="step-label">details</div>
+      </div>
+      <div class="step" id="step-3-indicator">
+        <div class="step-num">3</div>
+        <div class="step-label">submit</div>
+      </div>
+    </div>
+
+    <!-- step 1: write -->
+    <div class="card" id="step-1">
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">title <span class="required">*</span></label>
+          <input type="text" class="form-control" placeholder="what happened? (keep it short and punchy)" maxlength="120" />
+          <div class="form-hint">a catchy title gets more reactions</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">your bhadaas <span class="required">*</span></label>
+          <textarea class="form-control" id="post-body" rows="8" placeholder="tell your full story here. the more detail, the more impact..." maxlength="5000" oninput="updateCharCount(this,'body-counter',5000)"></textarea>
+          <div id="body-counter" class="char-counter">0 / 5000</div>
+          <div class="form-hint">be honest, be detailed. no personal names — only companies/organizations allowed.</div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button class="btn btn-primary" onclick="goToStep(2)">next: add details →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- step 2: details -->
+    <div class="card hidden" id="step-2">
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">category <span class="required">*</span></label>
+          <select class="form-control" id="category-select">
+            <option value="">select a category</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">company / entity <span class="required">*</span></label>
+          <input type="text" class="form-control" id="entity-search" placeholder="search or type company name..." list="entity-list" />
+          <datalist id="entity-list"></datalist>
+          <div class="form-hint">tag the company, organization, or government body this is about</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">severity level</label>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <input type="range" class="severity-slider" min="1" max="5" value="3" id="severity-slider" oninput="updateSeverity(this.value)" />
+            <span id="severity-label" style="font-weight:700;min-width:100px;color:#FF9F43;">significant</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted);margin-top:0.25rem;">
+            <span>minor</span>
+            <span>critical</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">tags</label>
+          <input type="text" class="form-control" placeholder="add tags separated by commas (e.g., billing, fraud, refund)" />
+          <div class="form-hint">tags help others find similar bhadaas</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;gap:0.75rem;">
+          <button class="btn btn-outline" onclick="goToStep(1)">← back</button>
+          <button class="btn btn-primary" onclick="goToStep(3)">next: media & submit →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- step 3: submit -->
+    <div class="card hidden" id="step-3">
+      <div class="card-body">
+        <div class="form-group">
+          <label class="form-label">attach media (optional)</label>
+          <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">📎</div>
+            <div style="font-weight:600;margin-bottom:0.25rem;">drag & drop or click to upload</div>
+            <div class="text-xs text-muted">images, screenshots (max 5mb each, up to 5 files)</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">your username <span class="required">*</span></label>
+          <input type="text" class="form-control" placeholder="choose a username for this post" />
+          <div class="form-hint">this is how others will see you. pick wisely!</div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="anonymous-toggle" />
+            <span>🕶️ post anonymously</span>
+          </label>
+          <div class="form-hint">your username will be hidden. your identity stays safe.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- community guidelines reminder -->
+        <div class="alert alert-warning" style="font-size:0.8rem;">
+          <span>⚠️</span>
+          <div>
+            <strong>before you post:</strong> no personal names, no hate speech, no fake claims.
+            only tag companies, organizations, or government bodies. read our
+            <a href="rules.html" style="color:var(--primary);text-decoration:underline;">community rules</a>.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="terms-check" />
+            <span>i agree to the <a href="rules.html" style="color:var(--primary);">terms of use</a> and <a href="rules.html" style="color:var(--primary);">community guidelines</a></span>
+          </label>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;gap:0.75rem;">
+          <button class="btn btn-outline" onclick="goToStep(2)">← back</button>
+          <button class="btn btn-primary btn-lg" onclick="submitPost()">🔥 submit bhadaas</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- success state (hidden) -->
+    <div class="card hidden" id="success-state">
+      <div class="card-body" style="text-align:center;padding:3rem;">
+        <div style="font-size:4rem;margin-bottom:1rem;">🎉</div>
+        <h2>bhadaas posted!</h2>
+        <p class="text-muted" style="max-width:400px;margin:1rem auto;">
+          your bhadaas is now live with an <span class="under-review-badge" style="display:inline-flex;">⏳ under review</span> label.
+          our team will review it shortly.
+        </p>
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem;">
+          <a href="feed.html" class="btn btn-outline">browse feed</a>
+          <button class="btn btn-primary" onclick="resetForm()">post another</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // populate category dropdown
+    const catSelect = document.getElementById('category-select');
+    if (catSelect) {
+      CATEGORIES.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.icon} ${c.label}`;
+        catSelect.appendChild(opt);
+      });
+    }
+
+    // populate entity datalist
+    const entityList = document.getElementById('entity-list');
+    if (entityList) {
+      ENTITIES.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e.name;
+        entityList.appendChild(opt);
+      });
+    }
+
+    // severity slider
+    function updateSeverity(val) {
+      const label = document.getElementById('severity-label');
+      const labels = ['', 'minor issue', 'noteworthy', 'significant', 'serious', 'critical'];
+      const colors = ['', '#28C76F', '#7BC67E', '#FF9F43', '#FF6B35', '#EA5455'];
+      if (label) {
+        label.textContent = labels[val];
+        label.style.color = colors[val];
+      }
+    }
+
+    // step navigation
+    function goToStep(n) {
+      [1, 2, 3].forEach(i => {
+        const step = document.getElementById(`step-${i}`);
+        const indicator = document.getElementById(`step-${i}-indicator`);
+        if (step) step.classList.toggle('hidden', i !== n);
+        if (indicator) {
+          indicator.classList.remove('active', 'done');
+          if (i < n) indicator.classList.add('done');
+          if (i === n) indicator.classList.add('active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // submit
+    function submitPost() {
+      const termsCheck = document.getElementById('terms-check');
+      if (!termsCheck || !termsCheck.checked) {
+        showToast('please agree to the terms and community guidelines', 'warning');
+        return;
+      }
+      document.getElementById('step-3').classList.add('hidden');
+      document.getElementById('success-state').classList.remove('hidden');
+      [1, 2, 3].forEach(i => {
+        document.getElementById(`step-${i}-indicator`)?.classList.add('done');
+        document.getElementById(`step-${i}-indicator`)?.classList.remove('active');
+      });
+      showToast('🎉 bhadaas posted successfully!', 'success');
+    }
+
+    // reset
+    function resetForm() {
+      document.getElementById('success-state').classList.add('hidden');
+      goToStep(1);
+    }
+  </script>
+</body>
+</html>

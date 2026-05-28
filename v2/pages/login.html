@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-name">भड़ास</div>
+        <p class="text-muted" style="margin-top:0.5rem;">welcome back! login to post your bhadaas</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">email</label>
+        <input type="email" class="form-control" placeholder="your@email.com" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" style="display:flex;justify-content:space-between;">
+          <span>password</span>
+          <a href="#" style="color:var(--primary);font-size:0.8rem;font-weight:500;" onclick="showToast('password reset link sent!','info');return false;">forgot password?</a>
+        </label>
+        <input type="password" class="form-control" placeholder="enter your password" />
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="showToast('logged in successfully! redirecting...','success');setTimeout(()=>window.location='feed.html',1500)">login</button>
+
+      <div class="auth-divider">or</div>
+
+      <button class="btn btn-outline btn-block" disabled style="opacity:0.5;">
+        🔒 google login (coming soon)
+      </button>
+
+      <div class="auth-footer">
+        don't have an account? <a href="signup.html">sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../js/shared.js"></script>
+</body>
+</html>

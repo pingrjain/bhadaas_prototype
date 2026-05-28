@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dev reference — bhadaas v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* warning section */
+    .warning-section {
+      background: linear-gradient(135deg, #1a0a0a 0%, #2d0f0f 40%, #1a0a14 100%);
+      border-bottom: 2px solid rgba(234,84,85,0.3);
+      padding: 3.5rem 0;
+    }
+    .warning-card {
+      background: rgba(234,84,85,0.08);
+      border: 1px solid rgba(234,84,85,0.25);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: var(--transition);
+    }
+    .warning-card:hover {
+      border-color: rgba(234,84,85,0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(234,84,85,0.15);
+    }
+    .warning-card .icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .warning-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: #ff8a8a;
+    }
+    .warning-card p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    /* checklist strip */
+    .checklist-strip {
+      background: rgba(234,84,85,0.06);
+      border: 1px solid rgba(234,84,85,0.2);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-top: 2rem;
+    }
+    .checklist-strip h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--danger);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    .checklist-strip .items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .checklist-strip .items span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* exec summary stat grid */
+    .exec-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .exec-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .exec-stat .label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .exec-stat .value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* nav card links */
+    .nav-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: var(--transition);
+      display: block;
+    }
+    .nav-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+    .nav-card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .nav-card h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .nav-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+    .nav-card .link-arrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* prototype link cards */
+    .proto-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--transition);
+    }
+    .proto-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .proto-card .icon {
+      font-size: 1.3rem;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .proto-card .info { flex: 1; }
+    .proto-card .info h4 { font-size: 0.9rem; font-weight: 600; }
+    .proto-card .info p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0; }
+    .proto-card .arrow { color: var(--text-muted); font-size: 0.85rem; }
+
+    /* section spacing */
+    .dev-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dev-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .section-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    /* risk matrix */
+    .risk-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .exec-stat-grid { grid-template-columns: 1fr; }
+      .warning-section { padding: 2rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <div id="nav-placeholder" data-dev="true" data-active="overview"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       1. WARNING SECTION
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="warning-section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom: 2.5rem;">
+        <span class="badge badge-danger" style="font-size:0.75rem; padding:5px 14px; margin-bottom:1rem; display:inline-block;">last updated: may 2025</span>
+        <h1 style="font-size:2.2rem; font-weight:900; color:#ff6b6b; margin-bottom:0.75rem;">⛔ read this before you write a single line of code</h1>
+        <p style="font-size:0.95rem; color:rgba(255,255,255,0.5); max-width:680px; margin:0 auto; line-height:1.7;">
+          this is not a suggestion document — these are non-negotiable rules. violating any of them can kill the company, land founders in court, or cause real-world harm to users.
+        </p>
+      </div>
+
+      <div class="grid grid-3 gap-3">
+        <!-- card 1 -->
+        <div class="warning-card">
+          <div class="icon">🏢</div>
+          <h4>register as pvt ltd company</h4>
+          <p>₹8k-₹15k, 2-4 weeks. must be done before any public launch. personal liability protection is non-negotiable for a platform like this.</p>
+        </div>
+        <!-- card 2 -->
+        <div class="warning-card">
+          <div class="icon">⚖️</div>
+          <h4>defamation risk is real</h4>
+          <p>budget ₹5-10 lakhs/year legal retainer. you will get sued. it's not "if" — it's "when". have a lawyer on speed dial from day one.</p>
+        </div>
+        <!-- card 3 -->
+        <div class="warning-card">
+          <div class="icon">🚫</div>
+          <h4>never allow individual tagging</h4>
+          <p>only companies, organizations, and government bodies. the moment you allow tagging individuals, you become a harassment platform.</p>
+        </div>
+        <!-- card 4 -->
+        <div class="warning-card">
+          <div class="icon">🔒</div>
+          <h4>dpdpa 2023 compliance</h4>
+          <p>explicit consent, dpo appointment, data breach notification within 72 hours. fines up to ₹250 crore. this is not optional.</p>
+        </div>
+        <!-- card 5 -->
+        <div class="warning-card">
+          <div class="icon">👥</div>
+          <h4>three mandatory officers</h4>
+          <p>grievance officer, nodal contact officer, chief compliance officer. all three required under IT rules 2021. publish names on the site.</p>
+        </div>
+        <!-- card 6 -->
+        <div class="warning-card">
+          <div class="icon">🚫</div>
+          <h4>no politics ever</h4>
+          <p>zero tolerance for political content. no political parties, no politicians, no political commentary. this is a consumer complaints platform, not a political forum.</p>
+        </div>
+      </div>
+
+      <!-- checklist strip -->
+      <div class="checklist-strip">
+        <h4>☑ action items</h4>
+        <div class="items">
+          <span>☐ register company</span>
+          <span>☐ appoint officers</span>
+          <span>☐ legal retainer</span>
+          <span>☐ dpdpa audit</span>
+          <span>☐ content policy</span>
+          <span>☐ insurance</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       2. EXECUTIVE SUMMARY
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">executive summary</div>
+      <h2 class="section-title">what is bhadaas?</h2>
+      <p class="section-desc">
+        bhadaas is india's first dedicated consumer complaints and grievance platform. a bold, unfiltered space where real people share real experiences about companies, organizations, and government bodies. no bots, no fake reviews, no brands buying influence. think of it as "glassdoor for consumers" — transparent, community-driven accountability.
+      </p>
+
+      <div class="exec-stat-grid">
+        <div class="exec-stat">
+          <div class="label">tagline</div>
+          <div class="value" style="color:var(--primary);">no cap. just bhadaas!</div>
+        </div>
+        <div class="exec-stat">
+          <div class="label">target geography</div>
+          <div class="value">india-first (pan-india, english + hindi)</div>
+        </div>
+        <div class="exec-stat">
+          <div class="label">initial budget</div>
+          <div class="value">₹5-10 lakhs (bootstrapped mvp)</div>
+        </div>
+        <div class="exec-stat">
+          <div class="label">revenue model</div>
+          <div class="value">freemium + entity dashboard subscriptions</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;">
+        <p class="text-sm text-muted" style="margin-bottom:0;">
+          for detailed breakdowns, see the sub-pages linked below ↓
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       3. NAVIGATION CARDS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">documentation</div>
+      <h2 class="section-title">dev reference pages</h2>
+      <p class="section-desc mb-3">deep-dive into each area of the product. these are founder/dev reference docs, not user-facing pages.</p>
+
+      <div class="grid grid-3 gap-3">
+        <a href="business.html" class="nav-card">
+          <div class="icon">💰</div>
+          <h3>business model</h3>
+          <p>revenue streams, pricing tiers, entity dashboard subscriptions, membership plans, growth strategy, and financial projections.</p>
+          <span class="link-arrow">view business docs →</span>
+        </a>
+        <a href="technical.html" class="nav-card">
+          <div class="icon">🔧</div>
+          <h3>technical architecture</h3>
+          <p>tech stack, database schema, api design, moderation pipeline, infrastructure, deployment strategy, and scalability plan.</p>
+          <span class="link-arrow">view technical docs →</span>
+        </a>
+        <a href="legal.html" class="nav-card">
+          <div class="icon">⚖️</div>
+          <h3>legal & compliance</h3>
+          <p>dpdpa 2023, it rules 2021, intermediary guidelines, defamation defense, content policy, officer appointments, and audit checklists.</p>
+          <span class="link-arrow">view legal docs →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       4. RISK MATRIX
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">risk assessment</div>
+      <h2 class="section-title">risk matrix</h2>
+      <p class="section-desc mb-3">top risks ranked by severity. every item here has a mitigation plan in the relevant sub-page.</p>
+
+      <div class="risk-matrix">
+        <!-- 1 -->
+        <div class="risk-item">
+          <div class="risk-number">1</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">defamation suits</strong>
+              <span class="risk-level medium">medium</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">companies will sue. safe harbour under IT act section 79 applies if moderation SOP followed. legal retainer mandatory.</p>
+          </div>
+        </div>
+        <!-- 2 -->
+        <div class="risk-item">
+          <div class="risk-number">2</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">individual tagging causing harassment</strong>
+              <span class="risk-level critical">critical</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">if users can tag individuals, the platform becomes a weapon. this is the #1 existential risk. hard-blocked at architecture level.</p>
+          </div>
+        </div>
+        <!-- 3 -->
+        <div class="risk-item">
+          <div class="risk-number">3</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">fake reviews / competitor sabotage</strong>
+              <span class="risk-level high">high</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">companies will post fake negative reviews about competitors. ai-powered detection + user reputation scoring mitigates this.</p>
+          </div>
+        </div>
+        <!-- 4 -->
+        <div class="risk-item">
+          <div class="risk-number">4</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">political content misuse</strong>
+              <span class="risk-level high">high</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">platform could be hijacked for political agendas. zero-tolerance policy, keyword filters, and manual review for flagged content.</p>
+          </div>
+        </div>
+        <!-- 5 -->
+        <div class="risk-item">
+          <div class="risk-number">5</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">dpdpa non-compliance</strong>
+              <span class="risk-level high">high</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">fines up to ₹250 crore. explicit consent flows, data minimization, dpo appointment, breach notification within 72 hours.</p>
+          </div>
+        </div>
+        <!-- 6 -->
+        <div class="risk-item">
+          <div class="risk-number">6</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">IT rules non-compliance</strong>
+              <span class="risk-level medium">medium</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">loss of safe harbour protection. grievance officer, nodal contact, compliance officer — all three must be appointed and published.</p>
+          </div>
+        </div>
+        <!-- 7 -->
+        <div class="risk-item">
+          <div class="risk-number">7</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">content moderation failure at scale</strong>
+              <span class="risk-level medium">medium</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">as volume grows, manual moderation breaks down. layered approach: ai pre-filter → community reports → human review queue.</p>
+          </div>
+        </div>
+        <!-- 8 -->
+        <div class="risk-item">
+          <div class="risk-number">8</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">database breach / PII leak</strong>
+              <span class="risk-level medium">medium</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">encryption at rest + in transit. pii minimization. no aadhaar/pan storage. regular security audits and penetration testing.</p>
+          </div>
+        </div>
+        <!-- 9 -->
+        <div class="risk-item">
+          <div class="risk-number">9</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">user base cold start</strong>
+              <span class="risk-level medium">medium</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">chicken-and-egg problem. seed with curated content, partner with consumer forums, viral social media campaigns (reels, threads).</p>
+          </div>
+        </div>
+        <!-- 10 -->
+        <div class="risk-item">
+          <div class="risk-number">10</div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+              <strong style="font-size:0.9rem;">revenue model validation</strong>
+              <span class="risk-level medium">medium</span>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom:0;">will companies actually pay for dashboards? validate with 10 pilot companies before scaling. freemium hook essential.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       5. PROTOTYPE LINKS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section" style="border-bottom:none; padding-bottom:4rem;">
+    <div class="container">
+      <div class="section-label">prototype</div>
+      <h2 class="section-title">v2 prototype pages</h2>
+      <p class="section-desc mb-3">live prototype pages — click to preview the current state of each screen.</p>
+
+      <div class="grid grid-2 gap-2">
+        <a href="../index.html" class="proto-card">
+          <div class="icon">🏠</div>
+          <div class="info">
+            <h4>homepage</h4>
+            <p>hero, how it works, trending, categories</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+        <a href="../pages/feed.html" class="proto-card">
+          <div class="icon">📋</div>
+          <div class="info">
+            <h4>feed</h4>
+            <p>main complaint feed with filters and sorting</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+        <a href="../pages/post.html" class="proto-card">
+          <div class="icon">✍️</div>
+          <div class="info">
+            <h4>post bhadaas</h4>
+            <p>complaint submission form with entity tagging</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+        <a href="../pages/entity.html" class="proto-card">
+          <div class="icon">🏢</div>
+          <div class="info">
+            <h4>entity profile</h4>
+            <p>company page with stats, complaints, responses</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+        <a href="../pages/admin-dashboard.html" class="proto-card">
+          <div class="icon">🛡️</div>
+          <div class="info">
+            <h4>admin dashboard</h4>
+            <p>moderation queue, analytics, user management</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+        <a href="../pages/company-dashboard.html" class="proto-card">
+          <div class="icon">📊</div>
+          <div class="info">
+            <h4>company dashboard</h4>
+            <p>entity-side panel for responding to complaints</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

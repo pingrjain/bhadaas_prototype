@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — no cap. just bhadaas!</title>
+  <meta name="description" content="a bold, unfiltered consumer complaints platform. real voices. real experiences. no bots. no brands buying influence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <!-- announcement bar -->
+  <div class="announcement-bar">
+    🔥 bhadaas.com is live — drop your first bhadaas now!
+  </div>
+
+  <!-- nav -->
+  <div id="nav-placeholder" data-root="true"></div>
+
+  <!-- hero -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-eyebrow">the people's platform</div>
+      <h1 class="hero-title">
+        <span class="hindi">भड़ास</span>
+        no cap. just <span class="highlight">bhadaas</span>!
+      </h1>
+      <p class="hero-subtitle">
+        a bold, unfiltered space where everyone speaks up. real voices. real experiences. no bots. no brands buying influence.
+      </p>
+      <div class="hero-actions">
+        <a href="pages/post.html" class="btn btn-primary btn-lg">🔥 post your bhadaas</a>
+        <a href="pages/feed.html" class="btn btn-outline btn-lg">browse feed →</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-value">48k+</div>
+          <div class="hero-stat-label">posts</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">124k+</div>
+          <div class="hero-stat-label">users</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">8.7k+</div>
+          <div class="hero-stat-label">entities</div>
+        </div>
+        <div>
+          <div class="hero-stat-value">6</div>
+          <div class="hero-stat-label">emoji reactions</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- how it works -->
+  <section style="padding:5rem 0;">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title">how it works</h2>
+        <p class="section-subtitle">three simple steps to make your voice heard</p>
+      </div>
+      <div class="grid grid-3 gap-4 mt-4">
+        <!-- step 1: write -->
+        <div class="card p-4 text-center" style="border-top:3px solid var(--primary);">
+          <div style="font-size:3rem;margin-bottom:1rem;">📝</div>
+          <h3 style="margin-bottom:0.5rem;">write</h3>
+          <p class="text-muted text-sm" style="margin-bottom:0;">
+            describe your experience honestly. add details, screenshots, and pick a severity level. anonymous posting available.
+          </p>
+        </div>
+        <!-- step 2: tag -->
+        <div class="card p-4 text-center" style="border-top:3px solid var(--primary);">
+          <div style="font-size:3rem;margin-bottom:1rem;">🏷️</div>
+          <h3 style="margin-bottom:0.5rem;">tag</h3>
+          <p class="text-muted text-sm" style="margin-bottom:0;">
+            tag the company or entity involved. they get notified and can respond publicly. accountability starts here.
+          </p>
+        </div>
+        <!-- step 3: react -->
+        <div class="card p-4 text-center" style="border-top:3px solid var(--primary);">
+          <div style="font-size:3rem;margin-bottom:1rem;">🔥😂💯🤡💔🚩</div>
+          <h3 style="margin-bottom:0.5rem;">react</h3>
+          <p class="text-muted text-sm" style="margin-bottom:0;">
+            the community reacts with 6 locked emoji reactions. no upvote wars — just genuine sentiment from real people.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- trending posts -->
+  <section style="padding:4rem 0;background:var(--bg-card);">
+    <div class="container">
+      <div class="section-header">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="section-title">🔥 trending bhadaas</h2>
+            <p class="section-subtitle">the most reacted posts right now</p>
+          </div>
+          <a href="pages/feed.html" class="btn btn-outline btn-sm">view all →</a>
+        </div>
+      </div>
+      <div id="trending-posts" class="grid grid-2 gap-3"></div>
+    </div>
+  </section>
+
+  <!-- top entities -->
+  <section style="padding:5rem 0;">
+    <div class="container">
+      <div class="section-header">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="section-title">top entities</h2>
+            <p class="section-subtitle">companies and organizations people are talking about</p>
+          </div>
+          <a href="pages/entity.html" class="btn btn-outline btn-sm">view all →</a>
+        </div>
+      </div>
+      <!-- category filter chips -->
+      <div id="entity-filters" class="flex gap-1 mt-3" style="flex-wrap:wrap;margin-bottom:1.5rem;"></div>
+      <!-- entity grid -->
+      <div id="entity-grid" class="grid grid-3 gap-3"></div>
+    </div>
+  </section>
+
+  <!-- company cta / pricing -->
+  <section style="padding:5rem 0;background:var(--bg-card);">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title">for companies & entities</h2>
+        <p class="section-subtitle">claim your profile. respond to bhadaas. build trust transparently.</p>
+      </div>
+      <div class="grid grid-3 gap-4 mt-4">
+        <!-- basic -->
+        <div class="plan-card">
+          <div class="plan-name">basic</div>
+          <div class="plan-price"><sup>₹</sup>9,999</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>claim your entity profile</li>
+            <li>respond to bhadaas publicly</li>
+            <li>basic analytics dashboard</li>
+            <li>email notifications</li>
+            <li>up to 2 team members</li>
+          </ul>
+          <a href="pages/company-dashboard.html" class="btn btn-outline btn-block">get started</a>
+        </div>
+        <!-- professional -->
+        <div class="plan-card popular">
+          <div class="plan-badge">most popular</div>
+          <div class="plan-name">professional</div>
+          <div class="plan-price"><sup>₹</sup>29,999</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>everything in basic</li>
+            <li>priority response placement</li>
+            <li>advanced sentiment analytics</li>
+            <li>api access</li>
+            <li>up to 10 team members</li>
+            <li>dedicated account manager</li>
+          </ul>
+          <a href="pages/company-dashboard.html" class="btn btn-primary btn-block">get started</a>
+        </div>
+        <!-- enterprise -->
+        <div class="plan-card">
+          <div class="plan-name">enterprise</div>
+          <div class="plan-price"><sup>₹</sup>99,999</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>everything in professional</li>
+            <li>white-label resolution portal</li>
+            <li>custom integrations</li>
+            <li>bulk response tools</li>
+            <li>unlimited team members</li>
+            <li>sla-backed support</li>
+          </ul>
+          <a href="pages/company-dashboard.html" class="btn btn-outline btn-block">contact us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- trust section -->
+  <section style="padding:5rem 0;">
+    <div class="container">
+      <div class="section-header text-center">
+        <h2 class="section-title">built on trust</h2>
+        <p class="section-subtitle">how we keep bhadaas real, safe, and community-first</p>
+      </div>
+      <div class="grid grid-3 gap-4 mt-4">
+        <div class="card p-4 text-center">
+          <div style="font-size:2.5rem;margin-bottom:1rem;">🕶️</div>
+          <h4 style="margin-bottom:0.5rem;">anonymous posting</h4>
+          <p class="text-muted text-sm" style="margin-bottom:0;">
+            post without revealing your identity. we protect your privacy while ensuring accountability through moderation.
+          </p>
+        </div>
+        <div class="card p-4 text-center">
+          <div style="font-size:2.5rem;margin-bottom:1rem;">🛡️</div>
+          <h4 style="margin-bottom:0.5rem;">moderation</h4>
+          <p class="text-muted text-sm" style="margin-bottom:0;">
+            every post goes through ai + human moderation. hate speech, fake reviews, and spam get flagged and removed.
+          </p>
+        </div>
+        <div class="card p-4 text-center">
+          <div style="font-size:2.5rem;margin-bottom:1rem;">❤️</div>
+          <h4 style="margin-bottom:0.5rem;">community-first</h4>
+          <p class="text-muted text-sm" style="margin-bottom:0;">
+            no paid rankings. no brand influence. the community decides what rises through genuine reactions and engagement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- cta strip -->
+  <section style="padding:4rem 0;background:linear-gradient(135deg, var(--primary), #FF9A6C);text-align:center;">
+    <div class="container">
+      <h2 style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:0.75rem;">ready to drop your bhadaas?</h2>
+      <p style="color:rgba(255,255,255,0.8);margin-bottom:2rem;font-size:1.1rem;">
+        join thousands of people holding companies accountable. your voice matters.
+      </p>
+      <div class="flex justify-center gap-2">
+        <a href="pages/post.html" class="btn btn-lg" style="background:#fff;color:var(--primary);border-color:#fff;font-weight:800;">
+          🔥 post your bhadaas
+        </a>
+        <a href="pages/feed.html" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.5);color:#fff;">
+          browse feed →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <div id="footer-placeholder" data-root="true"></div>
+
+  <script src="js/shared.js"></script>
+  <script>
+    // render trending posts (first 4)
+    document.addEventListener('DOMContentLoaded', () => {
+      const trendingContainer = document.getElementById('trending-posts');
+      if (trendingContainer && typeof POSTS !== 'undefined' && typeof renderPostCard === 'function') {
+        trendingContainer.innerHTML = POSTS.slice(0, 4).map(p => renderPostCard(p, 'pages/')).join('');
+      }
+
+      // render entity filter chips
+      const filtersContainer = document.getElementById('entity-filters');
+      const entityGrid = document.getElementById('entity-grid');
+      if (filtersContainer && entityGrid && typeof CATEGORIES !== 'undefined' && typeof ENTITIES !== 'undefined') {
+        // "all" chip
+        let activeFilter = 'all';
+        const allChip = document.createElement('button');
+        allChip.className = 'chip active';
+        allChip.textContent = 'all';
+        allChip.dataset.filter = 'all';
+        filtersContainer.appendChild(allChip);
+
+        // category chips (only those with entities)
+        const usedCategories = [...new Set(ENTITIES.map(e => e.category))];
+        CATEGORIES.filter(c => usedCategories.includes(c.id)).forEach(cat => {
+          const chip = document.createElement('button');
+          chip.className = 'chip';
+          chip.textContent = `${cat.icon} ${cat.label}`;
+          chip.dataset.filter = cat.id;
+          filtersContainer.appendChild(chip);
+        });
+
+        function renderEntities(filter) {
+          const filtered = filter === 'all' ? ENTITIES : ENTITIES.filter(e => e.category === filter);
+          entityGrid.innerHTML = filtered.map(e => renderEntityCard(e, 'pages/')).join('');
+        }
+
+        filtersContainer.addEventListener('click', (e) => {
+          const chip = e.target.closest('.chip');
+          if (!chip) return;
+          filtersContainer.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          activeFilter = chip.dataset.filter;
+          renderEntities(activeFilter);
+        });
+
+        renderEntities('all');
+      }
+    });
+  </script>
+
+</body>
+</html>

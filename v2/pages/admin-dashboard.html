@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — admin dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ===== admin layout ===== */
+    .admin-layout {
+      display: flex;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* ===== sidebar ===== */
+    .admin-sidebar {
+      width: 260px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      padding: 0 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .sidebar-logo .hindi {
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+    .sidebar-logo .sidebar-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      letter-spacing: 0.05em;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      border-left: 3px solid transparent;
+      position: relative;
+    }
+    .sidebar-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+    .sidebar-item.active {
+      background: rgba(255,107,0,0.08);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 700;
+    }
+    .sidebar-item .icon {
+      font-size: 1.1rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+    .sidebar-badge {
+      margin-left: auto;
+      background: var(--danger, #ef4444);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      line-height: 1.3;
+    }
+
+    /* ===== main content ===== */
+    .admin-main {
+      flex: 1;
+      padding: 2rem 2.5rem;
+      overflow-y: auto;
+    }
+
+    /* ===== section title ===== */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ===== stat cards ===== */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+    .stat-card.orange::before  { background: var(--primary); }
+    .stat-card.blue::before    { background: #3b82f6; }
+    .stat-card.red::before     { background: #ef4444; }
+    .stat-card.green::before   { background: #22c55e; }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+    }
+    .stat-card.orange .stat-value { color: var(--primary); }
+    .stat-card.blue   .stat-value { color: #3b82f6; }
+    .stat-card.red    .stat-value { color: #ef4444; }
+    .stat-card.green  .stat-value { color: #22c55e; }
+
+    /* ===== chart ===== */
+    .chart-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .chart-container h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.75rem;
+      height: 200px;
+      padding-top: 1rem;
+    }
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .bar {
+      width: 100%;
+      max-width: 48px;
+      border-radius: 6px 6px 0 0;
+      background: var(--primary);
+      transition: height 0.4s ease;
+      min-height: 4px;
+    }
+    .bar-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 60px;
+    }
+    .bar-value {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ===== activity feed ===== */
+    .activity-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .activity-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    .activity-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,107,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .activity-text {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .activity-text strong {
+      font-weight: 700;
+    }
+    .activity-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ===== alert ===== */
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .alert-danger {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444;
+    }
+
+    /* ===== tables ===== */
+    .admin-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .admin-table th {
+      text-align: left;
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: lowercase;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .admin-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+    .admin-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* ===== status badges ===== */
+    .status {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .status-pending   { background: rgba(234,179,8,0.15);  color: #eab308; }
+    .status-approved  { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .status-rejected  { background: rgba(239,68,68,0.15);  color: #ef4444; }
+    .status-verified  { background: rgba(34,197,94,0.15);  color: #22c55e; }
+    .status-unverified{ background: rgba(156,163,175,0.15);color: #9ca3af; }
+    .status-on-hold   { background: rgba(234,179,8,0.15);  color: #eab308; }
+    .status-suspended { background: rgba(239,68,68,0.15);  color: #ef4444; }
+
+    /* ===== severity ===== */
+    .severity {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .severity.high    { color: #ef4444; }
+    .severity.medium  { color: #eab308; }
+    .severity.low     { color: #22c55e; }
+
+    /* ===== action buttons ===== */
+    .btn-xs {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    .btn-xs:hover { opacity: 0.8; }
+    .btn-approve { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .btn-edit    { background: rgba(59,130,246,0.15); color: #3b82f6; }
+    .btn-remove  { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    /* ===== bulk actions ===== */
+    .bulk-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+    .bulk-bar select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    .bulk-bar .btn {
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    /* ===== entity cards (admin) ===== */
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .entity-admin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .entity-admin-card .entity-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .entity-admin-card .entity-icon {
+      font-size: 1.5rem;
+    }
+    .entity-admin-card .entity-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .entity-admin-card .entity-cat {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .entity-admin-card .entity-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .entity-admin-card .entity-stats span strong {
+      color: var(--text);
+    }
+    .entity-claimed {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .entity-claimed.yes { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .entity-claimed.no  { background: rgba(156,163,175,0.15); color: #9ca3af; }
+
+    /* ===== hidden ===== */
+    .dashboard-section.hidden { display: none; }
+
+    /* ===== chips ===== */
+    .chip {
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    /* ===== responsive ===== */
+    @media (max-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { padding: 1.25rem; }
+      .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder" data-active="admin"></div>
+
+  <!-- admin layout -->
+  <div class="admin-layout">
+
+    <!-- sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">
+        <div class="hindi">भड़ास</div>
+        <div class="sidebar-label">admin panel</div>
+      </div>
+      <div class="sidebar-item active" data-section="overview">
+        <span class="icon">📊</span> overview
+      </div>
+      <div class="sidebar-item" data-section="moderation">
+        <span class="icon">🛡️</span> moderation
+        <span class="sidebar-badge">127</span>
+      </div>
+      <div class="sidebar-item" data-section="entities">
+        <span class="icon">🏢</span> entities
+      </div>
+      <div class="sidebar-item" data-section="users">
+        <span class="icon">👥</span> users
+      </div>
+      <div class="sidebar-item" data-section="reports">
+        <span class="icon">🚨</span> reports
+      </div>
+      <div class="sidebar-item" data-section="legal">
+        <span class="icon">⚖️</span> legal
+      </div>
+      <div class="sidebar-item" data-section="settings">
+        <span class="icon">⚙️</span> settings
+      </div>
+    </aside>
+
+    <!-- main content -->
+    <main class="admin-main">
+
+      <!-- ========== overview ========== -->
+      <div class="dashboard-section" id="section-overview">
+        <h2 class="section-title">overview</h2>
+
+        <!-- stat cards -->
+        <div class="grid-4">
+          <div class="stat-card orange">
+            <div class="stat-label">total posts</div>
+            <div class="stat-value">48.3k</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-label">total users</div>
+            <div class="stat-value">124.5k</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-label">pending moderation</div>
+            <div class="stat-value">127</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">claimed entities</div>
+            <div class="stat-value">342</div>
+          </div>
+        </div>
+
+        <!-- bar chart -->
+        <div class="chart-container">
+          <h3>bhadaas by category</h3>
+          <div class="bar-chart" id="bar-chart"></div>
+        </div>
+
+        <!-- recent activity -->
+        <div class="activity-card">
+          <h3>recent activity</h3>
+          <div class="activity-item">
+            <div class="activity-avatar">🔥</div>
+            <div class="activity-text"><strong>fed_up_customer</strong> posted a bhadaas against <strong>airtel india</strong></div>
+            <div class="activity-time">2 min ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar">✅</div>
+            <div class="activity-text"><strong>moderator_1</strong> approved 12 pending posts</div>
+            <div class="activity-time">18 min ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar">🏢</div>
+            <div class="activity-text"><strong>swiggy</strong> claimed their entity profile</div>
+            <div class="activity-time">1 hour ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar">🚨</div>
+            <div class="activity-text"><strong>anonymous_user</strong> reported a post for <strong>abusive language</strong></div>
+            <div class="activity-time">3 hours ago</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar">👥</div>
+            <div class="activity-text"><strong>245 new users</strong> signed up today</div>
+            <div class="activity-time">5 hours ago</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== moderation ========== -->
+      <div class="dashboard-section hidden" id="section-moderation">
+        <h2 class="section-title">moderation queue</h2>
+
+        <div class="alert alert-danger">🛡️ 127 posts pending review</div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" /></th>
+                <th>post title</th>
+                <th>entity</th>
+                <th>severity</th>
+                <th>submitted</th>
+                <th>status</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>airtel charged me for a plan i never subscribed to</td>
+                <td>airtel india</td>
+                <td><span class="severity high">🔴 high</span></td>
+                <td>2 hours ago</td>
+                <td><span class="status status-pending">pending</span></td>
+                <td>
+                  <button class="btn-xs btn-approve">approve</button>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">remove</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>hdfc credit card fraud — bank refusing to help</td>
+                <td>hdfc bank</td>
+                <td><span class="severity high">🔴 high</span></td>
+                <td>5 hours ago</td>
+                <td><span class="status status-pending">pending</span></td>
+                <td>
+                  <button class="btn-xs btn-approve">approve</button>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">remove</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>swiggy delivered cold food after 2 hour wait</td>
+                <td>swiggy</td>
+                <td><span class="severity medium">🟡 medium</span></td>
+                <td>6 hours ago</td>
+                <td><span class="status status-pending">pending</span></td>
+                <td>
+                  <button class="btn-xs btn-approve">approve</button>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">remove</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>irctc website crashed during tatkal booking again</td>
+                <td>irctc / indian railways</td>
+                <td><span class="severity medium">🟡 medium</span></td>
+                <td>8 hours ago</td>
+                <td><span class="status status-pending">pending</span></td>
+                <td>
+                  <button class="btn-xs btn-approve">approve</button>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">remove</button>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>byju's won't process my refund after 6 months</td>
+                <td>byju's</td>
+                <td><span class="severity low">🟢 low</span></td>
+                <td>12 hours ago</td>
+                <td><span class="status status-pending">pending</span></td>
+                <td>
+                  <button class="btn-xs btn-approve">approve</button>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- bulk actions -->
+        <div class="bulk-bar">
+          <span>bulk actions:</span>
+          <select>
+            <option value="">select action...</option>
+            <option value="approve">approve selected</option>
+            <option value="reject">reject selected</option>
+            <option value="flag">flag for review</option>
+            <option value="delete">delete selected</option>
+          </select>
+          <button class="btn btn-primary btn-sm">apply</button>
+        </div>
+      </div>
+
+      <!-- ========== entities ========== -->
+      <div class="dashboard-section hidden" id="section-entities">
+        <h2 class="section-title">manage entities</h2>
+        <div class="entity-grid" id="entity-grid"></div>
+      </div>
+
+      <!-- ========== users ========== -->
+      <div class="dashboard-section hidden" id="section-users">
+        <h2 class="section-title">user management</h2>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>username</th>
+                <th>email</th>
+                <th>status</th>
+                <th>posts</th>
+                <th>joined</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>fed_up_customer</td>
+                <td>fed_up@email.com</td>
+                <td><span class="status status-verified">verified</span></td>
+                <td>47</td>
+                <td>jan 2025</td>
+                <td>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">suspend</button>
+                </td>
+              </tr>
+              <tr>
+                <td>scammed_by_hdfc</td>
+                <td>scammed@email.com</td>
+                <td><span class="status status-verified">verified</span></td>
+                <td>23</td>
+                <td>mar 2025</td>
+                <td>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">suspend</button>
+                </td>
+              </tr>
+              <tr>
+                <td>delhi_wala_99</td>
+                <td>delhi99@email.com</td>
+                <td><span class="status status-unverified">unverified</span></td>
+                <td>8</td>
+                <td>may 2025</td>
+                <td>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">suspend</button>
+                </td>
+              </tr>
+              <tr>
+                <td>telecom_victim</td>
+                <td>telecom_v@email.com</td>
+                <td><span class="status status-on-hold">on-hold</span></td>
+                <td>15</td>
+                <td>feb 2025</td>
+                <td>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-remove">suspend</button>
+                </td>
+              </tr>
+              <tr>
+                <td>spam_bot_420</td>
+                <td>bot420@email.com</td>
+                <td><span class="status status-suspended">suspended</span></td>
+                <td>312</td>
+                <td>apr 2025</td>
+                <td>
+                  <button class="btn-xs btn-edit">edit</button>
+                  <button class="btn-xs btn-approve">restore</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== reports ========== -->
+      <div class="dashboard-section hidden" id="section-reports">
+        <h2 class="section-title">reported content</h2>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>reported post</th>
+                <th>reason</th>
+                <th>reported by</th>
+                <th>date</th>
+                <th>action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>airtel charged me for a plan i never subscribed to</td>
+                <td>abusive language</td>
+                <td>concerned_citizen</td>
+                <td>28 may 2026</td>
+                <td>
+                  <button class="btn-xs btn-approve">dismiss</button>
+                  <button class="btn-xs btn-remove">remove post</button>
+                </td>
+              </tr>
+              <tr>
+                <td>swiggy delivered cold food after 2 hour wait</td>
+                <td>spam / duplicate</td>
+                <td>moderator_2</td>
+                <td>27 may 2026</td>
+                <td>
+                  <button class="btn-xs btn-approve">dismiss</button>
+                  <button class="btn-xs btn-remove">remove post</button>
+                </td>
+              </tr>
+              <tr>
+                <td>byju's won't process my refund after 6 months</td>
+                <td>misinformation</td>
+                <td>fact_checker</td>
+                <td>26 may 2026</td>
+                <td>
+                  <button class="btn-xs btn-approve">dismiss</button>
+                  <button class="btn-xs btn-remove">remove post</button>
+                </td>
+              </tr>
+              <tr>
+                <td>ola driver cancelled 5 times in a row</td>
+                <td>personal attack on driver</td>
+                <td>anonymous_user</td>
+                <td>25 may 2026</td>
+                <td>
+                  <button class="btn-xs btn-approve">dismiss</button>
+                  <button class="btn-xs btn-remove">remove post</button>
+                </td>
+              </tr>
+              <tr>
+                <td>amazon fake product sold as original</td>
+                <td>defamation / legal risk</td>
+                <td>brand_watch</td>
+                <td>24 may 2026</td>
+                <td>
+                  <button class="btn-xs btn-approve">dismiss</button>
+                  <button class="btn-xs btn-remove">remove post</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========== legal (placeholder) ========== -->
+      <div class="dashboard-section hidden" id="section-legal">
+        <h2 class="section-title">legal</h2>
+        <div class="card p-4" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
+          <p class="text-muted text-sm">legal compliance and takedown request management — coming soon.</p>
+        </div>
+      </div>
+
+      <!-- ========== settings (placeholder) ========== -->
+      <div class="dashboard-section hidden" id="section-settings">
+        <h2 class="section-title">settings</h2>
+        <div class="card p-4" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
+          <p class="text-muted text-sm">platform configuration, feature flags, and admin preferences — coming soon.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // ===== sidebar navigation =====
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.addEventListener('click', () => {
+        // update active sidebar item
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // show matching section
+        const section = item.getAttribute('data-section');
+        document.querySelectorAll('.dashboard-section').forEach(s => s.classList.add('hidden'));
+        const target = document.getElementById('section-' + section);
+        if (target) target.classList.remove('hidden');
+      });
+    });
+
+    // ===== render bar chart =====
+    function renderBarChart() {
+      const data = [
+        { label: 'telecom',    value: 4820 },
+        { label: 'banking',    value: 3890 },
+        { label: 'e-commerce', value: 6210 },
+        { label: 'government', value: 2140 },
+        { label: 'healthcare', value: 1560 },
+        { label: 'food',       value: 5430 },
+        { label: 'transport',  value: 4100 },
+        { label: 'real estate',value: 980  },
+        { label: 'insurance',  value: 1320 },
+        { label: 'education',  value: 3670 },
+        { label: 'utilities',  value: 870  },
+        { label: 'retail',     value: 2410 },
+      ];
+
+      const max = Math.max(...data.map(d => d.value));
+      const chart = document.getElementById('bar-chart');
+      if (!chart) return;
+
+      chart.innerHTML = data.map(d => {
+        const height = Math.round((d.value / max) * 180);
+        return `
+          <div class="bar-col">
+            <div class="bar-value">${(d.value / 1000).toFixed(1)}k</div>
+            <div class="bar" style="height:${height}px;"></div>
+            <div class="bar-label">${d.label}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    renderBarChart();
+
+    // ===== render entity cards =====
+    function renderEntityCards() {
+      const grid = document.getElementById('entity-grid');
+      if (!grid || typeof ENTITIES === 'undefined') return;
+
+      grid.innerHTML = ENTITIES.map(e => `
+        <div class="entity-admin-card">
+          <div class="entity-header">
+            <span class="entity-icon">${e.icon}</span>
+            <div>
+              <div class="entity-name">${e.name}</div>
+              <div class="entity-cat">${e.category}</div>
+            </div>
+          </div>
+          <div class="entity-stats">
+            <span><strong>${e.bhadaasCount.toLocaleString()}</strong> posts</span>
+            <span><strong>${e.resolutionRate}%</strong> resolved</span>
+            <span><strong>${e.responseRate}%</strong> response</span>
+          </div>
+          <span class="entity-claimed ${e.claimed ? 'yes' : 'no'}">${e.claimed ? '✅ claimed' : '⬜ unclaimed'}</span>
+        </div>
+      `).join('');
+    }
+
+    renderEntityCards();
+
+    // ===== chip toggle behavior =====
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const parent = chip.parentElement;
+        if (parent) {
+          parent.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        }
+        chip.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

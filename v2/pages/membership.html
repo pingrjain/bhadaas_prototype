@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — pro membership</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <!-- hero -->
+  <div class="membership-hero">
+    <div class="container">
+      <div style="font-size:3rem;margin-bottom:1rem;">⭐</div>
+      <h1 style="font-size:2.5rem;margin-bottom:0.5rem;">bhadaas <span style="color:var(--primary);">pro</span></h1>
+      <p style="color:rgba(255,255,255,0.5);max-width:500px;margin:0 auto;font-size:1.1rem;">
+        upgrade your voice. get seen. get heard. get results faster.
+      </p>
+    </div>
+  </div>
+
+  <div class="container" style="max-width:900px;padding-top:3rem;padding-bottom:4rem;">
+
+    <!-- benefits -->
+    <div style="margin-bottom:3rem;">
+      <h2 style="text-align:center;margin-bottom:2rem;">what you get with pro</h2>
+      <div class="grid grid-2 gap-3">
+        <div class="benefit-card">
+          <div class="benefit-icon">⭐</div>
+          <div>
+            <h4 style="margin-bottom:0.25rem;">highlighted pro badge</h4>
+            <p class="text-sm text-muted" style="margin:0;">stand out in the feed with a golden pro badge next to your username</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">⚡</div>
+          <div>
+            <h4 style="margin-bottom:0.25rem;">faster approval</h4>
+            <p class="text-sm text-muted" style="margin:0;">your bhadaas gets reviewed and approved first — priority queue</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🔒</div>
+          <div>
+            <h4 style="margin-bottom:0.25rem;">private group access</h4>
+            <p class="text-sm text-muted" style="margin:0;">join exclusive groups with other pro members for deeper discussions</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📊</div>
+          <div>
+            <h4 style="margin-bottom:0.25rem;">post analytics</h4>
+            <p class="text-sm text-muted" style="margin:0;">see how many views, reactions, and shares your bhadaas gets</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🎯</div>
+          <div>
+            <h4 style="margin-bottom:0.25rem;">trending boost</h4>
+            <p class="text-sm text-muted" style="margin:0;">pro posts get a slight boost in the trending algorithm</p>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🛡️</div>
+          <div>
+            <h4 style="margin-bottom:0.25rem;">premium support</h4>
+            <p class="text-sm text-muted" style="margin:0;">direct line to our support team for any issues or questions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- pricing -->
+    <div style="margin-bottom:3rem;">
+      <h2 style="text-align:center;margin-bottom:2rem;">simple pricing</h2>
+      <div class="grid grid-2 gap-3" style="max-width:600px;margin:0 auto;">
+        <div class="plan-card">
+          <div class="plan-name">monthly</div>
+          <div class="plan-price"><sup>₹</sup>199</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>pro badge on all posts</li>
+            <li>priority review queue</li>
+            <li>private group access</li>
+            <li>basic post analytics</li>
+          </ul>
+          <button class="btn btn-outline-primary btn-block" onclick="showToast('pro membership coming soon!','info')">start monthly</button>
+        </div>
+        <div class="plan-card popular">
+          <div class="plan-badge">save 33%</div>
+          <div class="plan-name">yearly</div>
+          <div class="plan-price"><sup>₹</sup>1,599</div>
+          <div class="plan-period">per year (₹133/mo)</div>
+          <ul class="plan-features">
+            <li>everything in monthly</li>
+            <li>trending boost</li>
+            <li>premium support</li>
+            <li>early access to features</li>
+          </ul>
+          <button class="btn btn-primary btn-block" onclick="showToast('pro membership coming soon!','info')">start yearly</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- faq -->
+    <div>
+      <h2 style="text-align:center;margin-bottom:2rem;">frequently asked questions</h2>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="card" style="padding:1.25rem;">
+          <h4 style="margin-bottom:0.5rem;">can i post without pro?</h4>
+          <p class="text-sm text-muted" style="margin:0;">absolutely! bhadaas is free for everyone. pro just adds extra perks and visibility.</p>
+        </div>
+        <div class="card" style="padding:1.25rem;">
+          <h4 style="margin-bottom:0.5rem;">can i cancel anytime?</h4>
+          <p class="text-sm text-muted" style="margin:0;">yes, cancel anytime. no questions asked. your pro benefits stay until the billing period ends.</p>
+        </div>
+        <div class="card" style="padding:1.25rem;">
+          <h4 style="margin-bottom:0.5rem;">will pro remove the "under review" label faster?</h4>
+          <p class="text-sm text-muted" style="margin:0;">pro members are in a priority review queue, so yes — your posts get reviewed faster.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../js/shared.js"></script>
+</body>
+</html>

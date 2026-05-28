@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — post detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <div id="nav-placeholder" data-active="feed"></div>
+
+  <div class="container" style="max-width:800px;padding-top:2rem;padding-bottom:4rem;">
+
+    <!-- breadcrumb -->
+    <div class="breadcrumb">
+      <a href="feed.html">browse</a>
+      <span class="separator">›</span>
+      <a href="entity.html?id=airtel">airtel india</a>
+      <span class="separator">›</span>
+      <span class="text-muted">post #1</span>
+    </div>
+
+    <!-- post detail card -->
+    <div class="card" id="post-detail">
+      <div class="severity-bar"><div class="severity-bar-fill sev-4"></div></div>
+      <div class="card-body">
+        <!-- meta -->
+        <div class="post-meta" style="margin-bottom:1rem;">
+          <span class="entity-tag">📡 airtel india</span>
+          <span class="category-tag">📡 telecom</span>
+          <span class="badge badge-danger">serious</span>
+          <span class="under-review-badge" style="display:none;">⏳ under review</span>
+        </div>
+
+        <!-- title -->
+        <h1 style="font-size:1.5rem;font-weight:800;margin-bottom:0.5rem;">
+          airtel charged me for a plan i never subscribed to
+        </h1>
+
+        <!-- author & time -->
+        <div class="text-sm text-muted" style="margin-bottom:1.5rem;">
+          posted by <span style="color:var(--primary);font-weight:600;">@fed_up_customer</span> · 2 hours ago
+        </div>
+
+        <!-- body -->
+        <div style="line-height:1.8;font-size:0.95rem;margin-bottom:2rem;">
+          <p>for 3 consecutive months, airtel has been deducting ₹299 from my account for a 'family add-on' that i never opted for. customer care keeps transferring calls and no resolution.</p>
+          <p>here's what happened:</p>
+          <p>i noticed an extra charge of ₹299 on my june bill. when i called customer care, they said it was for a 'family add-on pack' that was apparently activated on my line. i never requested this.</p>
+          <p>i asked them to remove it and refund the charges. they said they'd "raise a ticket" and it would be resolved in 48 hours. nothing happened.</p>
+          <p>called again in july — same story. "ticket raised, will be resolved." the charge appeared again on my july and august bills too. that's ₹897 deducted for something i never wanted.</p>
+          <p>i've now called 7 times, visited the airtel store twice, and even tweeted at them. the store staff says "we can only raise a request, sir" and the twitter team sends automated dms.</p>
+          <p>this is exactly the kind of corporate gaslighting that needs to stop. they make it impossible to cancel or get a refund for something they activated without consent.</p>
+        </div>
+
+        <!-- tags -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+          <span class="chip">billing</span>
+          <span class="chip">fraud</span>
+          <span class="chip">customer-care</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- reactions -->
+        <div style="margin-bottom:1.5rem;">
+          <div class="text-sm font-semibold" style="margin-bottom:0.75rem;">reactions</div>
+          <div class="reaction-bar" style="gap:0.5rem;">
+            <button class="reaction-btn" onclick="handleReaction(this,'angry',1)">🔥 <span class="count">189</span></button>
+            <button class="reaction-btn" onclick="handleReaction(this,'funny',1)">😂 <span class="count">23</span></button>
+            <button class="reaction-btn active" onclick="handleReaction(this,'relatable',1)">💯 <span class="count">342</span></button>
+            <button class="reaction-btn" onclick="handleReaction(this,'clown',1)">🤡 <span class="count">56</span></button>
+            <button class="reaction-btn" onclick="handleReaction(this,'disappointed',1)">💔 <span class="count">87</span></button>
+            <button class="reaction-btn" onclick="handleReaction(this,'redflag',1)">🚩 <span class="count">124</span></button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- share & report -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <div class="share-bar">
+            <button class="share-btn whatsapp" onclick="showToast('copied link for whatsapp sharing!','success')">📱 whatsapp</button>
+            <button class="share-btn twitter" onclick="showToast('opening twitter...','info')">🐦 twitter</button>
+            <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href);showToast('link copied!','success')">🔗 copy link</button>
+          </div>
+          <button class="report-btn" onclick="openModal('report-modal')" style="border:1px solid var(--border);padding:6px 14px;">🚨 report this post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- company response (if any) -->
+    <div class="card" style="margin-top:1.5rem;border-left:4px solid var(--success);">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+          <div class="avatar" style="background:var(--success);">📡</div>
+          <div>
+            <div style="font-weight:700;">airtel india <span class="badge badge-verified">✓ verified</span></div>
+            <div class="text-xs text-muted">official response · 1 hour ago</div>
+          </div>
+        </div>
+        <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.7;">
+          we sincerely apologize for the inconvenience caused. we've identified the issue and have initiated a full refund of ₹897 to your account.
+          the unauthorized add-on has been removed. please allow 3-5 business days for the refund to reflect. our team will follow up directly.
+          — airtel customer care team
+        </p>
+      </div>
+    </div>
+
+    <!-- related posts -->
+    <div style="margin-top:3rem;">
+      <h3 style="margin-bottom:1rem;">related bhadaas</h3>
+      <div id="related-posts" class="grid grid-2 gap-3"></div>
+    </div>
+
+  </div>
+
+  <!-- report modal -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h4>🚨 report this post</h4>
+        <button class="modal-close" onclick="closeModal('report-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-muted" style="margin-bottom:1rem;">select a reason for reporting:</p>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <label class="checkbox-group" style="padding:0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);"><input type="radio" name="report" /> spam or misleading</label>
+          <label class="checkbox-group" style="padding:0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);"><input type="radio" name="report" /> false or harmful information</label>
+          <label class="checkbox-group" style="padding:0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);"><input type="radio" name="report" /> abuse or harassment</label>
+          <label class="checkbox-group" style="padding:0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);"><input type="radio" name="report" /> legal issue / defamation</label>
+          <label class="checkbox-group" style="padding:0.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);"><input type="radio" name="report" /> personal information shared</label>
+        </div>
+        <div class="form-group" style="margin-top:1rem;">
+          <textarea class="form-control" rows="3" placeholder="additional details (optional)"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('report-modal')">cancel</button>
+        <button class="btn btn-danger" onclick="closeModal('report-modal');showToast('report submitted. we\\'ll review it within 24 hours.','success')">submit report</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // render related posts
+    const relatedEl = document.getElementById('related-posts');
+    if (relatedEl) {
+      relatedEl.innerHTML = POSTS.filter(p => p.id !== 1).slice(0, 4).map(p => renderPostCard(p)).join('');
+    }
+  </script>
+</body>
+</html>

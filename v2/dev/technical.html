@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>technical architecture — bhadaas dev reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ── hero ─────────────────────────────────────────────────────── */
+    .tech-hero {
+      background: linear-gradient(135deg, #0a0f1f 0%, #1A1A2E 60%);
+      padding: 3.5rem 0 2.5rem;
+    }
+    .tech-hero .breadcrumb {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .tech-hero .breadcrumb a { color: rgba(255,107,53,0.8); }
+    .tech-hero .breadcrumb a:hover { color: var(--primary); }
+    .tech-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .tech-hero p.subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 720px;
+      line-height: 1.7;
+    }
+
+    /* ── sections ─────────────────────────────────────────────────── */
+    .dev-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dev-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .section-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    /* ── stack cards ──────────────────────────────────────────────── */
+    .stack-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+    .stack-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .stack-icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .stack-card h4 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .stack-card .stack-tech {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .stack-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* ── model cards ─────────────────────────────────────────────── */
+    .model-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .model-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+    .model-card-header {
+      background: rgba(255,107,53,0.08);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .model-card-body {
+      padding: 1rem 1.25rem;
+    }
+    .model-field {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .model-field:last-child { border-bottom: none; }
+    .model-field-name {
+      color: #61AFEF;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      min-width: 120px;
+    }
+    .model-field-type {
+      color: #98C379;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+    }
+
+    /* ── api cards ───────────────────────────────────────────────── */
+    .api-group-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      margin-top: 1.5rem;
+      color: var(--text);
+    }
+    .api-group-title:first-of-type { margin-top: 0; }
+    .api-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: var(--transition);
+      flex-wrap: wrap;
+    }
+    .api-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.03);
+    }
+    .api-method {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      min-width: 52px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .api-method.get { background: rgba(40,199,111,0.15); color: #28c76f; }
+    .api-method.post { background: rgba(74,144,217,0.15); color: #4a90d9; }
+    .api-method.put { background: rgba(255,159,67,0.15); color: #ff9f43; }
+    .api-method.delete { background: rgba(234,84,85,0.15); color: #ea5455; }
+    .api-path {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+    }
+    .api-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+    .api-auth {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(255,107,53,0.12);
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* ── security cards ──────────────────────────────────────────── */
+    .sec-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .sec-card:hover {
+      border-color: var(--success);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .sec-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .sec-card h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .sec-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* ── phase cards ──────────────────────────────────────────────── */
+    .phase-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    .phase-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .phase-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+    .phase-badge.p1 { background: rgba(40,199,111,0.15); color: #28c76f; }
+    .phase-badge.p2 { background: rgba(74,144,217,0.15); color: #4a90d9; }
+    .phase-badge.p3 { background: rgba(255,107,53,0.15); color: var(--primary); }
+    .phase-card h4 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .phase-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* ── table total row ─────────────────────────────────────────── */
+    .table tr.total-row td {
+      font-weight: 800;
+      border-top: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    /* ── responsive ──────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .tech-hero h1 { font-size: 1.8rem; }
+      .api-desc { margin-left: 0; }
+      .model-field-name { min-width: 90px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <div id="nav-placeholder" data-dev="true" data-active="technical"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       1. PAGE HEADER
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="tech-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">dev reference</a> / technical architecture
+      </div>
+      <h1>🔧 technical architecture</h1>
+      <p class="subtitle">
+        complete technical stack, data models, api design, security measures, infrastructure costs, and development roadmap for bhadaas.com v2.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       2. RECOMMENDED STACK
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">stack</div>
+      <h2 class="section-title">recommended stack</h2>
+      <p class="section-desc mb-3">battle-tested technologies chosen for scalability, developer experience, and cost efficiency.</p>
+
+      <div class="grid grid-2 gap-3" style="margin-top:1.5rem;">
+        <!-- frontend -->
+        <div class="stack-card">
+          <div class="stack-icon">⚛️</div>
+          <h4>frontend</h4>
+          <div class="stack-tech">next.js (react)</div>
+          <p>component-based architecture, server-side rendering for seo, built-in api routes for backend logic. the modern standard for production react apps.</p>
+        </div>
+        <!-- database -->
+        <div class="stack-card">
+          <div class="stack-icon">🐘</div>
+          <h4>database</h4>
+          <div class="stack-tech">postgresql</div>
+          <p>relational database with native json support and full-text search. handles complex queries, referential integrity, and scales well with read replicas.</p>
+        </div>
+        <!-- cache -->
+        <div class="stack-card">
+          <div class="stack-icon">⚡</div>
+          <h4>cache</h4>
+          <div class="stack-tech">redis</div>
+          <p>in-memory data store for session management, rate limiting, and response caching. sub-millisecond reads for hot data paths.</p>
+        </div>
+        <!-- cloud -->
+        <div class="stack-card">
+          <div class="stack-icon">☁️</div>
+          <h4>cloud</h4>
+          <div class="stack-tech">aws</div>
+          <p>ec2 for compute, rds for managed postgres, s3 for media storage, cloudfront for cdn, ses for transactional email. pay-as-you-grow pricing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       3. DATA MODELS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">database</div>
+      <h2 class="section-title">data models</h2>
+      <p class="section-desc mb-3">core database schema — 6 primary tables covering users, content, interactions, and monetization.</p>
+
+      <div class="grid grid-2 gap-3" style="margin-top:1.5rem;">
+
+        <!-- users -->
+        <div class="model-card">
+          <div class="model-card-header">👤 users</div>
+          <div class="model-card-body">
+            <div class="model-field">
+              <span class="model-field-name">id</span>
+              <span class="model-field-type">uuid</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">username</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">email</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">password_hash</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">role</span>
+              <span class="model-field-type">enum: verified / unverified / on-hold / suspended</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">is_pro</span>
+              <span class="model-field-type">boolean</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">created_at</span>
+              <span class="model-field-type">timestamp</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- posts -->
+        <div class="model-card">
+          <div class="model-card-header">📝 posts</div>
+          <div class="model-card-body">
+            <div class="model-field">
+              <span class="model-field-name">id</span>
+              <span class="model-field-type">uuid</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">user_id</span>
+              <span class="model-field-type">fk → users</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">entity_id</span>
+              <span class="model-field-type">fk → entities</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">title</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">body</span>
+              <span class="model-field-type">text</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">severity</span>
+              <span class="model-field-type">int 1-5</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">status</span>
+              <span class="model-field-type">enum: pending / approved / rejected</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">is_anonymous</span>
+              <span class="model-field-type">boolean</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">created_at</span>
+              <span class="model-field-type">timestamp</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- entities -->
+        <div class="model-card">
+          <div class="model-card-header">🏢 entities</div>
+          <div class="model-card-body">
+            <div class="model-field">
+              <span class="model-field-name">id</span>
+              <span class="model-field-type">uuid</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">name</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">category</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">claimed</span>
+              <span class="model-field-type">boolean</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">claimed_by</span>
+              <span class="model-field-type">fk → users</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">bhadaas_count</span>
+              <span class="model-field-type">int</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">avg_severity</span>
+              <span class="model-field-type">float</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- reactions -->
+        <div class="model-card">
+          <div class="model-card-header">😤 reactions</div>
+          <div class="model-card-body">
+            <div class="model-field">
+              <span class="model-field-name">id</span>
+              <span class="model-field-type">uuid</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">post_id</span>
+              <span class="model-field-type">fk → posts</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">user_id</span>
+              <span class="model-field-type">fk → users</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">reaction_type</span>
+              <span class="model-field-type">enum: angry / funny / relatable / clown / disappointed / redflag</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- reports -->
+        <div class="model-card">
+          <div class="model-card-header">🚩 reports</div>
+          <div class="model-card-body">
+            <div class="model-field">
+              <span class="model-field-name">id</span>
+              <span class="model-field-type">uuid</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">post_id</span>
+              <span class="model-field-type">fk → posts</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">reporter_id</span>
+              <span class="model-field-type">fk → users</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">reason</span>
+              <span class="model-field-type">string</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">status</span>
+              <span class="model-field-type">enum: pending / reviewed / resolved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- subscriptions -->
+        <div class="model-card">
+          <div class="model-card-header">💳 subscriptions</div>
+          <div class="model-card-body">
+            <div class="model-field">
+              <span class="model-field-name">id</span>
+              <span class="model-field-type">uuid</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">entity_id</span>
+              <span class="model-field-type">fk → entities</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">plan</span>
+              <span class="model-field-type">enum: basic / professional / enterprise</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">status</span>
+              <span class="model-field-type">enum: active / cancelled</span>
+            </div>
+            <div class="model-field">
+              <span class="model-field-name">expires_at</span>
+              <span class="model-field-type">timestamp</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       4. API DESIGN
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">endpoints</div>
+      <h2 class="section-title">api design</h2>
+      <p class="section-desc mb-3">restful api endpoints — organized by resource. all responses in json. auth via jwt bearer tokens.</p>
+
+      <div style="margin-top:1.5rem;">
+
+        <!-- auth -->
+        <h3 class="api-group-title">🔐 auth</h3>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/auth/register</span>
+          <span class="api-desc">register new user</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/auth/login</span>
+          <span class="api-desc">login user</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/auth/verify</span>
+          <span class="api-desc">verify email</span>
+        </div>
+
+        <!-- posts -->
+        <h3 class="api-group-title">📝 posts</h3>
+        <div class="api-card">
+          <span class="api-method get">get</span>
+          <span class="api-path">/api/posts</span>
+          <span class="api-desc">list posts (with filters)</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method get">get</span>
+          <span class="api-path">/api/posts/:id</span>
+          <span class="api-desc">get single post</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/posts</span>
+          <span class="api-desc">create post</span>
+          <span class="api-auth">auth required</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method put">put</span>
+          <span class="api-path">/api/posts/:id</span>
+          <span class="api-desc">update post</span>
+          <span class="api-auth">auth required</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method delete">delete</span>
+          <span class="api-path">/api/posts/:id</span>
+          <span class="api-desc">delete post</span>
+          <span class="api-auth">admin only</span>
+        </div>
+
+        <!-- entities -->
+        <h3 class="api-group-title">🏢 entities</h3>
+        <div class="api-card">
+          <span class="api-method get">get</span>
+          <span class="api-path">/api/entities</span>
+          <span class="api-desc">list entities</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method get">get</span>
+          <span class="api-path">/api/entities/:id</span>
+          <span class="api-desc">get entity with posts</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/entities/:id/claim</span>
+          <span class="api-desc">claim entity</span>
+          <span class="api-auth">company only</span>
+        </div>
+
+        <!-- reactions -->
+        <h3 class="api-group-title">😤 reactions</h3>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/posts/:id/react</span>
+          <span class="api-desc">add reaction</span>
+          <span class="api-auth">auth required</span>
+        </div>
+        <div class="api-card">
+          <span class="api-method delete">delete</span>
+          <span class="api-path">/api/posts/:id/react</span>
+          <span class="api-desc">remove reaction</span>
+          <span class="api-auth">auth required</span>
+        </div>
+
+        <!-- reports -->
+        <h3 class="api-group-title">🚩 reports</h3>
+        <div class="api-card">
+          <span class="api-method post">post</span>
+          <span class="api-path">/api/posts/:id/report</span>
+          <span class="api-desc">report post</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       5. SECURITY
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">security</div>
+      <h2 class="section-title">security measures</h2>
+      <p class="section-desc mb-3">platform security architecture — protecting user data, preventing abuse, and ensuring legal compliance.</p>
+
+      <div class="grid grid-2 gap-3" style="margin-top:1.5rem;">
+        <div class="sec-card">
+          <div class="sec-icon">🔒</div>
+          <div>
+            <h4>end-to-end encryption</h4>
+            <p>all sensitive data encrypted at rest and in transit. tls 1.3 for all connections, aes-256 for stored credentials and pii.</p>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-icon">🛡️</div>
+          <div>
+            <h4>no pii in public apis</h4>
+            <p>public-facing api endpoints never expose personally identifiable information. user data is anonymized in all external responses.</p>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-icon">⏱️</div>
+          <div>
+            <h4>rate limiting</h4>
+            <p>100 requests/min for anonymous users, 300 requests/min for authenticated users. redis-backed sliding window counters.</p>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-icon">🤖</div>
+          <div>
+            <h4>captcha protection</h4>
+            <p>captcha verification on registration and posting flows. prevents bot spam and automated abuse of the platform.</p>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-icon">📋</div>
+          <div>
+            <h4>ip logging</h4>
+            <p>ip addresses logged and hashed for law enforcement compliance. retained for 90 days per legal requirements.</p>
+          </div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-icon">🧹</div>
+          <div>
+            <h4>input sanitization</h4>
+            <p>all user inputs sanitized against xss, sql injection, and other injection attacks. parameterized queries and html escaping throughout.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       6. INFRASTRUCTURE COSTS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">infrastructure</div>
+      <h2 class="section-title">infrastructure costs</h2>
+      <p class="section-desc mb-3">estimated yearly infrastructure expenses across 3-year growth trajectory.</p>
+
+      <div class="table-container" style="margin-top:1.5rem;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>item</th>
+              <th style="text-align:right;">year 1</th>
+              <th style="text-align:right;">year 2</th>
+              <th style="text-align:right;">year 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>hosting (aws)</td>
+              <td style="text-align:right;">₹36,000</td>
+              <td style="text-align:right;">₹72,000</td>
+              <td style="text-align:right;">₹1,80,000</td>
+            </tr>
+            <tr>
+              <td>domain</td>
+              <td style="text-align:right;">₹1,200</td>
+              <td style="text-align:right;">₹1,200</td>
+              <td style="text-align:right;">₹1,200</td>
+            </tr>
+            <tr>
+              <td>ssl</td>
+              <td style="text-align:right;">free (let's encrypt)</td>
+              <td style="text-align:right;">free</td>
+              <td style="text-align:right;">free</td>
+            </tr>
+            <tr>
+              <td>cdn</td>
+              <td style="text-align:right;">₹6,000</td>
+              <td style="text-align:right;">₹18,000</td>
+              <td style="text-align:right;">₹36,000</td>
+            </tr>
+            <tr>
+              <td>email (ses)</td>
+              <td style="text-align:right;">₹1,200</td>
+              <td style="text-align:right;">₹6,000</td>
+              <td style="text-align:right;">₹24,000</td>
+            </tr>
+            <tr class="total-row">
+              <td>total</td>
+              <td style="text-align:right;">₹44,400</td>
+              <td style="text-align:right;">₹97,200</td>
+              <td style="text-align:right;">₹2,41,200</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       7. ROADMAP
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section" style="border-bottom:none; padding-bottom:4rem;">
+    <div class="container">
+      <div class="section-label">timeline</div>
+      <h2 class="section-title">development roadmap</h2>
+      <p class="section-desc mb-3">3-phase rollout plan — from mvp to full-scale platform with ai moderation and mobile app.</p>
+
+      <div class="grid grid-3 gap-3" style="margin-top:1.5rem;">
+        <!-- phase 1 -->
+        <div class="phase-card">
+          <div class="phase-badge p1">phase 1 — month 1-3</div>
+          <h4>mvp launch</h4>
+          <p>core posting flow, emoji reactions, entity pages, basic admin panel. get the product live and start collecting real user feedback.</p>
+        </div>
+        <!-- phase 2 -->
+        <div class="phase-card">
+          <div class="phase-badge p2">phase 2 — month 4-6</div>
+          <h4>growth</h4>
+          <p>full user authentication, pro membership tier, company dashboards for claimed entities, ai moderation v1 for content filtering.</p>
+        </div>
+        <!-- phase 3 -->
+        <div class="phase-card">
+          <div class="phase-badge p3">phase 3 — month 7-12</div>
+          <h4>scale</h4>
+          <p>advanced analytics for companies, public api access, mobile app (react native), ai moderation v2 with sentiment analysis and auto-flagging.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

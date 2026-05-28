@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — entity profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+
+  <div id="nav-placeholder" data-active="entity"></div>
+
+  <!-- entity hero -->
+  <div class="entity-hero">
+    <div class="container">
+      <div class="breadcrumb" style="color:rgba(255,255,255,0.4);margin-bottom:1.5rem;">
+        <a href="feed.html" style="color:rgba(255,255,255,0.5);">browse</a>
+        <span class="separator">›</span>
+        <a href="entity.html" style="color:rgba(255,255,255,0.5);">entities</a>
+        <span class="separator">›</span>
+        <span>airtel india</span>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+        <div class="entity-logo">📡</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+            <h1 style="font-size:2rem;">airtel india</h1>
+            <span class="badge badge-claimed">✓ claimed</span>
+            <span class="category-tag" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);">📡 telecom</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.5);margin-top:0.5rem;">telecommunications · india's largest mobile network operator</p>
+        </div>
+        <div class="score-ring high">3.8</div>
+      </div>
+
+      <div class="entity-stats">
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" style="color:var(--danger);">1,247</div>
+          <div class="entity-stat-label">total bhadaas</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" style="color:var(--success);">42%</div>
+          <div class="entity-stat-label">resolution rate</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" style="color:var(--accent);">67%</div>
+          <div class="entity-stat-label">response rate</div>
+        </div>
+        <div class="entity-stat-item">
+          <div class="entity-stat-value" style="color:var(--warning);">3.8</div>
+          <div class="entity-stat-label">avg severity</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <a href="post.html" class="btn btn-primary">🔥 post about airtel</a>
+        <button class="btn btn-outline" style="border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);" onclick="showToast('notifications enabled for airtel india!','success')">🔔 follow</button>
+        <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href);showToast('link copied!','success')" style="border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);">🔗 share</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- entity content -->
+  <div class="container" style="padding-top:2rem;padding-bottom:4rem;">
+    <div class="feed-layout">
+
+      <!-- posts for entity -->
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <h3>bhadaas about airtel india</h3>
+          <div style="display:flex;gap:0.5rem;">
+            <span class="chip active">latest</span>
+            <span class="chip">most reacted</span>
+            <span class="chip">critical first</span>
+          </div>
+        </div>
+        <div id="entity-posts" style="display:flex;flex-direction:column;gap:1rem;"></div>
+      </div>
+
+      <!-- entity sidebar -->
+      <div class="filter-sidebar" style="width:280px;">
+        <div style="margin-bottom:1.5rem;">
+          <div class="filter-section-title">company info</div>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.75rem;font-size:0.85rem;">
+            <div><span class="text-muted">industry:</span> telecom</div>
+            <div><span class="text-muted">headquarters:</span> new delhi, india</div>
+            <div><span class="text-muted">website:</span> <span style="color:var(--accent);">airtel.in</span></div>
+            <div><span class="text-muted">on bhadaas since:</span> jan 2025</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="margin-bottom:1.5rem;">
+          <div class="filter-section-title">response stats</div>
+          <div style="margin-top:0.75rem;">
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.5rem;">
+              <span class="text-muted">avg response time</span>
+              <span style="font-weight:700;">18 hours</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.5rem;">
+              <span class="text-muted">responded this month</span>
+              <span style="font-weight:700;color:var(--success);">32</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span class="text-muted">satisfaction score</span>
+              <span style="font-weight:700;color:var(--warning);">3.2/5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- claim cta -->
+        <div style="background:var(--primary-light);border-radius:var(--radius);padding:1.25rem;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">🏢</div>
+          <div style="font-weight:700;margin-bottom:0.25rem;">own this company?</div>
+          <div class="text-xs text-muted" style="margin-bottom:1rem;">claim this page to respond to bhadaas and manage your reputation</div>
+          <a href="company-dashboard.html" class="btn btn-primary btn-sm btn-block">claim your page</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/shared.js"></script>
+  <script>
+    // render entity posts (filter for telecom)
+    const postsEl = document.getElementById('entity-posts');
+    if (postsEl) {
+      const entityPosts = POSTS.filter(p => p.entity.id === 'airtel');
+      if (entityPosts.length) {
+        postsEl.innerHTML = entityPosts.map(p => renderPostCard(p)).join('');
+      } else {
+        postsEl.innerHTML = POSTS.slice(0, 3).map(p => renderPostCard(p)).join('');
+      }
+    }
+
+    // chip toggle
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

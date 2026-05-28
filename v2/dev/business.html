@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>business model & revenue — bhadaas dev reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ── hero ─────────────────────────────────────────────────────── */
+    .biz-hero {
+      background: linear-gradient(135deg, #0a1a0f 0%, #1A1A2E 60%);
+      padding: 3.5rem 0 2.5rem;
+    }
+    .biz-hero .breadcrumb {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .biz-hero .breadcrumb a { color: rgba(255,107,53,0.8); }
+    .biz-hero .breadcrumb a:hover { color: var(--primary); }
+    .biz-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .biz-hero p.subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 720px;
+      line-height: 1.7;
+    }
+
+    /* ── sections ─────────────────────────────────────────────────── */
+    .dev-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dev-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .section-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    /* ── revenue stream cards ─────────────────────────────────────── */
+    .rev-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+    .rev-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .rev-card .rev-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .rev-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .rev-card .rev-range {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--success);
+      margin-bottom: 0.35rem;
+    }
+    .rev-card .rev-effort {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .rev-effort.low { background: var(--success-light); color: var(--success); }
+    .rev-effort.medium { background: var(--warning-light); color: var(--warning); }
+    .rev-effort.high { background: var(--danger-light); color: var(--danger); }
+
+    /* ── b2b plan cards ───────────────────────────────────────────── */
+    .b2b-plan {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    .b2b-plan:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+    .b2b-plan.recommended { border-color: var(--primary); box-shadow: var(--shadow); }
+    .b2b-plan .plan-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: #fff;
+      padding: 3px 16px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .b2b-plan .plan-tier {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .b2b-plan .plan-price {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .b2b-plan .plan-price sup {
+      font-size: 0.9rem;
+      vertical-align: top;
+    }
+    .b2b-plan .plan-period {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .b2b-plan .plan-features {
+      margin-bottom: 1.5rem;
+    }
+    .b2b-plan .plan-features li {
+      padding: 0.5rem 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      list-style: none;
+    }
+    .b2b-plan .plan-features li:last-child { border-bottom: none; }
+    .b2b-plan .plan-features li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* ── summary highlight ────────────────────────────────────────── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(255,107,53,0.08), rgba(40,199,111,0.08));
+      border: 1px solid rgba(255,107,53,0.25);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .highlight-box .big-number {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+    .highlight-box .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* ── table total row ──────────────────────────────────────────── */
+    .table tr.total-row td {
+      font-weight: 800;
+      border-top: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .table tr.alt-total td {
+      font-weight: 700;
+      color: var(--success);
+      background: rgba(40,199,111,0.05);
+    }
+
+    /* ── responsive ───────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .biz-hero h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <div id="nav-placeholder" data-dev="true" data-active="business"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       1. PAGE HEADER
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="biz-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">dev reference</a> / business model
+      </div>
+      <h1>💰 business model & revenue</h1>
+      <p class="subtitle">
+        complete revenue strategy, pricing tiers, budget breakdown, and growth projections for bhadaas.com — india's consumer grievance platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       2. REVENUE STREAMS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">monetization</div>
+      <h2 class="section-title">revenue streams</h2>
+      <p class="section-desc mb-3">7 revenue channels — diversified across ads, community, and b2b saas. ordered by ease of implementation.</p>
+
+      <div class="grid grid-3 gap-3" style="margin-top:1.5rem;">
+        <!-- 1 -->
+        <div class="rev-card">
+          <div class="rev-number">1</div>
+          <h4>sponsored brand content</h4>
+          <div class="rev-range">₹5k – ₹50k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">native ads, branded posts, and sponsored placement in feed. brands pay to promote positive stories alongside complaints.</p>
+          <span class="rev-effort low">no dev effort</span>
+        </div>
+        <!-- 2 -->
+        <div class="rev-card">
+          <div class="rev-number">2</div>
+          <h4>affiliate links in posts</h4>
+          <div class="rev-range">₹2k – ₹20k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">contextual affiliate links in complaint posts — "had a bad experience? try this alternative." commission-based revenue.</p>
+          <span class="rev-effort low">low effort</span>
+        </div>
+        <!-- 3 -->
+        <div class="rev-card">
+          <div class="rev-number">3</div>
+          <h4>ugc contests with entry fees</h4>
+          <div class="rev-range">₹1k – ₹10k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">community contests — best rant of the week, most relatable bhadaas. small entry fees with prize pools.</p>
+          <span class="rev-effort low">low effort</span>
+        </div>
+        <!-- 4 -->
+        <div class="rev-card">
+          <div class="rev-number">4</div>
+          <h4>featured rant boosting</h4>
+          <div class="rev-range">₹2k – ₹15k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">users pay to boost their complaint visibility in the feed. pinned posts, highlighted cards, trending push.</p>
+          <span class="rev-effort medium">medium effort</span>
+        </div>
+        <!-- 5 -->
+        <div class="rev-card">
+          <div class="rev-number">5</div>
+          <h4>meme ad drops / collabs</h4>
+          <div class="rev-range">₹10k – ₹75k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">brand collaborations for meme-style ad campaigns. viral content partnerships with brands who want the "bhadaas voice".</p>
+          <span class="rev-effort medium">medium effort</span>
+        </div>
+        <!-- 6 -->
+        <div class="rev-card">
+          <div class="rev-number">6</div>
+          <h4>bhadaas insider membership</h4>
+          <div class="rev-range">₹3k – ₹30k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">premium membership tier — pro badge, priority review, private groups, analytics, trending boost for power users.</p>
+          <span class="rev-effort medium">medium effort</span>
+        </div>
+        <!-- 7 -->
+        <div class="rev-card">
+          <div class="rev-number">7</div>
+          <h4>brand response dashboard</h4>
+          <div class="rev-range">₹5k – ₹50k/mo</div>
+          <p class="text-sm text-muted" style="margin-bottom:0.5rem;">b2b saas dashboard for companies — respond to complaints, track sentiment, analytics, api access. the real money maker.</p>
+          <span class="rev-effort high">highest dev effort</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       3. B2B SUBSCRIPTION PLANS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">b2b pricing</div>
+      <h2 class="section-title">entity dashboard subscription plans</h2>
+      <p class="section-desc mb-3">tiered pricing for companies/organizations who want to claim their profile and respond to complaints.</p>
+
+      <div class="grid grid-3 gap-3" style="margin-top:1.5rem;">
+        <!-- basic -->
+        <div class="b2b-plan">
+          <div class="plan-tier">basic</div>
+          <div class="plan-price"><sup>₹</sup>9,999</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>view complaint data & trends</li>
+            <li>5 official responses per month</li>
+            <li>claimed entity badge</li>
+            <li>basic complaint notifications</li>
+          </ul>
+          <button class="btn btn-outline btn-block btn-sm" disabled>coming soon</button>
+        </div>
+        <!-- professional -->
+        <div class="b2b-plan recommended">
+          <div class="plan-badge">recommended</div>
+          <div class="plan-tier">professional</div>
+          <div class="plan-price"><sup>₹</sup>29,999</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>full analytics dashboard</li>
+            <li>unlimited official responses</li>
+            <li>sentiment tracking & trends</li>
+            <li>priority support & onboarding</li>
+            <li>competitor benchmarking</li>
+          </ul>
+          <button class="btn btn-primary btn-block btn-sm" disabled>coming soon</button>
+        </div>
+        <!-- enterprise -->
+        <div class="b2b-plan">
+          <div class="plan-tier">enterprise</div>
+          <div class="plan-price"><sup>₹</sup>99,999</div>
+          <div class="plan-period">per month</div>
+          <ul class="plan-features">
+            <li>full api access</li>
+            <li>dedicated account manager</li>
+            <li>custom integrations (crm, helpdesk)</li>
+            <li>white-label reporting</li>
+            <li>sla-backed response times</li>
+            <li>multi-brand management</li>
+          </ul>
+          <button class="btn btn-outline btn-block btn-sm" disabled>contact us</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       4. BUDGET TABLE
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">financials</div>
+      <h2 class="section-title">year 1 budget breakdown</h2>
+      <p class="section-desc mb-3">estimated monthly and yearly expenses for bootstrapped launch. "self-done" row assumes founder handles dev, design, and content.</p>
+
+      <div class="table-container" style="margin-top:1.5rem;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>expense</th>
+              <th style="text-align:right;">monthly</th>
+              <th style="text-align:right;">yearly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>domain + hosting</td>
+              <td style="text-align:right;">₹500</td>
+              <td style="text-align:right;">₹6,000</td>
+            </tr>
+            <tr>
+              <td>website development</td>
+              <td style="text-align:right;">₹15,000</td>
+              <td style="text-align:right;">₹1,80,000</td>
+            </tr>
+            <tr>
+              <td>ui/ux design</td>
+              <td style="text-align:right;">₹5,000</td>
+              <td style="text-align:right;">₹60,000</td>
+            </tr>
+            <tr>
+              <td>seo & content</td>
+              <td style="text-align:right;">₹4,000</td>
+              <td style="text-align:right;">₹48,000</td>
+            </tr>
+            <tr>
+              <td>digital marketing</td>
+              <td style="text-align:right;">₹8,000</td>
+              <td style="text-align:right;">₹96,000</td>
+            </tr>
+            <tr>
+              <td>tools & software</td>
+              <td style="text-align:right;">₹2,000</td>
+              <td style="text-align:right;">₹24,000</td>
+            </tr>
+            <tr>
+              <td>legal & compliance</td>
+              <td style="text-align:right;">₹3,000</td>
+              <td style="text-align:right;">₹36,000</td>
+            </tr>
+            <tr>
+              <td>part-time ops / team</td>
+              <td style="text-align:right;">₹10,000</td>
+              <td style="text-align:right;">₹1,20,000</td>
+            </tr>
+            <tr class="total-row">
+              <td>total (outsourced)</td>
+              <td style="text-align:right;">₹50,500</td>
+              <td style="text-align:right;">₹6,06,000</td>
+            </tr>
+            <tr class="alt-total">
+              <td>total (self-done)</td>
+              <td style="text-align:right;">₹13,500</td>
+              <td style="text-align:right;">₹1,62,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       5. GROWTH PROJECTIONS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section" style="border-bottom:none; padding-bottom:4rem;">
+    <div class="container">
+      <div class="section-label">projections</div>
+      <h2 class="section-title">growth & revenue estimates</h2>
+      <p class="section-desc mb-3">conservative year 1 revenue estimates from primary streams. assumes organic growth with minimal paid acquisition.</p>
+
+      <div class="table-container" style="margin-top:1.5rem;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>stream</th>
+              <th style="text-align:right;">monthly est</th>
+              <th style="text-align:right;">yearly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>native ads</td>
+              <td style="text-align:right;">₹10,000</td>
+              <td style="text-align:right;">₹1,20,000</td>
+            </tr>
+            <tr>
+              <td>affiliate links</td>
+              <td style="text-align:right;">₹5,000</td>
+              <td style="text-align:right;">₹60,000</td>
+            </tr>
+            <tr>
+              <td>brand subscriptions</td>
+              <td style="text-align:right;">₹3,000</td>
+              <td style="text-align:right;">₹36,000</td>
+            </tr>
+            <tr>
+              <td>featured posts</td>
+              <td style="text-align:right;">₹2,000</td>
+              <td style="text-align:right;">₹24,000</td>
+            </tr>
+            <tr class="total-row">
+              <td>total</td>
+              <td style="text-align:right;">₹20,000</td>
+              <td style="text-align:right;">₹2,40,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- revenue potential highlight -->
+      <div class="grid grid-3 gap-3" style="margin-top:2rem;">
+        <div class="highlight-box">
+          <div class="big-number">₹2.4l</div>
+          <div class="label">year 1 revenue (conservative)</div>
+        </div>
+        <div class="highlight-box">
+          <div class="big-number">₹4–6 cr</div>
+          <div class="label">year 3 revenue potential</div>
+        </div>
+        <div class="highlight-box">
+          <div class="big-number">10x+</div>
+          <div class="label">growth multiplier by year 3</div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:2rem;">
+        <span>📈</span>
+        <div>
+          <strong>revenue potential note:</strong> with strong brand adoption and 50k+ monthly active users by year 3, the b2b dashboard subscriptions alone can generate ₹4-6 cr/year. the consumer-side revenue streams (ads, affiliates, memberships) add another ₹1-2 cr on top.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>

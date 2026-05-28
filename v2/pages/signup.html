@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bhadaas — sign up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand-name">भड़ास</div>
+        <p class="text-muted" style="margin-top:0.5rem;">join the revolution — create your account</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">username <span class="required">*</span></label>
+        <input type="text" class="form-control" placeholder="pick a unique username" />
+        <div class="form-hint">this is how others will see you on bhadaas</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">email <span class="required">*</span></label>
+        <input type="email" class="form-control" placeholder="your@email.com" />
+        <div class="form-hint">we'll send a verification link to this email</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">password <span class="required">*</span></label>
+        <input type="password" class="form-control" placeholder="create a strong password" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">confirm password <span class="required">*</span></label>
+        <input type="password" class="form-control" placeholder="confirm your password" />
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-group">
+          <input type="checkbox" id="terms-agree" />
+          <span>i agree to the <a href="rules.html" style="color:var(--primary);">terms of use</a> and <a href="rules.html" style="color:var(--primary);">community guidelines</a></span>
+        </label>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="handleSignup()">create account</button>
+
+      <div class="auth-divider">or</div>
+
+      <button class="btn btn-outline btn-block" disabled style="opacity:0.5;">
+        🔒 sign up with google (coming soon)
+      </button>
+
+      <div class="auth-footer">
+        already have an account? <a href="login.html">login</a>
+      </div>
+    </div>
+
+    <!-- email verification notice (hidden by default) -->
+    <div class="card hidden" id="verify-notice" style="margin-top:1.5rem;text-align:center;">
+      <div class="card-body" style="padding:2rem;">
+        <div style="font-size:3rem;margin-bottom:1rem;">📧</div>
+        <h3>check your email!</h3>
+        <p class="text-muted" style="max-width:350px;margin:0.75rem auto;">
+          we've sent a verification link to your email. please verify within 30 days to keep full posting access.
+        </p>
+        <div class="alert alert-warning" style="margin-top:1.5rem;font-size:0.8rem;text-align:left;">
+          <span>⚠️</span>
+          <span>unverified accounts lose posting privileges after 30 days. you can still react to posts.</span>
+        </div>
+        <a href="feed.html" class="btn btn-primary" style="margin-top:1rem;">start browsing →</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../js/shared.js"></script>
+  <script>
+    function handleSignup() {
+      const terms = document.getElementById('terms-agree');
+      if (!terms || !terms.checked) {
+        showToast('please agree to the terms and community guidelines', 'warning');
+        return;
+      }
+      document.querySelector('.auth-card').classList.add('hidden');
+      document.getElementById('verify-notice').classList.remove('hidden');
+      showToast('🎉 account created! check your email to verify.', 'success');
+    }
+  </script>
+</body>
+</html>

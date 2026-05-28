@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>legal & compliance — bhadaas dev reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ── hero ─────────────────────────────────────────────────────── */
+    .legal-hero {
+      background: linear-gradient(135deg, #0f0a1a 0%, #1A1A2E 60%);
+      padding: 3.5rem 0 2.5rem;
+    }
+    .legal-hero .breadcrumb {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1rem;
+    }
+    .legal-hero .breadcrumb a { color: rgba(255,107,53,0.8); }
+    .legal-hero .breadcrumb a:hover { color: var(--primary); }
+    .legal-hero h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+    .legal-hero p.subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 720px;
+      line-height: 1.7;
+    }
+
+    /* ── sections ─────────────────────────────────────────────────── */
+    .dev-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dev-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .section-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      line-height: 1.7;
+    }
+
+    /* ── legal cards ──────────────────────────────────────────────── */
+    .legal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .legal-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+    .legal-card-header {
+      background: rgba(255,107,53,0.08);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .legal-card-body {
+      padding: 1.25rem;
+    }
+    .legal-card-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .legal-card-body ul li {
+      padding: 0.5rem 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.6;
+    }
+    .legal-card-body ul li:last-child { border-bottom: none; }
+    .legal-card-body ul li::before {
+      content: '›';
+      color: var(--primary);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* ── officer cards ───────────────────────────────────────────── */
+    .officer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+    .officer-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .officer-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .officer-card h4 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .officer-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+    .officer-card .officer-duties {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+    }
+    .officer-card .officer-duties li {
+      padding: 0.35rem 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .officer-card .officer-duties li:last-child { border-bottom: none; }
+    .officer-card .officer-duties li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* ── risk scenario cards ─────────────────────────────────────── */
+    .risk-scenario {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    .risk-scenario:last-child { border-bottom: none; }
+    .risk-scenario .scenario-label {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .risk-scenario .scenario-outcome {
+      color: var(--text-muted);
+    }
+
+    /* ── policy list ─────────────────────────────────────────────── */
+    .policy-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .policy-item:last-child { border-bottom: none; }
+    .policy-icon {
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    /* ── progress summary ────────────────────────────────────────── */
+    .progress-summary {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .progress-summary .progress {
+      flex: 1;
+    }
+
+    /* ── responsive ───────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .legal-hero h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <div id="nav-placeholder" data-dev="true" data-active="legal"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       1. PAGE HEADER
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="legal-hero">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">dev reference</a> / legal & compliance
+      </div>
+      <h1>⚖️ legal & compliance</h1>
+      <p class="subtitle">
+        complete legal framework, regulatory compliance, content policies, mandatory officer appointments, and audit checklists for bhadaas.com — operating under indian it law, dpdpa 2023, and intermediary guidelines.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       2. IT ACT SECTION 79
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">intermediary protection</div>
+      <h2 class="section-title">it act section 79 — safe harbor</h2>
+      <p class="section-desc mb-3">the foundation of platform immunity — bhadaas qualifies as an intermediary under the it act, 2000. section 79 provides conditional protection from liability for user-generated content.</p>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">🛡️ safe harbor conditions</div>
+        <div class="legal-card-body">
+          <ul>
+            <li>safe harbor protection available for intermediaries — platform is not liable for third-party content if conditions are met</li>
+            <li>condition 1: do not initiate transmission, select receiver, or modify/select content — bhadaas must never edit user posts</li>
+            <li>condition 2: act within 36 hours of receiving a valid complaint or court/government order to remove content</li>
+            <li>condition 3: publish grievance redressal mechanism prominently — users must know how to report issues</li>
+            <li>must comply with it (intermediary guidelines and digital media ethics code) rules, 2021 — updated regulations for social media intermediaries</li>
+            <li>appoint grievance officer — mandatory, name and contact must be displayed on platform</li>
+            <li>appoint nodal contact officer — for 24x7 coordination with law enforcement agencies</li>
+            <li>appoint chief compliance officer — overall compliance oversight, must be resident of india</li>
+          </ul>
+
+          <div class="alert alert-warning" style="margin-top:1rem;">
+            <strong>⚠️ critical:</strong> if bhadaas modifies, curates, or editorially controls user content, safe harbor protection under section 79 is LOST. automated moderation (spam filters, profanity filters) is acceptable — editorial changes are not.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       3. DPDPA 2023
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">data privacy</div>
+      <h2 class="section-title">digital personal data protection act, 2023</h2>
+      <p class="section-desc mb-3">india's comprehensive data protection law — applies to all digital personal data processing. bhadaas must comply as a "data fiduciary".</p>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">🔐 key requirements</div>
+        <div class="legal-card-body">
+          <ul>
+            <li>obtain explicit, informed consent before collecting any personal data — consent must be specific, clear, and withdrawable</li>
+            <li>appoint data protection officer (dpo) — responsible for data protection compliance and user grievances</li>
+            <li>honor deletion requests within 30 days — users can request complete erasure of their personal data</li>
+            <li>data breach notification within 72 hours — mandatory reporting to the data protection board of india</li>
+            <li>fines up to ₹250 crore for non-compliance — highest penalty category for significant data breaches or willful non-compliance</li>
+            <li>cross-border data transfer restrictions — personal data can only be transferred to countries not blacklisted by the central government</li>
+            <li>children's data requires verifiable parental consent — additional obligations for processing data of minors (under 18)</li>
+            <li>purpose limitation — data collected for one purpose cannot be used for another without fresh consent</li>
+          </ul>
+
+          <div class="alert alert-danger" style="margin-top:1rem;">
+            <strong>🚨 penalty risk:</strong> non-compliance with dpdpa can result in penalties up to ₹250 crore per instance. bhadaas must implement consent management, data deletion workflows, and breach notification systems before launch.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       4. DEFAMATION ANALYSIS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">legal risk</div>
+      <h2 class="section-title">defamation risk analysis</h2>
+      <p class="section-desc mb-3">defamation (civil + criminal under ipc section 499/500) is the primary legal risk for a grievance platform. here's how different scenarios play out.</p>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">⚠️ risk scenarios</div>
+        <div class="legal-card-body">
+
+          <div class="risk-scenario">
+            <div class="scenario-label">scenario 1: user posts false claim about a company</div>
+            <div class="scenario-outcome">→ platform can claim safe harbor IF moderation process exists and content is removed within 36 hours of complaint. company's recourse is against the user, not the platform.</div>
+          </div>
+
+          <div class="risk-scenario">
+            <div class="scenario-label">scenario 2: user names an individual person <span class="badge badge-danger" style="margin-left:0.5rem;">high risk</span></div>
+            <div class="scenario-outcome">→ this is why individual tagging is blocked on bhadaas. naming individuals opens both the user AND the platform to defamation suits. individuals have stronger legal protection than companies. platform must proactively prevent this.</div>
+          </div>
+
+          <div class="risk-scenario">
+            <div class="scenario-label">scenario 3: company sues platform for defamation</div>
+            <div class="scenario-outcome">→ need legal retainer on standby. estimated cost: ₹5-10 lakhs/year for a law firm specializing in cyber/it law. first line of defense is safe harbor + immediate content review on complaint.</div>
+          </div>
+
+          <div class="risk-scenario">
+            <div class="scenario-label">scenario 4: government complaint about content</div>
+            <div class="scenario-outcome">→ must comply with government takedown orders immediately. non-compliance can result in loss of safe harbor and criminal proceedings against compliance officer.</div>
+          </div>
+
+          <div class="alert alert-warning" style="margin-top:1rem;">
+            <strong>💡 defense tips:</strong> never modify user content (preserves safe harbor) · act quickly on complaints (36-hour window) · maintain complete audit trail of all moderation actions · log timestamps, ip addresses, and actions taken.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       5. MANDATORY OFFICERS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">appointments</div>
+      <h2 class="section-title">mandatory officers</h2>
+      <p class="section-desc mb-3">under it (intermediary guidelines) rules, 2021 — these 3 officers must be appointed before the platform goes live. all must be residents of india.</p>
+
+      <div class="grid grid-3 gap-3" style="margin-top:1.5rem;">
+
+        <!-- grievance officer -->
+        <div class="officer-card">
+          <div class="officer-icon">📋</div>
+          <h4>grievance officer</h4>
+          <p>primary point of contact for user complaints. name and contact details must be published on the platform.</p>
+          <ul class="officer-duties">
+            <li>acknowledge complaints within 24 hours</li>
+            <li>resolve complaints within 15 days</li>
+            <li>publish name, email, and phone on platform</li>
+            <li>maintain register of all complaints received</li>
+            <li>provide monthly report to management</li>
+          </ul>
+        </div>
+
+        <!-- nodal contact officer -->
+        <div class="officer-card">
+          <div class="officer-icon">🔗</div>
+          <h4>nodal contact officer</h4>
+          <p>liaison with law enforcement agencies and government authorities. must be available 24x7.</p>
+          <ul class="officer-duties">
+            <li>24x7 coordination with law enforcement</li>
+            <li>respond to government orders within 72 hours</li>
+            <li>provide information/assistance for investigations</li>
+            <li>coordinate with cert-in for cyber incidents</li>
+            <li>maintain communication log with authorities</li>
+          </ul>
+        </div>
+
+        <!-- chief compliance officer -->
+        <div class="officer-card">
+          <div class="officer-icon">🏛️</div>
+          <h4>chief compliance officer</h4>
+          <p>senior employee responsible for overall compliance with it act and intermediary guidelines.</p>
+          <ul class="officer-duties">
+            <li>overall compliance with it rules 2021</li>
+            <li>ensure platform follows due diligence</li>
+            <li>generate monthly compliance reports</li>
+            <li>coordinate between grievance officer and legal team</li>
+            <li>liable for non-compliance penalties</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       6. CONTENT POLICIES
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">moderation</div>
+      <h2 class="section-title">content policies</h2>
+      <p class="section-desc mb-3">strict content policies designed to minimize legal risk while allowing genuine consumer grievances. the "no individual tagging" rule is the most critical differentiator.</p>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">🚫 prohibited content</div>
+        <div class="legal-card-body">
+
+          <div class="policy-item">
+            <span class="policy-icon">🔴</span>
+            <div><strong style="color:var(--danger);">no individual tagging (CRITICAL)</strong> — only companies, organizations, and government bodies can be tagged. naming individuals is blocked at the ui level and enforced by moderation. this is the single most important rule for defamation defense.</div>
+          </div>
+
+          <div class="policy-item">
+            <span class="policy-icon">🔴</span>
+            <div><strong style="color:var(--danger);">no political content (zero tolerance)</strong> — no posts about political parties, politicians, elections, or political ideology. this avoids sedition charges and government scrutiny.</div>
+          </div>
+
+          <div class="policy-item">
+            <span class="policy-icon">🟠</span>
+            <div><strong>no hate speech, abuse, or harassment</strong> — posts must focus on the service/product complaint, not personal attacks. profanity filter enforced.</div>
+          </div>
+
+          <div class="policy-item">
+            <span class="policy-icon">🟠</span>
+            <div><strong>no personal information sharing</strong> — no phone numbers, addresses, aadhaar, pan, or other pii in posts. auto-detected and redacted.</div>
+          </div>
+
+          <div class="policy-item">
+            <span class="policy-icon">🟡</span>
+            <div><strong>no fake or misleading content</strong> — community reporting + ai detection for fabricated complaints. repeat offenders banned.</div>
+          </div>
+
+          <div class="policy-item">
+            <span class="policy-icon">🟡</span>
+            <div><strong>no spam or promotional content</strong> — no ads, affiliate links, or promotional posts disguised as complaints.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">🚩 report mechanism</div>
+        <div class="legal-card-body">
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;">every post has a report button with structured categories for faster processing:</p>
+          <div class="grid grid-2 gap-2">
+            <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">
+              <span class="badge">🗑️ spam</span>
+              <span style="color:var(--text-muted);">— promotional or irrelevant content</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">
+              <span class="badge badge-danger">⚠️ false/harmful</span>
+              <span style="color:var(--text-muted);">— fabricated or misleading claims</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">
+              <span class="badge badge-warning">🔥 abuse</span>
+              <span style="color:var(--text-muted);">— hate speech, harassment, threats</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;">
+              <span class="badge" style="background:rgba(74,144,217,0.12);color:var(--accent);">⚖️ legal issue</span>
+              <span style="color:var(--text-muted);">— defamation, pii exposure, court order</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       7. DATA RETENTION POLICY
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">data management</div>
+      <h2 class="section-title">data retention policy</h2>
+      <p class="section-desc mb-3">balancing law enforcement requirements (it rules mandate data retention) with user privacy rights under dpdpa 2023.</p>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">💾 retention rules</div>
+        <div class="legal-card-body">
+          <ul>
+            <li>log ip address, date/time, user-agent for every action — required for law enforcement cooperation under it rules</li>
+            <li>retain user data and logs for minimum 180 days (as per it intermediary guidelines rules, 2021) — even after account deletion</li>
+            <li>user can request deletion of personal data under dpdpa — must be honored within 30 days, but anonymized logs retained for compliance</li>
+            <li>anonymized data retained indefinitely for analytics — stripped of all pii, used for platform insights and trend analysis</li>
+            <li>content moderation logs retained for 1 year — includes all actions taken, timestamps, and officer decisions</li>
+            <li>complaint records and grievance officer responses retained for 2 years — legal requirement for dispute resolution</li>
+          </ul>
+
+          <div class="alert alert-warning" style="margin-top:1rem;">
+            <strong>⚠️ conflict note:</strong> there's an inherent tension between it rules (retain 180 days minimum) and dpdpa (delete on request). resolution: anonymize personal data on deletion request but retain non-identifying logs for 180 days. legal counsel should review this approach before implementation.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       8. COMPLIANCE CHECKLIST
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="dev-section">
+    <div class="container">
+      <div class="section-label">readiness</div>
+      <h2 class="section-title">compliance checklist</h2>
+      <p class="section-desc mb-3">pre-launch compliance status. all items must be completed before bhadaas.com goes live to avoid regulatory exposure.</p>
+
+      <div class="legal-card" style="margin-top:1.5rem;">
+        <div class="legal-card-header">📝 launch readiness — 3 of 12 complete</div>
+        <div class="legal-card-body">
+
+          <!-- done items -->
+          <div class="checklist-item">
+            <div class="checklist-check done">✓</div>
+            <span>content moderation system designed</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check done">✓</div>
+            <span>user guidelines drafted</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check done">✓</div>
+            <span>report mechanism designed</span>
+          </div>
+
+          <!-- pending items -->
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>register as pvt ltd company</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>appoint grievance officer</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>appoint nodal contact officer</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>appoint chief compliance officer</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>dpdpa consent flow implementation</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>privacy policy publication</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>terms of service publication</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>legal retainer engagement</span>
+          </div>
+          <div class="checklist-item">
+            <div class="checklist-check pending">⏳</div>
+            <span>cyber insurance</span>
+          </div>
+
+          <!-- progress bar -->
+          <div class="progress-summary">
+            <span><strong>3</strong> / 12 complete</span>
+            <div class="progress" style="flex:1;">
+              <div class="progress-bar primary" style="width:25%;"></div>
+            </div>
+            <span style="color:var(--warning);font-weight:700;">~25%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dev-banner" style="margin-top:1.5rem;">
+        <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+          <span style="font-size:1.5rem;">🚨</span>
+          <div>
+            <strong class="dev-warning">do not launch without completing all checklist items.</strong>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.35rem;margin-bottom:0;">operating a social media intermediary without proper officer appointments and compliance framework exposes founders to personal criminal liability under the it act. register the company first, then appoint officers, then launch.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../js/shared.js"></script>
+</body>
+</html>
